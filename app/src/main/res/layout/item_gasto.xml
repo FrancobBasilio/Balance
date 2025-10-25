@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Icono de la categoría -->
+        <ImageView
+            android:id="@+id/ivIconoCategoria"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_billetera"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_vertical"/>
+
+        <!-- Información del gasto -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvNombreCategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Necesidades"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/tvTipoCategoria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PC"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:id="@+id/tvComentario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="mi pc no prende"
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="2dp"
+                android:fontFamily="sans-serif-light"/>
+
+        </LinearLayout>
+
+        <!-- Monto del gasto y botón eliminar -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/tvMontoGasto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="S/. 200"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_dark"/>
+
+            <TextView
+                android:id="@+id/tvFechaGasto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2024-01-15"
+                android:textSize="12sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginTop="4dp"/>
+
+            <!-- BOTÓN ELIMINAR -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEliminarGasto"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Eliminar"
+                android:textSize="11sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="8dp"
+                app:icon="@android:drawable/ic_menu_delete"
+                app:iconSize="16dp"
+                app:iconTint="@android:color/white"
+                app:iconGravity="start"
+                app:cornerRadius="18dp"
+                app:backgroundTint="@android:color/holo_red_dark"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                style="@style/Widget.Material3.Button.TonalButton"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

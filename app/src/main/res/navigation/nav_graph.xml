@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/inicioActivity">
+    <activity
+        android:id="@+id/inicioActivity"
+        android:name="com.app.balance.InicioActivity"
+        android:label="activity_inicio"
+        tools:layout="@layout/activity_inicio" />
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="com.app.balance.ui.PerfilFragment"
+        android:label="PerfilFragment" />
+    <fragment
+        android:id="@+id/configuracionFragment"
+        android:name="com.app.balance.ui.ConfiguracionFragment"
+        android:label="ConfiguracionFragment" />
+</navigation>

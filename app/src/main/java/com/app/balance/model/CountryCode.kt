@@ -1,0 +1,8 @@
+package com.app.balance.model
+
+data class CountryCode(
+    val id: Int = 0,
+    val nombre: String,
+    val codigo: String,
+    val bandera: String = ""
+)

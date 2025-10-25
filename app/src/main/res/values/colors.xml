@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!---  COLORES DEL SISTEMA NO ELIMINAR !-->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#2E7D32</color>
+    <color name="red">#D32F2F</color>
+    <color name="blue">#1565C0</color>
+    <color name="gray">#424242</color>
+
+    <color name="light_green">#66BB6A</color>
+    <color name="light_blue">#42A5F5</color>
+    <color name="light_gray">#BDBDBD</color>
+
+    <color name="gold">#FBC02D</color>
+    <color name="teal">#009688</color>
+
+    <color name="success_green">#4CAF50</color>
+    <color name="warning_orange">#FB8C00</color>
+    <color name="error_red">#E53935</color>
+
+    <!---  COLORES DE LA APP !-->
+    <color name="negro">#0B0F12</color>
+    <color name="gris">#2E2E2E</color>
+    <color name="blanco">#ffffff</color>
+    <color name="balance">#F1B90C</color>
+    <color name="borde">#D9D9D9</color>
+    <color name="ic_launcher_bg">@color/gold</color>
+
+</resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical">
+
+    <!-- Bandera del país -->
+    <ImageView
+        android:id="@+id/ivBanderaDivisa"
+        android:layout_width="50dp"
+        android:layout_height="35dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Bandera"
+        android:layout_marginEnd="12dp"/>
+
+    <!-- Nombre del país -->
+    <TextView
+        android:id="@+id/tvNombreDivisa"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Perú"
+        android:textSize="15sp"
+        android:textColor="@android:color/black"/>
+
+    <!-- Código de divisa -->
+    <TextView
+        android:id="@+id/tvCodigoDivisa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PEN"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginStart="12dp"/>
+
+</LinearLayout>

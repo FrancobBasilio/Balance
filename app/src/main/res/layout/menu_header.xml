@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@color/balance">
+
+    <!-- Avatar del usuario -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="8dp"
+        app:strokeWidth="3dp"
+        app:strokeColor="@android:color/white">
+
+        <ImageView
+            android:id="@+id/ivHeaderAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_persona"
+            android:contentDescription="Avatar del usuario" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Nombre y bandera -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvHeaderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usuario"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4" />
+
+        <ImageView
+            android:id="@+id/ivHeaderFlag"
+            android:layout_width="32dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="Bandera del país" />
+
+    </LinearLayout>
+
+    <!-- Email del usuario (opcional) -->
+    <TextView
+        android:id="@+id/tvHeaderEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="correo@ejemplo.com"
+        android:textSize="14sp"
+        android:textColor="@android:color/white"
+        android:alpha="0.8"
+        android:layout_marginTop="4dp"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2" />
+
+</LinearLayout>

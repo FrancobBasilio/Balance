@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191983226423",
+    "project_id": "balanceplus-d0799",
+    "storage_bucket": "balanceplus-d0799.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191983226423:android:8ef3c9764d7308a4a939b2",
+        "android_client_info": {
+          "package_name": "com.app.balance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMXqtf0cJj76TPEgrgOgWbDOxZUiEFQLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

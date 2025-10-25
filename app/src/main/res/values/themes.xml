@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.Balance" parent="Theme.Material3.DayNight.NoActionBar">
+    </style>
+    <style name="Theme.Balance" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/gold</item>
+        <item name="colorSecondary">@color/gold</item>
+        <item name="colorOnPrimary">@color/black</item>
+    </style>
+
+
+
+    <style name="textBalance">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/gris</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="subTitulo">
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/negro</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+    <style name="input">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/negro</item>
+        <item name="strokeColor">@color/borde</item>
+    </style>
+
+    <style name="boton">
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@android:color/transparent</item>
+        <item name="backgroundTint">@color/balance</item>
+        <item name="android:textColor">@color/negro</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+
+</resources>
