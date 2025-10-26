@@ -68,12 +68,10 @@ class RegistroActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_registro)
 
-        // Inicializar BD
         dbHelper = AppDatabaseHelper(this)
         val db = dbHelper.writableDatabase
         usuarioDAO = UsuarioDAO(db, dbHelper)
 
-        // Inicializar repositorio de países
         val paisService = PaisesApiClientRegistro.crearServicio()
         paisRepository = PaisRepositoryRegistro(paisService)
 
@@ -488,7 +486,6 @@ class RegistroActivity : AppCompatActivity() {
             return
         }
 
-        // Verificar si el email ya está registrado
         val usuarioExistente = usuarioDAO.obtenerUsuarioPorEmail(email)
         if (usuarioExistente != null) {
             tilCorreo.error = "Este correo ya está registrado"
@@ -496,13 +493,11 @@ class RegistroActivity : AppCompatActivity() {
             return
         }
 
-        // Hashear la contraseña
         val contrasenaHasheada = hashearContrasena(contrasena)
 
-        // ✅ GUARDAR SOLO EN SHAREDPREFERENCES (NO en BD aún)
         val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
         prefs.edit()
-            .putBoolean("REGISTRO_EN_PROCESO", true) // Flag para saber que está registrándose
+            .putBoolean("REGISTRO_EN_PROCESO", true)
             .putString("TEMP_NOMBRE", nombre)
             .putString("TEMP_APELLIDO", apellido)
             .putString("TEMP_FECHA_NAC", fechaNacimiento)
@@ -514,7 +509,7 @@ class RegistroActivity : AppCompatActivity() {
 
         Toast.makeText(this, "Datos guardados temporalmente", Toast.LENGTH_SHORT).show()
 
-        // Ir a DivisaActivity
+
         val intent = Intent(this, DivisaActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

@@ -44,8 +44,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
     private var usuarioId = 0
     private var codigoDivisa = "PEN"
     private var balanceTotal = 0.0
-
-    // Variables para rango personalizado
     private var fechaDesde: String? = null
     private var fechaHasta: String? = null
 
@@ -240,12 +238,12 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
         val btnAplicar = dialogView.findViewById<MaterialButton>(R.id.btnAplicarFiltro)
         val btnCancelar = dialogView.findViewById<MaterialButton>(R.id.btnCancelarFiltro)
 
-        // Inicializar con fechas actuales si ya existen
+        // Inicializar con fechas actuales
         if (fechaDesde != null && fechaHasta != null) {
             tvFechaDesde.text = formatearFecha(fechaDesde!!)
             tvFechaHasta.text = formatearFecha(fechaHasta!!)
         } else {
-            // Establecer rango del mes actual por defecto
+            // Establecer rango del mes actual
             fechaDesde = obtenerInicioMes()
             fechaHasta = obtenerFechaHoy()
             tvFechaDesde.text = formatearFecha(fechaDesde!!)
@@ -292,7 +290,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
 
         // Botón Cancelar
         btnCancelar.setOnClickListener {
-            // Volver al filtro "Todos"
             chipGroupFiltros.check(R.id.chipTodos)
             fechaDesde = null
             fechaHasta = null
@@ -357,11 +354,9 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
     }
 
     private fun filtrarTransacciones(filtro: FiltroTipo) {
-        // Resetear fechas personalizadas si se selecciona otro filtro
         if (filtro != FiltroTipo.TODOS) {
             fechaDesde = null
             fechaHasta = null
-            //  NO establecer texto, mantener solo el ícono
         }
 
         val transaccionesFiltradas = when (filtro) {
@@ -410,8 +405,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
             startActivity(intent)
         }
     }
-
-    // FUNCIONES DE FECHA
 
     private fun obtenerFechaHoy(): String {
         val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())

@@ -58,7 +58,6 @@ class BalanceActivity : AppCompatActivity() {
     private fun crearCuentaCompleta(montoInicial: Double) {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-        // Verificar que estamos en proceso de registro
         val enProceso = prefs.getBoolean("REGISTRO_EN_PROCESO", false)
         if (!enProceso) {
             Toast.makeText(this, "Error: No hay datos de registro", Toast.LENGTH_SHORT).show()
@@ -84,7 +83,7 @@ class BalanceActivity : AppCompatActivity() {
         val usuarioDAO = UsuarioDAO(db, dbHelper)
 
         try {
-            // 1. Insertar o obtener divisa
+
             val divisaExistente = divisaDAO.obtenerDivisaPorCodigo(codigoDivisaTemp)
             var divisaId = divisaExistente?.id ?: 0
 
@@ -98,7 +97,6 @@ class BalanceActivity : AppCompatActivity() {
                 divisaId = divisaDAO.insertarDivisa(nuevaDivisa).toInt()
             }
 
-            // 2. Crear usuario COMPLETO
             val nuevoUsuario = Usuario(
                 id = 0,
                 nombre = nombre,
@@ -118,9 +116,8 @@ class BalanceActivity : AppCompatActivity() {
                 val usuarioInsertado = usuarioDAO.obtenerUsuarioPorEmail(email)
 
                 if (usuarioInsertado != null) {
-                    // 3. Guardar sesión COMPLETA en SharedPreferences
                     prefs.edit()
-                        .clear() // Limpiar datos temporales
+                        .clear()
                         .putBoolean("SESION_ACTIVA", true)
                         .putBoolean("ES_PRIMERA_VEZ", false)
                         .putInt("USER_ID", usuarioInsertado.id)
@@ -160,7 +157,6 @@ class BalanceActivity : AppCompatActivity() {
     private fun obtenerDivisaSeleccionada() {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-        // Obtener desde las claves TEMPORALES que guardamos en DivisaActivity
         codigoDivisa = prefs.getString("TEMP_DIVISA_CODIGO", "") ?: ""
         nombreDivisa = prefs.getString("TEMP_DIVISA_NOMBRE", "") ?: ""
 

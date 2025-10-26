@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Header Mejorado -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/svBienvenida"
             android:layout_width="match_parent"
@@ -27,7 +26,6 @@
             android:elevation="6dp"
             android:background="@drawable/gradient_header">
 
-            <!-- Botón Menú -->
             <ImageButton
                 android:id="@+id/btnMenu"
                 android:layout_width="44dp"
@@ -41,7 +39,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-            <!-- Layout Central: Balance + Botón Editar -->
             <LinearLayout
                 android:id="@+id/layoutCentro"
                 android:layout_width="wrap_content"
@@ -53,7 +50,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <!-- Etiqueta BALANCE -->
                 <TextView
                     android:id="@+id/tvTotal"
                     android:layout_width="wrap_content"
@@ -66,7 +62,6 @@
                     android:gravity="center"
                     android:layout_marginBottom="4dp" />
 
-                <!-- Monto + Botón Editar -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -83,7 +78,6 @@
                         android:textStyle="bold"
                         android:gravity="center" />
 
-                    <!-- Botón Editar Balance (al lado del monto) -->
                     <ImageButton
                         android:id="@+id/btnEditBalance"
                         android:layout_width="36dp"
@@ -101,7 +95,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Fragment Container -->
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"

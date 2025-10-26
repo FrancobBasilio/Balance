@@ -9,7 +9,6 @@
     android:focusable="true"
     android:gravity="center_vertical">
 
-    <!-- Bandera del país -->
     <ImageView
         android:id="@+id/ivBanderaDivisa"
         android:layout_width="50dp"
@@ -18,7 +17,6 @@
         android:contentDescription="Bandera"
         android:layout_marginEnd="12dp"/>
 
-    <!-- Nombre del país -->
     <TextView
         android:id="@+id/tvNombreDivisa"
         android:layout_width="0dp"
@@ -28,7 +26,6 @@
         android:textSize="15sp"
         android:textColor="@android:color/black"/>
 
-    <!-- Código de divisa -->
     <TextView
         android:id="@+id/tvCodigoDivisa"
         android:layout_width="wrap_content"

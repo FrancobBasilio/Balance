@@ -1,5 +1,6 @@
 package com.app.balance.adapters
 
+import android.app.Dialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.app.balance.R
 import com.app.balance.model.Categoria
@@ -72,17 +74,15 @@ class GastosAdapter(
         }
         holder.tvMontoGasto.setTextColor(colorMonto)
 
-        // ✅ Cargar icono de categoría circular
         cargarIconoCategoria(holder, item.categoria, context)
 
-        // ✅ Click en la imagen para ver en tamaño completo
+        // Click en la imagen para ver en tamaño completo
         holder.ivIconoCategoria.setOnClickListener {
             if (!item.categoria.rutaImagen.isNullOrEmpty()) {
                 mostrarImagenCompleta(context, item.categoria.rutaImagen)
             }
         }
 
-        // Click listener normal
         holder.itemView.setOnClickListener {
             onItemClick(item)
         }
@@ -111,41 +111,40 @@ class GastosAdapter(
         }
     }
 
-    // ✅ ACTUALIZADO: Cargar icono circular con Glide
+    // Cargar icono circular con Glide
     private fun cargarIconoCategoria(holder: GastoViewHolder, categoria: Categoria, context: Context) {
         if (!categoria.rutaImagen.isNullOrEmpty()) {
             val file = File(categoria.rutaImagen)
             if (file.exists()) {
-                // Cargar imagen personalizada circular
+                holder.ivIconoCategoria.background = null
+                holder.ivIconoCategoria.clearColorFilter()
+
                 Glide.with(context)
                     .load(file)
                     .circleCrop()
+                    .error(R.drawable.ic_default)
                     .into(holder.ivIconoCategoria)
 
-                // Hacer la imagen clickeable
                 holder.ivIconoCategoria.isClickable = true
                 holder.ivIconoCategoria.isFocusable = true
             } else {
-                // Si el archivo no existe, cargar icono por defecto
-                cargarIconoPredeterminado(holder, categoria) // ✅ Pasar categoria completa
+                cargarIconoPredeterminado(holder, categoria)
             }
         } else {
-            // Cargar icono predeterminado
-            cargarIconoPredeterminado(holder, categoria) // ✅ Pasar categoria completa
+            cargarIconoPredeterminado(holder, categoria)
         }
     }
 
-    //  NUEVA FUNCIÓN: Cargar icono predeterminado
-    //  ACTUALIZADO: Usar el color guardado en la categoría
+    //  Cargar icono predeterminado
     private fun cargarIconoPredeterminado(holder: GastoViewHolder, categoria: Categoria) {
         val context = holder.itemView.context
         val iconoRes = obtenerRecursoIcono(categoria.icono)
 
         holder.ivIconoCategoria.setImageResource(iconoRes)
-        // Fondo circular blanco
+
         holder.ivIconoCategoria.setBackgroundResource(R.drawable.fondo_circular_solido)
 
-        //  Usar el color guardado o negro por defecto
+
         val colorIcono = categoria.color ?: android.R.color.black
         holder.ivIconoCategoria.setColorFilter(
             context.getColor(colorIcono),
@@ -155,39 +154,28 @@ class GastosAdapter(
         holder.ivIconoCategoria.isFocusable = false
     }
 
-    //  NUEVA FUNCIÓN: Mostrar imagen en tamaño completo
-    private fun mostrarImagenCompleta(context: Context, rutaImagen: String) {
-        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_imagen_completa, null)
-        val ivImagenCompleta = dialogView.findViewById<ImageView>(R.id.ivImagenCompleta)
-        val btnCerrar = dialogView.findViewById<ImageButton>(R.id.btnCerrarImagen)
 
-        //  Cargar imagen en ALTA CALIDAD
+    //  Mostrar imagen en tamaño completo
+    private fun mostrarImagenCompleta(context: Context, rutaImagen: String) {
+        val file = File(rutaImagen)
+        if (!file.exists()) {
+            Toast.makeText(context, "Imagen no encontrada", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog.setContentView(R.layout.dialog_imagen_completa)
+
+        val ivImagenCompleta = dialog.findViewById<ImageView>(R.id.ivImagenCompleta)
+        val btnCerrar = dialog.findViewById<ImageButton>(R.id.btnCerrarImagen)
+
         Glide.with(context)
-            .load(File(rutaImagen))
-            .override(2048, 2048) // Tamaño máximo para evitar OutOfMemory
-            .fitCenter()
+            .load(file)
+            .centerInside()
             .into(ivImagenCompleta)
 
-        // Crear diálogo en pantalla completa
-        val dialog = MaterialAlertDialogBuilder(context)
-            .setView(dialogView)
-            .create()
-
-        // Hacer el diálogo pantalla completa
-        dialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        dialog.window?.setBackgroundDrawableResource(android.R.color.black)
-
-        // Cerrar al hacer click en la imagen o el botón
-        ivImagenCompleta.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        btnCerrar.setOnClickListener {
-            dialog.dismiss()
-        }
+        ivImagenCompleta.setOnClickListener { dialog.dismiss() }
+        btnCerrar.setOnClickListener { dialog.dismiss() }
 
         dialog.show()
     }

@@ -16,7 +16,6 @@
         android:paddingTop="16dp"
         android:paddingBottom="24dp">
 
-        <!-- Header con botón de regreso -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +44,6 @@
 
         </LinearLayout>
 
-        <!-- Card del icono seleccionado -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +59,6 @@
                 android:gravity="center"
                 android:padding="32dp">
 
-                <!-- Icono seleccionado -->
                 <FrameLayout
                     android:layout_width="130dp"
                     android:layout_height="130dp"
@@ -96,7 +93,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Nombre de categoría -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -118,7 +114,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Tipo de categoría -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -156,7 +151,6 @@
 
         </RadioGroup>
 
-        <!-- Iconos predeterminados -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -193,11 +187,9 @@
             android:alignmentMode="alignBounds"
             android:useDefaultMargins="false">
 
-            <!-- Los iconos se agregarán programáticamente -->
 
         </GridLayout>
 
-        <!-- Colores -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -240,13 +232,11 @@
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp">
 
-                <!-- Los colores se agregarán programáticamente -->
 
             </LinearLayout>
 
         </HorizontalScrollView>
 
-        <!-- Botón Añadir -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAnadirCategoria"
             android:layout_width="match_parent"

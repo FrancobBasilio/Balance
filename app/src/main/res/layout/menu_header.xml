@@ -8,7 +8,6 @@
     android:padding="24dp"
     android:background="@drawable/gradient_header">
 
-    <!-- Avatar del usuario -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -27,7 +26,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Nombre y bandera -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +56,6 @@
 
     </LinearLayout>
 
-    <!-- Email del usuario (opcional) -->
     <TextView
         android:id="@+id/tvHeaderEmail"
         android:layout_width="wrap_content"

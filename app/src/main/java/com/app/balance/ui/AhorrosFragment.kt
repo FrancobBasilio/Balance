@@ -4,13 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.app.balance.R
 import com.app.balance.TransaccionGastoActivity
@@ -20,11 +16,7 @@ import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
 import com.app.balance.model.TransaccionConDetalles
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.chip.ChipGroup
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+
 
 class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListener {
 
@@ -76,7 +68,7 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
     }
 
     private fun obtenerDatosUsuario() {
-        verificarYCargarDivisaDesdeDB() // ← AGREGAR ESTA LÍNEA PRIMERO
+        verificarYCargarDivisaDesdeDB()
 
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         balanceOriginal = prefs.getString("BALANCE_ORIGINAL", "0.00")?.toDoubleOrNull() ?: 0.0
@@ -85,7 +77,7 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
     }
 
     override fun onBalanceUpdated(nuevoBalance: Double, codigoDivisa: String) {
-        // Recargar datos desde SharedPreferences para obtener BALANCE_ORIGINAL actualizado
+        // Recargar datos desde SharedPreferences
         obtenerDatosUsuario()
         this.codigoDivisa = codigoDivisa
         cargarTransacciones()
@@ -184,7 +176,7 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
             ((gastoDeseo / montoIdealDeseo) * 100).toInt().coerceIn(0, 100)
         } else 0
 
-        // Porcentaje de cuánto del ahorro ideal se ha consumido
+        // Porcentaje de cuanto del ahorro ideal se ha consumido
         val porcentajeAhorroConsumido = if (montoIdealAhorro > 0) {
             val deficitAhorro = (montoIdealAhorro - ahorroDisponible).coerceAtLeast(0.0)
             ((deficitAhorro / montoIdealAhorro) * 100).toInt().coerceIn(0, 100)
@@ -205,7 +197,7 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
         tvPorcentajeDeseo.text = "Gastado: $codigoDivisa ${String.format("%.2f", gastoDeseo)} ($porcentajeGastadoDeseo%)"
         tvPorcentajeAhorro.text = "${String.format("%.1f", porcentajeAhorro)}% del monto total"
 
-        // Total gastado e Ingresos (ahorro real)
+        // Total gastado e Ingresos
         tvTotalGastado.text = "$codigoDivisa ${String.format("%.2f", totalGastado)}"
         tvIngresosTotales.text = "$codigoDivisa ${String.format("%.2f", ahorroDisponible)}"
 

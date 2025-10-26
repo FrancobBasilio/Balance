@@ -13,18 +13,14 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <!-- Icono de la categoría -->
         <ImageView
             android:id="@+id/ivIconoCategoria"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_billetera"
-            android:scaleType="fitCenter"
-            android:background="@drawable/fondo_circular_solido"
-            android:padding="8dp"
+            android:scaleType="centerCrop"
             android:layout_gravity="center_vertical"/>
 
-        <!-- Información del gasto -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -63,7 +59,6 @@
 
         </LinearLayout>
 
-        <!-- Monto del gasto y botón eliminar -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,7 +84,6 @@
                 android:textColor="@android:color/darker_gray"
                 android:layout_marginTop="4dp"/>
 
-            <!-- BOTÓN ELIMINAR -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEliminarGasto"
                 android:layout_width="wrap_content"

@@ -98,7 +98,7 @@ class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateList
     }
 
     private fun obtenerDatos() {
-        verificarYCargarDivisaDesdeDB() // ← AGREGAR ESTA LÍNEA PRIMERO
+        verificarYCargarDivisaDesdeDB()
 
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         balanceOriginal = prefs.getString("BALANCE_ORIGINAL", "0.00")?.toDoubleOrNull() ?: 0.0
@@ -108,10 +108,7 @@ class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateList
     }
 
     private fun actualizarGrafico() {
-        // CÁLCULO: Porcentaje basado en lo que QUEDA respecto al ORIGINAL
-        // Ejemplo: Balance Original = 100 ALL, Balance Actual = 50 ALL
-        // Porcentaje de ahorro disponible = (50 / 100) * 100 = 50%
-
+        // CÁLCULO: Porcentaje basado en lo que queda respecto al original
         val porcentajeAhorroDisponible = if (balanceOriginal > 0) {
             ((balanceActual / balanceOriginal) * 100.0).toFloat().coerceIn(0f, 100f)
         } else {
@@ -124,78 +121,70 @@ class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateList
 
     private fun obtenerColorSegunAhorro(porcentajeAhorro: Float): Int {
         return when {
-            // 100% - 70%: Azul vibrante (Excelente)
             porcentajeAhorro >= 70f -> {
-                val progress = (100f - porcentajeAhorro) / 30f // 0.0 a 1.0
+                val progress = (100f - porcentajeAhorro) / 30f
                 interpolarColor(
-                    0xFF2196F3.toInt(), // Azul Material
-                    0xFF00BCD4.toInt(), // Cyan
+                    0xFF2196F3.toInt(),
+                    0xFF00BCD4.toInt(),
                     progress
                 )
             }
 
-            // 70% - 50%: Cyan a Verde (Muy Bien)
             porcentajeAhorro >= 50f -> {
                 val progress = (70f - porcentajeAhorro) / 20f
                 interpolarColor(
-                    0xFF00BCD4.toInt(), // Cyan
-                    0xFF4CAF50.toInt(), // Verde
+                    0xFF00BCD4.toInt(),
+                    0xFF4CAF50.toInt(),
                     progress
                 )
             }
 
-            // 50% - 30%: Verde (Bien)
             porcentajeAhorro >= 30f -> {
                 val progress = (50f - porcentajeAhorro) / 20f
                 interpolarColor(
-                    0xFF4CAF50.toInt(), // Verde
-                    0xFF8BC34A.toInt(), // Verde claro
+                    0xFF4CAF50.toInt(),
+                    0xFF8BC34A.toInt(),
                     progress
                 )
             }
 
-            // 30% - 20%: Verde claro a Amarillo (Atención)
             porcentajeAhorro >= 20f -> {
                 val progress = (30f - porcentajeAhorro) / 10f
                 interpolarColor(
-                    0xFF8BC34A.toInt(), // Verde claro
-                    0xFFFFC107.toInt(), // Amarillo/Dorado
+                    0xFF8BC34A.toInt(),
+                    0xFFFFC107.toInt(),
                     progress
                 )
             }
 
-            // 20% - 10%: Amarillo a Naranja (Alerta)
             porcentajeAhorro >= 10f -> {
                 val progress = (20f - porcentajeAhorro) / 10f
                 interpolarColor(
-                    0xFFFFC107.toInt(), // Amarillo
-                    0xFFFF9800.toInt(), // Naranja
+                    0xFFFFC107.toInt(),
+                    0xFFFF9800.toInt(),
                     progress
                 )
             }
 
-            // 10% - 5%: Naranja a Rojo (Peligro)
             porcentajeAhorro >= 5f -> {
                 val progress = (10f - porcentajeAhorro) / 5f
                 interpolarColor(
-                    0xFFFF9800.toInt(), // Naranja
-                    0xFFF44336.toInt(), // Rojo
+                    0xFFFF9800.toInt(),
+                    0xFFF44336.toInt(),
                     progress
                 )
             }
 
-            // 5% - 1%: Rojo a Rojo oscuro (Crítico)
             porcentajeAhorro > 0f -> {
                 val progress = (5f - porcentajeAhorro) / 5f
                 interpolarColor(
-                    0xFFF44336.toInt(), // Rojo
-                    0xFFD32F2F.toInt(), // Rojo oscuro
+                    0xFFF44336.toInt(),
+                    0xFFD32F2F.toInt(),
                     progress
                 )
             }
 
-            // 0%: Rojo muy oscuro (Sin fondos)
-            else -> 0xFFB71C1C.toInt() // Rojo muy oscuro
+            else -> 0xFFB71C1C.toInt()
         }
     }
 

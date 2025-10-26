@@ -59,7 +59,7 @@ class TransaccionGastoActivity : AppCompatActivity() {
         obtenerDatosUsuario()
         initViews()
         setupRecyclerView()
-        cargarCategoriasSistema() // CAMBIO
+        cargarCategoriasSistema()
         setupFechaPicker()
         setupBotonAnadir()
         setupBotonRegresar()
@@ -96,7 +96,6 @@ class TransaccionGastoActivity : AppCompatActivity() {
         adapter = CategoriaSeleccionAdapter(
             emptyList(),
             onCategoriaClick = { categoria ->
-                // Categoría seleccionada
             },
             onCategoriaLongClick = { categoria ->
                 mostrarDialogoEliminarCategoria(categoria)
@@ -244,12 +243,11 @@ class TransaccionGastoActivity : AppCompatActivity() {
             return
         }
 
-        //  Insertar transacción con el color incluido
         val resultado = transaccionDAO.insertarTransaccion(
             categoriaNombre = categoria.nombre,
             categoriaIcono = categoria.icono,
             categoriaRutaImagen = categoria.rutaImagen,
-            categoriaColor = categoria.color, //  NUEVO
+            categoriaColor = categoria.color,
             tipoCategoriaId = tipoCategoria.id,
             tipoCategoriaNombre = tipoCategoria.nombre,
             monto = monto,

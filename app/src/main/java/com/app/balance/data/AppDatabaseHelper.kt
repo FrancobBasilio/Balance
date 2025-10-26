@@ -8,15 +8,15 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
 
     companion object {
         private const val DATABASE_NAME = "balance_db"
-        private const val DATABASE_VERSION = 7 // INCREMENTAR VERSION
+        private const val DATABASE_VERSION = 7
 
         // Tablas
         const val TABLE_USUARIOS = "usuarios"
         const val TABLE_CATEGORIAS_SISTEMA = "categorias_sistema"
         const val TABLE_TRANSACCIONES = "transacciones"
         const val TABLE_TIPOS_CATEGORIA = "tipos_categoria"
-        const val TABLE_COUNTRY_CODES = "country_codes" // Para códigos telefónicos
-        const val TABLE_DIVISAS = "divisas" // NUEVA TABLA para monedas
+        const val TABLE_COUNTRY_CODES = "country_codes"
+        const val TABLE_DIVISAS = "divisas"
 
         // Columnas Usuario
         const val COL_USUARIO_ID = "id"
@@ -60,13 +60,13 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         const val COL_TIPO_NOMBRE = "nombre"
 
 
-        // Columnas Country Code (Códigos telefónicos)
+        // Columnas Country Code
         const val COL_COUNTRY_ID = "id"
         const val COL_COUNTRY_NOMBRE = "nombre"
         const val COL_COUNTRY_CODIGO = "codigo"
         const val COL_COUNTRY_BANDERA_URL = "bandera_url"
 
-        // Columnas Divisas (Monedas)
+        // Columnas Divisas
         const val COL_DIVISA_ID = "id"
         const val COL_DIVISA_NOMBRE = "nombre"
         const val COL_DIVISA_CODIGO = "codigo"
@@ -83,12 +83,12 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         """.trimIndent()
         db.execSQL(createTipoCategoriaTable)
 
-        // Insertar tipos de categoría predefinidos
+        // Insertar tipos de categoría
         db.execSQL("INSERT INTO $TABLE_TIPOS_CATEGORIA ($COL_TIPO_NOMBRE) VALUES ('Necesidad')")
         db.execSQL("INSERT INTO $TABLE_TIPOS_CATEGORIA ($COL_TIPO_NOMBRE) VALUES ('Deseo')")
         db.execSQL("INSERT INTO $TABLE_TIPOS_CATEGORIA ($COL_TIPO_NOMBRE) VALUES ('Ahorro')")
 
-        // Tabla de country codes (códigos telefónicos para registro)
+        // Tabla de country codes
         val createCountryCodeTable = """
             CREATE TABLE $TABLE_COUNTRY_CODES (
                 $COL_COUNTRY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -99,7 +99,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         """.trimIndent()
         db.execSQL(createCountryCodeTable)
 
-        // NUEVA TABLA: Divisas (monedas para transacciones)
+        // NUEVA TABLA: Divisas
         val createDivisasTable = """
             CREATE TABLE $TABLE_DIVISAS (
                 $COL_DIVISA_ID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -166,7 +166,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Eliminar tablas si existen (para desarrollo)
+        // Eliminar tablas si existen
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TRANSACCIONES")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_CATEGORIAS_SISTEMA")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USUARIOS")

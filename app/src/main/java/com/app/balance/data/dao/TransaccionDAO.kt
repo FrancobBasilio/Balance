@@ -14,7 +14,7 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
         categoriaNombre: String,
         categoriaIcono: String,
         categoriaRutaImagen: String?,
-        categoriaColor: Int?, //  NUEVO parámetro
+        categoriaColor: Int?,
         tipoCategoriaId: Int,
         tipoCategoriaNombre: String,
         monto: Double,
@@ -26,7 +26,7 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
             put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_NOMBRE, categoriaNombre)
             put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_ICONO, categoriaIcono)
             put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN, categoriaRutaImagen)
-            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR, categoriaColor) //  NUEVO
+            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR, categoriaColor)
             put(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID, tipoCategoriaId)
             put(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_NOMBRE, tipoCategoriaNombre)
             put(AppDatabaseHelper.COL_TRANSACCION_MONTO, monto)
@@ -57,7 +57,7 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
                 usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_USUARIO_ID))
             )
 
-            //  Leer el color también
+            //  Leer el color
             val colorIndex = cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR)
             val color = if (cursor.isNull(colorIndex)) null else cursor.getInt(colorIndex)
 
@@ -68,7 +68,7 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
                 usuarioId = usuarioId,
                 tipoCategoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID)),
                 rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN)),
-                color = color //  NUEVO
+                color = color
             )
 
             val tipoCategoria = TipoCategoria(

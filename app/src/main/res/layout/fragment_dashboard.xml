@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <!-- TabLayout para los tres tabs: Gastos, Ingresos, Ahorro -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -19,7 +18,6 @@
         app:tabPadding="16dp"
         app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
-    <!-- ViewPager2 para mostrar los fragments de Gastos, Ingresos y Ahorro -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"

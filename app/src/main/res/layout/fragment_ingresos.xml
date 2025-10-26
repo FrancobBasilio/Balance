@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/blanco">
 
-    <!-- Gráfico Circular MÁS GRANDE -->
     <com.app.balance.ui.ProgressCircular
         android:id="@+id/progressCircular"
         android:layout_width="0dp"
@@ -21,9 +20,7 @@
         app:layout_constraintVertical_bias="0.29"
         app:layout_constraintDimensionRatio="1:1" />
 
-    <!-- Botón Agregar Gasto -->
 
-    <!-- FAB Amarillo Circular -->
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAgregarGasto"

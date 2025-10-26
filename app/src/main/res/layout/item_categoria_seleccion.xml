@@ -19,7 +19,6 @@
             android:background="@drawable/fondo_circular_solido"
             android:padding="12dp"/>
 
-        <!-- Indicador de selección -->
         <ImageView
             android:id="@+id/ivCheckMarca"
             android:layout_width="24dp"

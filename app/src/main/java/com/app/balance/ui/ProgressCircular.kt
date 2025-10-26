@@ -20,7 +20,7 @@ class ProgressCircular @JvmOverloads constructor(
     private var colorPrincipal = context.getColor(android.R.color.holo_blue_light)
 
     init {
-        setLayerType(LAYER_TYPE_SOFTWARE, null) // Para que funcione la sombra
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
     }
 
 
@@ -46,27 +46,21 @@ class ProgressCircular @JvmOverloads constructor(
         paint.strokeWidth = strokeWidth
         paint.strokeCap = Paint.Cap.ROUND
 
-        // ✅ NUEVO: Sombra del círculo (opcional)
         paint.setShadowLayer(12f, 0f, 4f, 0x40000000)
 
-        // Pintar el círculo con el color según el ahorro
         paint.color = colorPrincipal
         canvas.drawCircle(centerX, centerY, radius, paint)
 
-        // Quitar sombra para el texto
         paint.clearShadowLayer()
 
-        // Configurar el paint para el texto
         paintText.style = Paint.Style.FILL
         paintText.textAlign = Paint.Align.CENTER
         paintText.typeface = android.graphics.Typeface.DEFAULT_BOLD
 
-        // PORCENTAJE DE AHORRO
         paintText.color = 0xFF000000.toInt()
         paintText.textSize = 110f
         canvas.drawText("${porcentajeAhorroDisponible.toInt()}%", centerX, centerY + 35f, paintText)
 
-        // Texto descriptivo
         paintText.textSize = 28f
         paintText.color = 0xFF666666.toInt()
         paintText.typeface = android.graphics.Typeface.DEFAULT

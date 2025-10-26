@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +38,6 @@
 
         </LinearLayout>
 
-        <!-- Título Gasto -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +47,6 @@
             android:textColor="@android:color/black"
             android:layout_marginTop="24dp"/>
 
-        <!-- Monto y Divisa -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +81,6 @@
 
         </LinearLayout>
 
-        <!-- Categorías -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -101,7 +97,6 @@
             android:layout_marginTop="12dp"
             android:clipToPadding="false"/>
 
-        <!-- Fecha de gasto -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -127,7 +122,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_calendar"
-                android:tint="@android:color/darker_gray"/>
+                app:tint="@android:color/darker_gray"/>
 
             <TextView
                 android:id="@+id/tvFechaSeleccionada"
@@ -141,7 +136,6 @@
 
         </LinearLayout>
 
-        <!-- Comentario -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -168,7 +162,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Botón Añadir Gasto -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAnadirGasto"
             android:layout_width="match_parent"

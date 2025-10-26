@@ -25,13 +25,11 @@ class BienvenidoActivity : AppCompatActivity() {
         val btnComenzar = findViewById<MaterialButton>(R.id.btnComenzar)
 
         btnComenzar.setOnClickListener {
-            // Marcar que ya NO es la primera vez
             val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
             prefs.edit()
                 .putBoolean("ES_PRIMERA_VEZ", false)
                 .apply()
 
-            // Ir a LoginActivity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()

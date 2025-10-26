@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- Avatar grande centrado -->
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +38,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Botón cámara superpuesto sobre el borde inferior derecho -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -66,16 +64,13 @@
         </FrameLayout>
 
 
-
-
-        <!-- Contenido del perfil -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Nombre completo con botón editar -->
+
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -117,7 +112,7 @@
 
                     </LinearLayout>
 
-                    <!-- Botón editar -->
+
                     <ImageButton
                         android:id="@+id/btnEditarNombre"
                         android:layout_width="40dp"
@@ -132,20 +127,20 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Grid de información -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Fila 1: País y Ahorro -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="16dp">
 
-                    <!-- País -->
+
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -198,7 +193,7 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Ahorro disponible -->
+
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -238,7 +233,6 @@
 
                 </LinearLayout>
 
-                <!-- Información de contacto -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -261,7 +255,7 @@
                             android:letterSpacing="0.1"
                             android:layout_marginBottom="16dp"/>
 
-                        <!-- Email -->
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -301,14 +295,13 @@
 
                         </LinearLayout>
 
-                        <!-- Divider -->
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:background="#EEEEEE"
                             android:layout_marginBottom="16dp"/>
 
-                        <!-- Celular -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

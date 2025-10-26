@@ -98,29 +98,6 @@ class UsuarioDAO(private val db: SQLiteDatabase, private val dbHelper: AppDataba
         )
     }
 
-    fun actualizarUsuario(usuario: Usuario): Int {
-        val valores = ContentValues().apply {
-            put(AppDatabaseHelper.COL_USUARIO_NOMBRE, usuario.nombre)
-            put(AppDatabaseHelper.COL_USUARIO_APELLIDO, usuario.apellido)
-            put(AppDatabaseHelper.COL_USUARIO_CELULAR, usuario.celular)
-            put(AppDatabaseHelper.COL_USUARIO_DIVISA_ID, usuario.divisaId)
-        }
-        return db.update(
-            AppDatabaseHelper.TABLE_USUARIOS,
-            valores,
-            "${AppDatabaseHelper.COL_USUARIO_ID} = ?",
-            arrayOf(usuario.id.toString())
-        )
-    }
-
-    fun eliminarUsuario(usuarioId: Int): Int {
-        return db.delete(
-            AppDatabaseHelper.TABLE_USUARIOS,
-            "${AppDatabaseHelper.COL_USUARIO_ID} = ?",
-            arrayOf(usuarioId.toString())
-        )
-    }
-
 
     fun actualizarFotoPerfil(usuarioId: Int, rutaFoto: String?): Int {
         val valores = ContentValues().apply {
@@ -134,20 +111,6 @@ class UsuarioDAO(private val db: SQLiteDatabase, private val dbHelper: AppDataba
         )
     }
 
-    /**
-     * Actualizar solo la divisa del usuario
-     */
-    fun actualizarDivisaUsuario(usuarioId: Int, divisaId: Int): Int {
-        val valores = ContentValues().apply {
-            put(AppDatabaseHelper.COL_USUARIO_DIVISA_ID, divisaId)
-        }
-        return db.update(
-            AppDatabaseHelper.TABLE_USUARIOS,
-            valores,
-            "${AppDatabaseHelper.COL_USUARIO_ID} = ?",
-            arrayOf(usuarioId.toString())
-        )
-    }
 
     fun actualizarNombre(usuarioId: Int, nombre: String, apellido: String): Int {
         val valores = ContentValues().apply {

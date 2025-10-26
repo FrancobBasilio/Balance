@@ -43,7 +43,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
     private lateinit var radioGroupTipo: RadioGroup
     private lateinit var rbNecesidad: RadioButton
     private lateinit var rbDeseo: RadioButton
-    // ELIMINADO: private lateinit var rbAhorro: RadioButton
     private lateinit var gridIconos: GridLayout
     private lateinit var linearLayoutColores: LinearLayout
     private lateinit var btnAnadirCategoria: MaterialButton
@@ -112,7 +111,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
         radioGroupTipo = findViewById(R.id.radioGroupTipo)
         rbNecesidad = findViewById(R.id.rbNecesidad)
         rbDeseo = findViewById(R.id.rbDeseo)
-        // ELIMINADO: rbAhorro = findViewById(R.id.rbAhorro)
         gridIconos = findViewById(R.id.gridIconos)
         linearLayoutColores = findViewById(R.id.linearLayoutColores)
         btnAnadirCategoria = findViewById(R.id.btnAnadirCategoria)
@@ -137,7 +135,7 @@ class CrearCategoriaActivity : AppCompatActivity() {
                     setMargins(16, 16, 16, 16)
                 }
                 setImageResource(iconoRes)
-                setPadding(4, 24, 24, 24) // ✅ REDUCIR padding (era 16, ahora 12)
+                setPadding(4, 24, 24, 24)
                 setBackgroundResource(R.drawable.fondo_circular_solido)
                 elevation = 4f
                 setColorFilter(getColor(android.R.color.black), PorterDuff.Mode.SRC_IN)
@@ -158,7 +156,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 layoutParams = LinearLayout.LayoutParams(70, 70).apply {
                     setMargins(12, 12, 12, 12)
                 }
-                //  Usar fondo circular sólido
                 setBackgroundResource(R.drawable.fondo_circular_solido)
                 backgroundTintList = ColorStateList.valueOf(getColor(colorRes))
 
@@ -244,14 +241,13 @@ class CrearCategoriaActivity : AppCompatActivity() {
                     data?.data?.let { uri ->
                         imagenPersonalizada = guardarImagenEnStorage(uri)
 
-                        //  Cargar imagen circular con Glide
+                        ivIconoSeleccionado.background = null
+                        ivIconoSeleccionado.clearColorFilter()
+
                         Glide.with(this)
                             .load(uri)
                             .circleCrop()
                             .into(ivIconoSeleccionado)
-
-                        // Quitar el background circular ya que Glide hace el recorte
-                        ivIconoSeleccionado.background = null
                     }
                 }
                 REQUEST_CAMERA -> {
@@ -259,25 +255,23 @@ class CrearCategoriaActivity : AppCompatActivity() {
                     bitmap?.let {
                         imagenPersonalizada = guardarBitmapEnStorage(it)
 
+                        ivIconoSeleccionado.background = null
+                        ivIconoSeleccionado.clearColorFilter()
+
                         Glide.with(this)
                             .load(it)
                             .circleCrop()
                             .into(ivIconoSeleccionado)
-
-                        // Quitar el background circular ya que Glide hace el recorte
-                        ivIconoSeleccionado.background = null
                     }
                 }
             }
         }
     }
-
     private fun guardarImagenEnStorage(uri: Uri): String {
         val fileName = "categoria_${System.currentTimeMillis()}.jpg"
         val file = File(filesDir, fileName)
 
         try {
-            // Decodificar y guardar con alta calidad
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
             } else {
@@ -285,13 +279,11 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 MediaStore.Images.Media.getBitmap(contentResolver, uri)
             }
 
-            // Guardar con calidad 100 (sin compresión)
             file.outputStream().use { output ->
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
             }
 
         } catch (e: Exception) {
-            // Fallback: copiar directamente sin recomprimir
             contentResolver.openInputStream(uri)?.use { input ->
                 file.outputStream().use { output ->
                     input.copyTo(output)
@@ -306,7 +298,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
         val fileName = "categoria_${System.currentTimeMillis()}.jpg"
         val file = File(filesDir, fileName)
 
-        //  Guardar con calidad 100 (máxima calidad)
         file.outputStream().use { output ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
         }
@@ -316,12 +307,19 @@ class CrearCategoriaActivity : AppCompatActivity() {
 
     private fun actualizarIconoSeleccionado() {
         if (imagenPersonalizada == null) {
-            //  Fondo circular blanco
             ivIconoSeleccionado.setBackgroundResource(R.drawable.fondo_circular_solido)
             ivIconoSeleccionado.setImageResource(iconoSeleccionado)
             ivIconoSeleccionado.scaleType = ImageView.ScaleType.CENTER_INSIDE
-            //  Pintar el icono con el color seleccionado
             ivIconoSeleccionado.setColorFilter(getColor(colorSeleccionado), PorterDuff.Mode.SRC_IN)
+        } else {
+
+            ivIconoSeleccionado.background = null
+            ivIconoSeleccionado.clearColorFilter()
+
+            Glide.with(this)
+                .load(File(imagenPersonalizada!!))
+                .circleCrop()
+                .into(ivIconoSeleccionado)
         }
     }
     private fun setupBotonAnadir() {
@@ -337,11 +335,10 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // SOLO Necesidad (1) o Deseo (2)
             val tipoSeleccionado = when (radioGroupTipo.checkedRadioButtonId) {
                 R.id.rbNecesidad -> 1
                 R.id.rbDeseo -> 2
-                else -> 1 // Por defecto Necesidad
+                else -> 1
             }
 
             guardarCategoriaSistema(nombreCategoria, tipoSeleccionado)

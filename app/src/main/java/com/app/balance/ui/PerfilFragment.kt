@@ -36,12 +36,11 @@ import java.util.Locale
 class PerfilFragment : Fragment(R.layout.fragment_perfil) {
 
     private lateinit var ivFotoPerfil: ImageView
-    // ✅ Cambiar de FloatingActionButton a ImageButton
     private lateinit var btnCambiarFoto: ImageButton
     private lateinit var tvNombreCompleto: TextView
     private lateinit var tvNombrePais: TextView
 
-    private lateinit var btnEditarNombre: ImageButton // ✅ NUEVO
+    private lateinit var btnEditarNombre: ImageButton
     private lateinit var ivBanderaPais: ImageView
     private lateinit var tvAhorroDisponible: TextView
     private lateinit var tvEmail: TextView
@@ -59,7 +58,7 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         initViews(view)
         cargarDatosUsuario()
         setupCambiarFoto()
-        setupEditarNombre() // ✅ NUEVO
+        setupEditarNombre()
     }
 
     private fun initViews(view: View) {
@@ -68,7 +67,7 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         tvNombreCompleto = view.findViewById(R.id.tvNombreCompleto)
         tvNombrePais = view.findViewById(R.id.tvNombrePais)
         ivBanderaPais = view.findViewById(R.id.ivBanderaPais)
-        btnEditarNombre = view.findViewById(R.id.btnEditarNombre) // ✅ NUEVO
+        btnEditarNombre = view.findViewById(R.id.btnEditarNombre)
         tvAhorroDisponible = view.findViewById(R.id.tvAhorroDisponible)
         tvEmail = view.findViewById(R.id.tvEmail)
         tvCelular = view.findViewById(R.id.tvCelular)
@@ -164,17 +163,15 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
     private fun cargarDatosUsuario() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-        // Nombre completo
         val nombre = prefs.getString("USER_NOMBRE", "") ?: ""
         val apellido = prefs.getString("USER_APELLIDO", "") ?: ""
         tvNombreCompleto.text = "$nombre $apellido"
 
-        // País
         val nombrePais = prefs.getString("DIVISA_NOMBRE", "Perú") ?: "Perú"
         val banderaUrl = prefs.getString("DIVISA_BANDERA", "") ?: ""
         tvNombrePais.text = nombrePais
 
-        // Cargar bandera usando Glide (si tienes la URL)
+        // Cargar bandera usando Glide
         if (banderaUrl.isNotEmpty()) {
             Glide.with(this)
                 .load(banderaUrl)
@@ -194,11 +191,10 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         val email = prefs.getString("USER_EMAIL", "correo@ejemplo.com") ?: "correo@ejemplo.com"
         tvEmail.text = email
 
-        // Celular
         val celular = prefs.getString("USER_CELULAR", "") ?: ""
         tvCelular.text = celular
 
-        // Cargar foto de perfil guardada (si existe)
+        // Cargar foto de perfil guardada
         val fotoPerfilPath = prefs.getString("FOTO_PERFIL_PATH", null)
         if (fotoPerfilPath != null) {
             val file = File(fotoPerfilPath)
@@ -254,7 +250,6 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
     private fun abrirCamara() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-        // Crear archivo temporal para guardar la foto
         val photoFile = crearArchivoTemporal()
         if (photoFile != null) {
             fotoUri = FileProvider.getUriForFile(
@@ -309,7 +304,6 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
 
     private fun guardarYMostrarFoto(uri: Uri) {
         try {
-            // Copiar imagen a almacenamiento interno de la app
             val inputStream = requireContext().contentResolver.openInputStream(uri)
             val fileName = "perfil_${System.currentTimeMillis()}.jpg"
             val file = File(requireContext().filesDir, fileName)
@@ -336,7 +330,6 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
                 db.close()
             }
 
-            // Mostrar foto en ImageView
             Glide.with(this)
                 .load(file)
                 .circleCrop()

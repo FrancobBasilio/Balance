@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <!-- Card de Control de Finanzas -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +19,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Título -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,7 +35,6 @@
                 android:textColor="@android:color/darker_gray"
                 android:layout_marginTop="4dp"/>
 
-            <!-- Necesidades (50%) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -90,7 +87,6 @@
 
             </LinearLayout>
 
-            <!-- Deseos (30%) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,7 +139,6 @@
 
             </LinearLayout>
 
-            <!-- Ahorro disponible (lo que sobra) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -196,14 +191,12 @@
 
             </LinearLayout>
 
-            <!-- Divider -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginVertical="16dp"
                 android:background="@android:color/darker_gray"/>
 
-            <!-- Total gastado -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -228,7 +221,6 @@
 
             </LinearLayout>
 
-            <!-- Ingresos totales (ahorro real) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -258,13 +250,11 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Espaciador -->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <!-- Botón Agregar Gasto -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAgregarGasto"
         android:layout_width="match_parent"

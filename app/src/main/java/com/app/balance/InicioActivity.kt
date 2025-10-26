@@ -41,11 +41,8 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var tvTotal: TextView
     private lateinit var btnEditBalance: ImageButton
     private lateinit var btnMenu: ImageButton
-
-    // Nuevo: Referencias al layout del centro
     private lateinit var layoutCentro: LinearLayout
 
-    // Header views
     private lateinit var ivHeaderAvatar: ImageView
     private lateinit var tvHeaderName: TextView
     private lateinit var ivHeaderFlag: ImageView
@@ -89,7 +86,7 @@ class InicioActivity : AppCompatActivity() {
         tvTotal = findViewById(R.id.tvTotal)
         btnEditBalance = findViewById(R.id.btnEditBalance)
         btnMenu = findViewById(R.id.btnMenu)
-        layoutCentro = findViewById(R.id.layoutCentro) // Nueva referencia
+        layoutCentro = findViewById(R.id.layoutCentro)
     }
 
     private fun initHeaderViews() {
@@ -159,19 +156,19 @@ class InicioActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_inicio -> {
                     loadFragment(DashboardFragment())
-                    mostrarHeaderBalance(true) // Mostrar balance en Dashboard
+                    mostrarHeaderBalance(true)
                     drawerLayout.closeDrawers()
                     true
                 }
                 R.id.nav_perfil -> {
                     loadFragment(PerfilFragment())
-                    mostrarHeaderBalance(false) // Ocultar balance en Perfil
+                    mostrarHeaderBalance(false)
                     drawerLayout.closeDrawers()
                     true
                 }
                 R.id.nav_config -> {
                     loadFragment(ConfiguracionFragment())
-                    mostrarHeaderBalance(false) // Ocultar balance en Configuración
+                    mostrarHeaderBalance(false)
                     drawerLayout.closeDrawers()
                     true
                 }
@@ -184,7 +181,6 @@ class InicioActivity : AppCompatActivity() {
         }
     }
 
-    // NUEVA FUNCIÓN: Controlar visibilidad del balance y botón de actualizar
     private fun mostrarHeaderBalance(mostrar: Boolean) {
         if (mostrar) {
             layoutCentro.visibility = View.VISIBLE

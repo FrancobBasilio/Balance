@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <!-- Filtros -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,7 +49,6 @@
                 android:layout_height="wrap_content"
                 android:text="Mes"/>
 
-            <!-- ✅ Chip solo con ícono (sin texto) -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipPersonalizado"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
@@ -69,7 +67,6 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- RecyclerView de gastos -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGastos"
         android:layout_width="match_parent"
@@ -79,7 +76,6 @@
         android:clipToPadding="false"
         android:paddingBottom="80dp"/>
 
-    <!-- Botón Agregar Gasto -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAgregarGasto"
         android:layout_width="match_parent"

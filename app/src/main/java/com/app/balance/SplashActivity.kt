@@ -23,7 +23,6 @@ class SplashActivity : AppCompatActivity() {
             insets
         }
 
-        // Verificar estado después de 2 segundos
         Handler(Looper.getMainLooper()).postDelayed({
             decidirPantallaSiguiente()
         }, 2000)
@@ -32,24 +31,19 @@ class SplashActivity : AppCompatActivity() {
     private fun decidirPantallaSiguiente() {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-        // 1. Verificar si es la primera vez
         val esPrimeraVez = prefs.getBoolean("ES_PRIMERA_VEZ", true)
 
         if (esPrimeraVez) {
-            // Primera instalación - mostrar Bienvenida
             irABienvenida()
             return
         }
 
-        // 2. No es primera vez - verificar si hay sesión activa
         val tieneSesionActiva = prefs.getBoolean("SESION_ACTIVA", false)
         val userId = prefs.getInt("USER_ID", 0)
 
         if (tieneSesionActiva && userId > 0) {
-            // Usuario tiene sesión activa - ir directo a Inicio
             irAInicio()
         } else {
-            // Usuario cerró sesión o no ha iniciado - ir a Login
             irALogin()
         }
     }

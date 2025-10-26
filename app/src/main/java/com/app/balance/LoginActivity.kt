@@ -44,7 +44,6 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        // Inicializar base de datos
         dbHelper = AppDatabaseHelper(this)
         val db = dbHelper.readableDatabase
         usuarioDAO = UsuarioDAO(db, dbHelper)
@@ -112,18 +111,14 @@ class LoginActivity : AppCompatActivity() {
         btnLogin.text = "Verificando..."
 
         try {
-            // Obtener usuario por correo
             val usuario = usuarioDAO.obtenerUsuarioPorEmail(correo)
 
             if (usuario != null) {
-                // Verificar contraseña (hashear y comparar)
                 val claveHasheada = hashearContrasena(clave)
 
                 if (usuario.contrasena == claveHasheada) {
-                    // Login exitoso - Obtener divisa del usuario
                     val divisa = divisaDAO.obtenerDivisaPorId(usuario.divisaId)
 
-                    // CALCULAR EL BALANCE ORIGINAL basado en los gastos
                     val transaccionDAO = TransaccionDAO(dbHelper.readableDatabase, dbHelper)
                     val transacciones = transaccionDAO.obtenerTransaccionesPorUsuario(usuario.id)
 
@@ -132,13 +127,10 @@ class LoginActivity : AppCompatActivity() {
                         totalGastado += transaccion.transaccion.monto
                     }
 
-                    // Balance actual (lo que está en la BD después de gastos)
                     val balanceActual = usuario.montoTotal
 
-                    // Balance original = Balance actual + Total gastado
                     val balanceOriginal = balanceActual + totalGastado
 
-                    // Guardar TODA la sesión completa en SharedPreferences
                     val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
                     prefs.edit()
                         .putBoolean("SESION_ACTIVA", true)
@@ -155,12 +147,11 @@ class LoginActivity : AppCompatActivity() {
                         .putString("DIVISA_BANDERA", divisa?.bandera ?: "")
                         .putString("BALANCE_MONTO", balanceActual.toString())
                         .putString("BALANCE_ORIGINAL", balanceOriginal.toString())
-                        .putString("FOTO_PERFIL_PATH", usuario.fotoPerfil) // ✅ NUEVO: Cargar foto desde BD
+                        .putString("FOTO_PERFIL_PATH", usuario.fotoPerfil)
                         .apply()
 
                     Toast.makeText(this, "¡Bienvenido ${usuario.nombre}!", Toast.LENGTH_SHORT).show()
 
-                    // Ir DIRECTO a InicioActivity
                     val intent = Intent(this, InicioActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
@@ -173,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
                     btnLogin.text = "Iniciar sesión"
                 }
             } else {
-                // Usuario no existe
+
                 tilCorreo.error = "Usuario no registrado"
                 Toast.makeText(this, "Este correo no está registrado", Toast.LENGTH_SHORT).show()
                 btnLogin.isEnabled = true

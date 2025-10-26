@@ -1,8 +1,5 @@
 package com.app.balance.model
 
-import java.time.LocalDate
-
-
 data class Transaccion(
     val id: Int = 0,
     val categoriaId: Int,

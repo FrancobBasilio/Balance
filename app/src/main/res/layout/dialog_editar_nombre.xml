@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <!-- Título -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +15,6 @@
         android:textColor="@android:color/black"
         android:layout_marginBottom="20dp"/>
 
-    <!-- Input Nombre -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +33,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Input Apellido -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +51,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
