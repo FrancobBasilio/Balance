@@ -14,6 +14,7 @@ class CategoriaDAO(private val db: SQLiteDatabase, private val dbHelper: AppData
             put(AppDatabaseHelper.COL_CAT_SISTEMA_USUARIO_ID, categoria.usuarioId)
             put(AppDatabaseHelper.COL_CAT_SISTEMA_TIPO_ID, categoria.tipoCategoriaId)
             put(AppDatabaseHelper.COL_CAT_SISTEMA_RUTA_IMAGEN, categoria.rutaImagen)
+            put(AppDatabaseHelper.COL_CAT_SISTEMA_COLOR, categoria.color)
         }
         return db.insert(AppDatabaseHelper.TABLE_CATEGORIAS_SISTEMA, null, valores)
     }
@@ -37,7 +38,8 @@ class CategoriaDAO(private val db: SQLiteDatabase, private val dbHelper: AppData
                     icono = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_CAT_SISTEMA_ICONO)),
                     usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_CAT_SISTEMA_USUARIO_ID)),
                     tipoCategoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_CAT_SISTEMA_TIPO_ID)),
-                    rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_CAT_SISTEMA_RUTA_IMAGEN))
+                    rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_CAT_SISTEMA_RUTA_IMAGEN)),
+                    color = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_CAT_SISTEMA_COLOR))
                 )
             )
         }

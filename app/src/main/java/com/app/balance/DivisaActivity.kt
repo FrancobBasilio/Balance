@@ -107,46 +107,19 @@ class DivisaActivity : AppCompatActivity() {
             }
 
             val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-            val userId = prefs.getInt("USER_ID", 0)
+            prefs.edit()
+                .putString("TEMP_DIVISA_CODIGO", divisaSeleccionada.codigo)
+                .putString("TEMP_DIVISA_NOMBRE", divisaSeleccionada.nombre)
+                .putString("TEMP_DIVISA_BANDERA", divisaSeleccionada.bandera)
+                .apply()
 
-            if (userId > 0) {
-                val dbHelper = AppDatabaseHelper(this)
-                val db = dbHelper.writableDatabase
-                val divisaDAO = DivisaDAO(db, dbHelper)
-                val usuarioDAO = UsuarioDAO(db, dbHelper)
+            Toast.makeText(
+                this,
+                "Divisa seleccionada: ${divisaSeleccionada.nombre}",
+                Toast.LENGTH_SHORT
+            ).show()
 
-                // Verificar si la divisa ya existe en la BD
-                val divisaExistente = divisaDAO.obtenerDivisaPorCodigo(divisaSeleccionada.codigo)
-                var divisaId = divisaExistente?.id ?: 0
-
-                if (divisaId == 0) {
-                    // Insertar divisa COMPLETA con bandera
-                    divisaId = divisaDAO.insertarDivisa(divisaSeleccionada).toInt()
-                }
-
-                // Actualizar usuario con la divisa
-                usuarioDAO.actualizarDivisaUsuario(userId, divisaId)
-
-                // Guardar en SharedPreferences
-                prefs.edit()
-                    .putInt("DIVISA_ID", divisaId)
-                    .putString("DIVISA_CODIGO", divisaSeleccionada.codigo)
-                    .putString("DIVISA_NOMBRE", divisaSeleccionada.nombre)
-                    .putString("DIVISA_BANDERA", divisaSeleccionada.bandera)
-                    .apply()
-
-                db.close()
-
-                Toast.makeText(
-                    this,
-                    "Divisa guardada: ${divisaSeleccionada.nombre}",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                navigateToBalance()
-            } else {
-                Toast.makeText(this, "Error: Usuario no encontrado", Toast.LENGTH_SHORT).show()
-            }
+            navigateToBalance()
         }
     }
 

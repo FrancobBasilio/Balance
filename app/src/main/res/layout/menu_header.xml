@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
-    android:background="@color/balance">
+    android:background="@drawable/gradient_header">
 
     <!-- Avatar del usuario -->
     <com.google.android.material.card.MaterialCardView

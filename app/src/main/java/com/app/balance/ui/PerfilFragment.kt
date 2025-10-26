@@ -2,6 +2,7 @@ package com.app.balance.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -19,9 +21,13 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.app.balance.InicioActivity
 import com.app.balance.R
+import com.app.balance.data.AppDatabaseHelper
+import com.app.balance.data.dao.UsuarioDAO
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -30,9 +36,12 @@ import java.util.Locale
 class PerfilFragment : Fragment(R.layout.fragment_perfil) {
 
     private lateinit var ivFotoPerfil: ImageView
-    private lateinit var btnCambiarFoto: MaterialButton
+    // ✅ Cambiar de FloatingActionButton a ImageButton
+    private lateinit var btnCambiarFoto: ImageButton
     private lateinit var tvNombreCompleto: TextView
     private lateinit var tvNombrePais: TextView
+
+    private lateinit var btnEditarNombre: ImageButton // ✅ NUEVO
     private lateinit var ivBanderaPais: ImageView
     private lateinit var tvAhorroDisponible: TextView
     private lateinit var tvEmail: TextView
@@ -50,6 +59,7 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         initViews(view)
         cargarDatosUsuario()
         setupCambiarFoto()
+        setupEditarNombre() // ✅ NUEVO
     }
 
     private fun initViews(view: View) {
@@ -58,11 +68,99 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
         tvNombreCompleto = view.findViewById(R.id.tvNombreCompleto)
         tvNombrePais = view.findViewById(R.id.tvNombrePais)
         ivBanderaPais = view.findViewById(R.id.ivBanderaPais)
+        btnEditarNombre = view.findViewById(R.id.btnEditarNombre) // ✅ NUEVO
         tvAhorroDisponible = view.findViewById(R.id.tvAhorroDisponible)
         tvEmail = view.findViewById(R.id.tvEmail)
         tvCelular = view.findViewById(R.id.tvCelular)
     }
 
+    private fun mostrarDialogoEditarNombre() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_editar_nombre, null)
+
+        val tietNombre = dialogView.findViewById<TextInputEditText>(R.id.tietNombre)
+        val tietApellido = dialogView.findViewById<TextInputEditText>(R.id.tietApellido)
+        val btnCancelar = dialogView.findViewById<MaterialButton>(R.id.btnCancelar)
+        val btnGuardar = dialogView.findViewById<MaterialButton>(R.id.btnGuardar)
+
+        // Cargar datos actuales
+        val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        val nombreActual = prefs.getString("USER_NOMBRE", "") ?: ""
+        val apellidoActual = prefs.getString("USER_APELLIDO", "") ?: ""
+
+        tietNombre.setText(nombreActual)
+        tietApellido.setText(apellidoActual)
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnGuardar.setOnClickListener {
+            val nuevoNombre = tietNombre.text.toString().trim()
+            val nuevoApellido = tietApellido.text.toString().trim()
+
+            // Validaciones
+            if (nuevoNombre.isEmpty()) {
+                tietNombre.error = "Ingresa tu nombre"
+                return@setOnClickListener
+            }
+
+            if (nuevoApellido.isEmpty()) {
+                tietApellido.error = "Ingresa tu apellido"
+                return@setOnClickListener
+            }
+
+            // Actualizar en la base de datos
+            actualizarNombreEnBD(nuevoNombre, nuevoApellido)
+
+            // Actualizar en SharedPreferences
+            prefs.edit()
+                .putString("USER_NOMBRE", nuevoNombre)
+                .putString("USER_APELLIDO", nuevoApellido)
+                .apply()
+
+            // Actualizar UI
+            tvNombreCompleto.text = "$nuevoNombre $nuevoApellido"
+
+            // Actualizar header del menú
+            (requireActivity() as? InicioActivity)?.recargarHeader()
+
+            Toast.makeText(
+                requireContext(),
+                "Nombre actualizado correctamente",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+
+    private fun actualizarNombreEnBD(nombre: String, apellido: String) {
+        val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        val userId = prefs.getInt("USER_ID", 0)
+
+        if (userId > 0) {
+            val dbHelper = AppDatabaseHelper(requireContext())
+            val db = dbHelper.writableDatabase
+            val usuarioDAO = UsuarioDAO(db, dbHelper)
+
+            usuarioDAO.actualizarNombre(userId, nombre, apellido)
+
+            db.close()
+        }
+    }
+    private fun setupEditarNombre() {
+        btnEditarNombre.setOnClickListener {
+            mostrarDialogoEditarNombre()
+        }
+    }
     private fun cargarDatosUsuario() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
@@ -224,9 +322,19 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
 
             // Guardar ruta en SharedPreferences
             val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+            val userId = prefs.getInt("USER_ID", 0)
+
             prefs.edit()
                 .putString("FOTO_PERFIL_PATH", file.absolutePath)
                 .apply()
+
+            if (userId > 0) {
+                val dbHelper = AppDatabaseHelper(requireContext())
+                val db = dbHelper.writableDatabase
+                val usuarioDAO = UsuarioDAO(db, dbHelper)
+                usuarioDAO.actualizarFotoPerfil(userId, file.absolutePath)
+                db.close()
+            }
 
             // Mostrar foto en ImageView
             Glide.with(this)
@@ -234,7 +342,7 @@ class PerfilFragment : Fragment(R.layout.fragment_perfil) {
                 .circleCrop()
                 .into(ivFotoPerfil)
 
-            // ← NUEVO: Actualizar el header del menú
+            // Actualizar el header del menú
             (requireActivity() as? InicioActivity)?.recargarHeader()
 
             Toast.makeText(requireContext(), "Foto de perfil actualizada", Toast.LENGTH_SHORT).show()

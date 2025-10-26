@@ -2,16 +2,16 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="82dp"
     android:height="82dp"
-    android:viewportWidth="22"
+    android:viewportWidth="24"
     android:viewportHeight="24">
 
-    <!-- Casa completa -->
+    <!-- Flecha de salida -->
     <path
         android:fillColor="#000000"
-        android:pathData="M10,20v-6h4v6h5v-8h3L12,3L2,12h3v8z"/>
+        android:pathData="M10,17l1.41,-1.41L8.83,13H20v-2H8.83l2.58,-2.59L10,7l-5,5L10,17z"/>
 
-    <!-- Chimenea -->
+    <!-- Marco de puerta -->
     <path
         android:fillColor="#000000"
-        android:pathData="M17,7h2v4h-2z"/>
+        android:pathData="M4,3h9v2H6v14h7v2H4V3z"/>
 </vector>

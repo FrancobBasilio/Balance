@@ -124,33 +124,78 @@ class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateList
 
     private fun obtenerColorSegunAhorro(porcentajeAhorro: Float): Int {
         return when {
-            porcentajeAhorro >= 30f -> requireContext().getColor(android.R.color.holo_blue_light)
-            porcentajeAhorro >= 20f -> interpolarColor(
-                requireContext().getColor(android.R.color.holo_blue_light),
-                requireContext().getColor(android.R.color.holo_green_light),
-                (30f - porcentajeAhorro) / 10f
-            )
-            porcentajeAhorro >= 15f -> interpolarColor(
-                requireContext().getColor(android.R.color.holo_green_light),
-                0xFFFFA500.toInt(),
-                (20f - porcentajeAhorro) / 5f
-            )
-            porcentajeAhorro >= 10f -> interpolarColor(
-                0xFFFFA500.toInt(),
-                0xFFFF6347.toInt(),
-                (15f - porcentajeAhorro) / 5f
-            )
-            porcentajeAhorro >= 5f -> interpolarColor(
-                0xFFFF6347.toInt(),
-                requireContext().getColor(android.R.color.holo_red_light),
-                (10f - porcentajeAhorro) / 5f
-            )
-            porcentajeAhorro > 0f -> interpolarColor(
-                requireContext().getColor(android.R.color.holo_red_light),
-                requireContext().getColor(android.R.color.holo_red_dark),
-                (5f - porcentajeAhorro) / 5f
-            )
-            else -> requireContext().getColor(android.R.color.holo_red_dark)
+            // 100% - 70%: Azul vibrante (Excelente)
+            porcentajeAhorro >= 70f -> {
+                val progress = (100f - porcentajeAhorro) / 30f // 0.0 a 1.0
+                interpolarColor(
+                    0xFF2196F3.toInt(), // Azul Material
+                    0xFF00BCD4.toInt(), // Cyan
+                    progress
+                )
+            }
+
+            // 70% - 50%: Cyan a Verde (Muy Bien)
+            porcentajeAhorro >= 50f -> {
+                val progress = (70f - porcentajeAhorro) / 20f
+                interpolarColor(
+                    0xFF00BCD4.toInt(), // Cyan
+                    0xFF4CAF50.toInt(), // Verde
+                    progress
+                )
+            }
+
+            // 50% - 30%: Verde (Bien)
+            porcentajeAhorro >= 30f -> {
+                val progress = (50f - porcentajeAhorro) / 20f
+                interpolarColor(
+                    0xFF4CAF50.toInt(), // Verde
+                    0xFF8BC34A.toInt(), // Verde claro
+                    progress
+                )
+            }
+
+            // 30% - 20%: Verde claro a Amarillo (Atención)
+            porcentajeAhorro >= 20f -> {
+                val progress = (30f - porcentajeAhorro) / 10f
+                interpolarColor(
+                    0xFF8BC34A.toInt(), // Verde claro
+                    0xFFFFC107.toInt(), // Amarillo/Dorado
+                    progress
+                )
+            }
+
+            // 20% - 10%: Amarillo a Naranja (Alerta)
+            porcentajeAhorro >= 10f -> {
+                val progress = (20f - porcentajeAhorro) / 10f
+                interpolarColor(
+                    0xFFFFC107.toInt(), // Amarillo
+                    0xFFFF9800.toInt(), // Naranja
+                    progress
+                )
+            }
+
+            // 10% - 5%: Naranja a Rojo (Peligro)
+            porcentajeAhorro >= 5f -> {
+                val progress = (10f - porcentajeAhorro) / 5f
+                interpolarColor(
+                    0xFFFF9800.toInt(), // Naranja
+                    0xFFF44336.toInt(), // Rojo
+                    progress
+                )
+            }
+
+            // 5% - 1%: Rojo a Rojo oscuro (Crítico)
+            porcentajeAhorro > 0f -> {
+                val progress = (5f - porcentajeAhorro) / 5f
+                interpolarColor(
+                    0xFFF44336.toInt(), // Rojo
+                    0xFFD32F2F.toInt(), // Rojo oscuro
+                    progress
+                )
+            }
+
+            // 0%: Rojo muy oscuro (Sin fondos)
+            else -> 0xFFB71C1C.toInt() // Rojo muy oscuro
         }
     }
 

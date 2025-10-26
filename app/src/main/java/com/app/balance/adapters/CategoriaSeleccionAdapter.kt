@@ -1,5 +1,7 @@
 package com.app.balance.adapters
 
+import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.app.balance.R
 import com.app.balance.model.Categoria
+import com.bumptech.glide.Glide
 import java.io.File
 
 class CategoriaSeleccionAdapter(
@@ -33,21 +36,29 @@ class CategoriaSeleccionAdapter(
 
     override fun onBindViewHolder(holder: CategoriaViewHolder, position: Int) {
         val categoria = categorias[position]
+        val context = holder.itemView.context
 
         holder.tvNombreCategoria.text = categoria.nombre
 
-        // Cargar icono
+        //  Cargar icono con Glide
         if (!categoria.rutaImagen.isNullOrEmpty()) {
-            // Cargar imagen personalizada
+            // Cargar imagen personalizada circular
             val file = File(categoria.rutaImagen)
             if (file.exists()) {
-                holder.ivIconoCategoria.setImageURI(Uri.fromFile(file))
-                holder.ivIconoCategoria.backgroundTintList = null
+                Glide.with(context)
+                    .load(file)
+                    .circleCrop()
+                    .into(holder.ivIconoCategoria)
+
+                // Quitar el background para evitar el borde
+                holder.ivIconoCategoria.background = null
+            } else {
+                // Si el archivo no existe, cargar icono por defecto
+                cargarIconoPredeterminado(holder, categoria)
             }
         } else {
             // Cargar icono predeterminado
-            val iconoRes = obtenerRecursoIcono(categoria.icono)
-            holder.ivIconoCategoria.setImageResource(iconoRes)
+            cargarIconoPredeterminado(holder, categoria)
         }
 
         // Mostrar check si está seleccionada
@@ -80,6 +91,24 @@ class CategoriaSeleccionAdapter(
 
     fun getCategoriaSeleccionada(): Categoria? {
         return categorias.find { it.id == categoriaSeleccionadaId }
+    }
+
+    //  NUEVA FUNCIÓN: Cargar icono predeterminado con background circular
+    // ✅ FUNCIÓN CORREGIDA
+    private fun cargarIconoPredeterminado(holder: CategoriaViewHolder, categoria: Categoria) {
+        val context = holder.itemView.context
+        val iconoRes = obtenerRecursoIcono(categoria.icono)
+
+        holder.ivIconoCategoria.setImageResource(iconoRes)
+        // Fondo circular blanco
+        holder.ivIconoCategoria.setBackgroundResource(R.drawable.fondo_circular_solido)
+
+        // Usar el color guardado o negro por defecto
+        val colorIcono = categoria.color ?: android.R.color.black
+        holder.ivIconoCategoria.setColorFilter(
+            context.getColor(colorIcono),
+            PorterDuff.Mode.SRC_IN
+        )
     }
 
     private fun obtenerRecursoIcono(nombreIcono: String): Int {

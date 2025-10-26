@@ -19,7 +19,9 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_billetera"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
+            android:background="@drawable/fondo_circular_solido"
+            android:padding="8dp"
             android:layout_gravity="center_vertical"/>
 
         <!-- Información del gasto -->

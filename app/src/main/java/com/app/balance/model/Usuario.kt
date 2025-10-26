@@ -10,5 +10,6 @@ data class Usuario(
     val email: String,
     val contrasena: String,
     val divisaId: Int,
-    val montoTotal: Double = 0.0
+    val montoTotal: Double = 0.0,
+    val fotoPerfil: String? = null
 )

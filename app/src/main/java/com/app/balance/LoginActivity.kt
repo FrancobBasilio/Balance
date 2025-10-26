@@ -141,7 +141,7 @@ class LoginActivity : AppCompatActivity() {
                     // Guardar TODA la sesión completa en SharedPreferences
                     val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
                     prefs.edit()
-                        .putBoolean("SESION_ACTIVA", true) // ← CRÍTICO: Mantener sesión activa
+                        .putBoolean("SESION_ACTIVA", true)
                         .putInt("USER_ID", usuario.id)
                         .putString("USER_EMAIL", usuario.email)
                         .putString("USER_NOMBRE", usuario.nombre)
@@ -153,13 +153,14 @@ class LoginActivity : AppCompatActivity() {
                         .putString("DIVISA_CODIGO", divisa?.codigo ?: "PEN")
                         .putString("DIVISA_NOMBRE", divisa?.nombre ?: "Nuevo Sol")
                         .putString("DIVISA_BANDERA", divisa?.bandera ?: "")
-                        .putString("BALANCE_MONTO", balanceActual.toString()) // ← Balance actual (después de gastos)
-                        .putString("BALANCE_ORIGINAL", balanceOriginal.toString()) // ← Balance original (antes de gastos)
+                        .putString("BALANCE_MONTO", balanceActual.toString())
+                        .putString("BALANCE_ORIGINAL", balanceOriginal.toString())
+                        .putString("FOTO_PERFIL_PATH", usuario.fotoPerfil) // ✅ NUEVO: Cargar foto desde BD
                         .apply()
 
                     Toast.makeText(this, "¡Bienvenido ${usuario.nombre}!", Toast.LENGTH_SHORT).show()
 
-                    // Ir DIRECTO a InicioActivity (no pasar por Divisa ni Balance)
+                    // Ir DIRECTO a InicioActivity
                     val intent = Intent(this, InicioActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
@@ -184,62 +185,6 @@ class LoginActivity : AppCompatActivity() {
             btnLogin.text = "Iniciar sesión"
             e.printStackTrace()
         }
-    }
-
-
-    // AGREGAR ESTE MÉTODO A TU LoginActivity.kt
-
-    private fun guardarSesion(usuario: Usuario) {
-        val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-
-        // Obtener la divisa del usuario desde la BD
-        val dbHelper = AppDatabaseHelper(this)
-        val db = dbHelper.readableDatabase
-        val divisaDAO = DivisaDAO(db, dbHelper)
-
-        val divisa = divisaDAO.obtenerDivisaPorId(usuario.divisaId)
-
-        // Guardar datos del usuario
-        prefs.edit()
-            .putBoolean("SESION_ACTIVA", true)
-            .putInt("USER_ID", usuario.id)
-            .putString("USER_NOMBRE", usuario.nombre)
-            .putString("USER_APELLIDO", usuario.apellido)
-            .putString("USER_EMAIL", usuario.email)
-            .putInt("DIVISA_ID", usuario.divisaId)
-            .putString("BALANCE_MONTO", usuario.montoTotal.toString())
-            .putString("BALANCE_ORIGINAL", usuario.montoTotal.toString())
-            // CRÍTICO: Guardar la divisa desde la BD
-            .putString("DIVISA_CODIGO", divisa?.codigo ?: "PEN")
-            .putString("DIVISA_NOMBRE", divisa?.nombre ?: "Perú")
-            .putString("DIVISA_BANDERA", divisa?.bandera ?: "")
-            .apply()
-
-        db.close()
-
-        // Navegar a InicioActivity
-        val intent = Intent(this, InicioActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
-    }
-
-    // LLAMAR ESTE MÉTODO después de validar el login exitoso
-// Ejemplo:
-    private fun validarLogin(email: String, password: String) {
-        val dbHelper = AppDatabaseHelper(this)
-        val db = dbHelper.readableDatabase
-        val usuarioDAO = UsuarioDAO(db, dbHelper)
-
-        val usuario = usuarioDAO.obtenerUsuarioPorEmail(email)
-
-        if (usuario != null && usuario.contrasena == password) {
-            guardarSesion(usuario) // ← Aquí se carga la divisa desde BD
-        } else {
-            Toast.makeText(this, "Email o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-        }
-
-        db.close()
     }
 
     /**

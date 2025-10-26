@@ -8,7 +8,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
 
     companion object {
         private const val DATABASE_NAME = "balance_db"
-        private const val DATABASE_VERSION = 4 // INCREMENTAR VERSION
+        private const val DATABASE_VERSION = 7 // INCREMENTAR VERSION
 
         // Tablas
         const val TABLE_USUARIOS = "usuarios"
@@ -30,6 +30,8 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         const val COL_USUARIO_DIVISA_ID = "divisa_id"
         const val COL_USUARIO_MONTO_TOTAL = "monto_total"
 
+        const val COL_USUARIO_FOTO_PERFIL = "foto_perfil"
+
         // Columnas Categoría Sistema
         const val COL_CAT_SISTEMA_ID = "id"
         const val COL_CAT_SISTEMA_NOMBRE = "nombre"
@@ -37,6 +39,8 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         const val COL_CAT_SISTEMA_USUARIO_ID = "usuario_id"
         const val COL_CAT_SISTEMA_TIPO_ID = "tipo_categoria_id"
         const val COL_CAT_SISTEMA_RUTA_IMAGEN = "ruta_imagen"
+
+        const val COL_CAT_SISTEMA_COLOR = "color"
 
         // Columnas Transacción
         const val COL_TRANSACCION_ID = "id"
@@ -49,10 +53,12 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         const val COL_TRANSACCION_FECHA = "fecha"
         const val COL_TRANSACCION_COMENTARIO = "comentario"
         const val COL_TRANSACCION_USUARIO_ID = "usuario_id"
+        const val COL_TRANSACCION_CATEGORIA_COLOR = "categoria_color"
 
         // Columnas Tipo Categoría
         const val COL_TIPO_ID = "id"
         const val COL_TIPO_NOMBRE = "nombre"
+
 
         // Columnas Country Code (Códigos telefónicos)
         const val COL_COUNTRY_ID = "id"
@@ -117,6 +123,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
                 $COL_USUARIO_CONTRASENA TEXT NOT NULL,
                 $COL_USUARIO_DIVISA_ID INTEGER NOT NULL,
                 $COL_USUARIO_MONTO_TOTAL REAL DEFAULT 0,
+                $COL_USUARIO_FOTO_PERFIL TEXT,
                 FOREIGN KEY ($COL_USUARIO_DIVISA_ID) REFERENCES $TABLE_DIVISAS ($COL_DIVISA_ID)
             )
         """.trimIndent()
@@ -131,6 +138,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
                 $COL_CAT_SISTEMA_USUARIO_ID INTEGER NOT NULL,
                 $COL_CAT_SISTEMA_TIPO_ID INTEGER NOT NULL,
                 $COL_CAT_SISTEMA_RUTA_IMAGEN TEXT,
+                $COL_CAT_SISTEMA_COLOR INTEGER,
                 FOREIGN KEY ($COL_CAT_SISTEMA_USUARIO_ID) REFERENCES $TABLE_USUARIOS ($COL_USUARIO_ID),
                 FOREIGN KEY ($COL_CAT_SISTEMA_TIPO_ID) REFERENCES $TABLE_TIPOS_CATEGORIA ($COL_TIPO_ID)
             )
@@ -145,6 +153,7 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
                 $COL_TRANSACCION_CATEGORIA_ICONO TEXT NOT NULL,
                 $COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN TEXT,
                 $COL_TRANSACCION_TIPO_CATEGORIA_ID INTEGER NOT NULL,
+                $COL_TRANSACCION_CATEGORIA_COLOR INTEGER,
                 $COL_TRANSACCION_TIPO_CATEGORIA_NOMBRE TEXT NOT NULL,
                 $COL_TRANSACCION_MONTO REAL NOT NULL,
                 $COL_TRANSACCION_FECHA TEXT NOT NULL,

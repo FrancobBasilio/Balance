@@ -461,17 +461,14 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     private fun registrarUsuario() {
-        // Obtener valores de los campos
         val nombre = tietNombre.text?.toString()?.trim().orEmpty()
         val apellido = tietApellido.text?.toString()?.trim().orEmpty()
 
-        // Construir fecha de nacimiento desde los campos separados
         val anio = tietAnio.text?.toString()?.trim().orEmpty()
         val mes = tietMes.text?.toString()?.trim().orEmpty()
         val dia = tietDia.text?.toString()?.trim().orEmpty()
-        val fechaNacimiento = "$dia/$mes/$anio" // Formato: DD/MM/YYYY
+        val fechaNacimiento = "$dia/$mes/$anio"
 
-        // Obtener género desde CheckBoxes
         val genero = when {
             chkHombre.isChecked -> "Masculino"
             chkMujer.isChecked -> "Femenino"
@@ -479,14 +476,11 @@ class RegistroActivity : AppCompatActivity() {
             else -> ""
         }
 
-        // Construir celular completo con código de país
         val celularSinCodigo = tietCelular.text?.toString()?.trim().orEmpty()
         val celular = "$selectedCountryCode$celularSinCodigo"
-
         val email = tietCorreo.text?.toString()?.trim().orEmpty()
         val contrasena = tietClave.text?.toString()?.trim().orEmpty()
 
-        // Validar todos los campos (ya se validaron con los botones, pero por seguridad)
         if (!validateCorreo() || !validateNombre() || !validateApellido() ||
             !validateFecha() || !validateGenero() || !validateCelular() ||
             !validateClave() || !validateTerms()) {
@@ -505,57 +499,27 @@ class RegistroActivity : AppCompatActivity() {
         // Hashear la contraseña
         val contrasenaHasheada = hashearContrasena(contrasena)
 
-        // Crear objeto Usuario SIN divisaId ni monto (se configurarán después)
-        val nuevoUsuario = Usuario(
-            id = 0,
-            nombre = nombre,
-            apellido = apellido,
-            fechaNacimiento = fechaNacimiento,
-            genero = genero,
-            celular = celular,
-            email = email,
-            contrasena = contrasenaHasheada,
-            divisaId = 0, // Se establecerá en DivisaActivity
-            montoTotal = 0.0 // Se establecerá en BalanceActivity
-        )
+        // ✅ GUARDAR SOLO EN SHAREDPREFERENCES (NO en BD aún)
+        val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+        prefs.edit()
+            .putBoolean("REGISTRO_EN_PROCESO", true) // Flag para saber que está registrándose
+            .putString("TEMP_NOMBRE", nombre)
+            .putString("TEMP_APELLIDO", apellido)
+            .putString("TEMP_FECHA_NAC", fechaNacimiento)
+            .putString("TEMP_GENERO", genero)
+            .putString("TEMP_CELULAR", celular)
+            .putString("TEMP_EMAIL", email)
+            .putString("TEMP_CONTRASENA", contrasenaHasheada)
+            .apply()
 
-        // Insertar usuario en la base de datos
-        val resultado = usuarioDAO.insertarUsuario(nuevoUsuario)
+        Toast.makeText(this, "Datos guardados temporalmente", Toast.LENGTH_SHORT).show()
 
-        if (resultado > 0) {
-            // Obtener el usuario recién insertado
-            val usuarioInsertado = usuarioDAO.obtenerUsuarioPorEmail(email)
-
-            if (usuarioInsertado != null) {
-                // Guardar SOLO los datos del usuario (sin divisa ni balance aún)
-                val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
-                prefs.edit()
-                    .putBoolean("SESION_ACTIVA", true) // Marcar sesión activa
-                    .putInt("USER_ID", usuarioInsertado.id)
-                    .putString("USER_EMAIL", usuarioInsertado.email)
-                    .putString("USER_NOMBRE", usuarioInsertado.nombre)
-                    .putString("USER_APELLIDO", usuarioInsertado.apellido)
-                    .putString("USER_CELULAR", usuarioInsertado.celular)
-                    .putString("USER_FECHA_NAC", usuarioInsertado.fechaNacimiento)
-                    .putString("USER_GENERO", usuarioInsertado.genero)
-                    // NO guardar DIVISA_ID, DIVISA_CODIGO, BALANCE_MONTO aún
-                    .apply()
-
-                Toast.makeText(this, "¡Registro exitoso!", Toast.LENGTH_SHORT).show()
-
-                // Ir a DivisaActivity para que seleccione su divisa
-                val intent = Intent(this, DivisaActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(this, "Error al registrar usuario", Toast.LENGTH_SHORT).show()
-        }
+        // Ir a DivisaActivity
+        val intent = Intent(this, DivisaActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
-
     /**
      * Hashea una contraseña usando SHA-256
      */

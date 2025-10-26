@@ -14,6 +14,7 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
         categoriaNombre: String,
         categoriaIcono: String,
         categoriaRutaImagen: String?,
+        categoriaColor: Int?, //  NUEVO parámetro
         tipoCategoriaId: Int,
         tipoCategoriaNombre: String,
         monto: Double,
@@ -25,6 +26,7 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
             put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_NOMBRE, categoriaNombre)
             put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_ICONO, categoriaIcono)
             put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN, categoriaRutaImagen)
+            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR, categoriaColor) //  NUEVO
             put(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID, tipoCategoriaId)
             put(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_NOMBRE, tipoCategoriaNombre)
             put(AppDatabaseHelper.COL_TRANSACCION_MONTO, monto)
@@ -38,30 +40,35 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
     fun obtenerTransaccionesPorUsuario(usuarioId: Int): List<TransaccionConDetalles> {
         val transacciones = mutableListOf<TransaccionConDetalles>()
         val query = """
-            SELECT * FROM ${AppDatabaseHelper.TABLE_TRANSACCIONES}
-            WHERE ${AppDatabaseHelper.COL_TRANSACCION_USUARIO_ID} = ?
-            ORDER BY ${AppDatabaseHelper.COL_TRANSACCION_FECHA} DESC
-        """.trimIndent()
+        SELECT * FROM ${AppDatabaseHelper.TABLE_TRANSACCIONES}
+        WHERE ${AppDatabaseHelper.COL_TRANSACCION_USUARIO_ID} = ?
+        ORDER BY ${AppDatabaseHelper.COL_TRANSACCION_FECHA} DESC
+    """.trimIndent()
 
         val cursor = db.rawQuery(query, arrayOf(usuarioId.toString()))
 
         while (cursor.moveToNext()) {
             val transaccion = Transaccion(
                 id = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_ID)),
-                categoriaId = 0, // Ya no se usa
+                categoriaId = 0,
                 monto = cursor.getDouble(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_MONTO)),
                 fecha = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_FECHA)),
                 comentario = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_COMENTARIO)),
                 usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_USUARIO_ID))
             )
 
+            //  Leer el color también
+            val colorIndex = cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR)
+            val color = if (cursor.isNull(colorIndex)) null else cursor.getInt(colorIndex)
+
             val categoria = Categoria(
-                id = 0, // Ya no se usa
+                id = 0,
                 nombre = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_NOMBRE)),
                 icono = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_ICONO)),
                 usuarioId = usuarioId,
                 tipoCategoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID)),
-                rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN))
+                rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN)),
+                color = color //  NUEVO
             )
 
             val tipoCategoria = TipoCategoria(

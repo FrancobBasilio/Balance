@@ -1,5 +1,6 @@
 package com.app.balance.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
     private lateinit var viewPager: ViewPager2
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
         tabLayout = view.findViewById(R.id.tabLayout)
@@ -35,8 +37,8 @@ class DashboardFragment : Fragment(R.layout.fragment_dashboard) {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "Gastos"
-                1 -> tab.text = "Ingresos"
-                2 -> tab.text = "Ahorro"
+                1 -> tab.text = "Dashboard"
+                2 -> tab.text = "Balance"
             }
         }.attach()
     }

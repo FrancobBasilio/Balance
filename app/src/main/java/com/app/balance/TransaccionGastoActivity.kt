@@ -236,7 +236,6 @@ class TransaccionGastoActivity : AppCompatActivity() {
         val usuarioDAO = UsuarioDAO(db, dbHelper)
         val tipoCategoriaDAO = TipoCategoriaDAO(db, dbHelper)
 
-        // Obtener el tipo de categoría
         val tipoCategoria = tipoCategoriaDAO.obtenerTipoPorId(categoria.tipoCategoriaId)
 
         if (tipoCategoria == null) {
@@ -245,11 +244,12 @@ class TransaccionGastoActivity : AppCompatActivity() {
             return
         }
 
-        // Insertar transacción con datos embebidos
+        //  Insertar transacción con el color incluido
         val resultado = transaccionDAO.insertarTransaccion(
             categoriaNombre = categoria.nombre,
             categoriaIcono = categoria.icono,
             categoriaRutaImagen = categoria.rutaImagen,
+            categoriaColor = categoria.color, //  NUEVO
             tipoCategoriaId = tipoCategoria.id,
             tipoCategoriaNombre = tipoCategoria.nombre,
             monto = monto,
@@ -259,7 +259,6 @@ class TransaccionGastoActivity : AppCompatActivity() {
         )
 
         if (resultado > 0) {
-            // Actualizar el balance
             actualizarBalanceDespuesDeGasto(monto, usuarioDAO)
 
             Toast.makeText(

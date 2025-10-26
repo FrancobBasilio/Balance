@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:drawable="@drawable/ic_logo"
-        android:top="60dp"
-        android:bottom="60dp"
-        android:left="110dp"
-        android:right="108dp" />
-</layer-list>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- B+ en negro -->
+    <group
+        android:translateX="54"
+        android:translateY="54">
+
+        <!-- Letra B -->
+        <path
+            android:fillColor="#000000"
+            android:pathData="M-15,-20 L-15,20 L5,20 C10,20 14,16 14,11 C14,8 12.5,5.5 10,4.5 C12,3.5 13,1.5 13,-1 C13,-6 9,-10 4,-10 L-15,-10 L-15,-20 Z M-5,-12 L2,-12 C5,-12 7,-10 7,-7 C7,-4 5,-2 2,-2 L-5,-2 Z M-5,2 L4,2 C7.5,2 10,4.5 10,8 C10,11.5 7.5,14 4,14 L-5,14 Z"/>
+
+        <!-- Signo + -->
+        <path
+            android:fillColor="#000000"
+            android:pathData="M18,-2 L18,-10 L24,-10 L24,-2 L32,-2 L32,4 L24,4 L24,12 L18,12 L18,4 L10,4 L10,-2 Z"/>
+
+    </group>
+</vector>

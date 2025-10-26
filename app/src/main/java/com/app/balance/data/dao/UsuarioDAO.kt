@@ -18,6 +18,7 @@ class UsuarioDAO(private val db: SQLiteDatabase, private val dbHelper: AppDataba
             put(AppDatabaseHelper.COL_USUARIO_CONTRASENA, usuario.contrasena)
             put(AppDatabaseHelper.COL_USUARIO_DIVISA_ID, usuario.divisaId)
             put(AppDatabaseHelper.COL_USUARIO_MONTO_TOTAL, usuario.montoTotal)
+            put(AppDatabaseHelper.COL_USUARIO_FOTO_PERFIL, usuario.fotoPerfil)
         }
         return db.insert(AppDatabaseHelper.TABLE_USUARIOS, null, valores)
     }
@@ -43,7 +44,8 @@ class UsuarioDAO(private val db: SQLiteDatabase, private val dbHelper: AppDataba
                 email = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_USUARIO_EMAIL)),
                 contrasena = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_USUARIO_CONTRASENA)),
                 divisaId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_USUARIO_DIVISA_ID)),
-                montoTotal = cursor.getDouble(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_USUARIO_MONTO_TOTAL))
+                montoTotal = cursor.getDouble(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_USUARIO_MONTO_TOTAL)),
+                fotoPerfil = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_USUARIO_FOTO_PERFIL))
             )
             cursor.close()
             usuario
@@ -119,6 +121,19 @@ class UsuarioDAO(private val db: SQLiteDatabase, private val dbHelper: AppDataba
         )
     }
 
+
+    fun actualizarFotoPerfil(usuarioId: Int, rutaFoto: String?): Int {
+        val valores = ContentValues().apply {
+            put(AppDatabaseHelper.COL_USUARIO_FOTO_PERFIL, rutaFoto)
+        }
+        return db.update(
+            AppDatabaseHelper.TABLE_USUARIOS,
+            valores,
+            "${AppDatabaseHelper.COL_USUARIO_ID} = ?",
+            arrayOf(usuarioId.toString())
+        )
+    }
+
     /**
      * Actualizar solo la divisa del usuario
      */
@@ -126,6 +141,20 @@ class UsuarioDAO(private val db: SQLiteDatabase, private val dbHelper: AppDataba
         val valores = ContentValues().apply {
             put(AppDatabaseHelper.COL_USUARIO_DIVISA_ID, divisaId)
         }
+        return db.update(
+            AppDatabaseHelper.TABLE_USUARIOS,
+            valores,
+            "${AppDatabaseHelper.COL_USUARIO_ID} = ?",
+            arrayOf(usuarioId.toString())
+        )
+    }
+
+    fun actualizarNombre(usuarioId: Int, nombre: String, apellido: String): Int {
+        val valores = ContentValues().apply {
+            put(AppDatabaseHelper.COL_USUARIO_NOMBRE, nombre)
+            put(AppDatabaseHelper.COL_USUARIO_APELLIDO, apellido)
+        }
+
         return db.update(
             AppDatabaseHelper.TABLE_USUARIOS,
             valores,

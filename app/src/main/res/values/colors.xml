@@ -28,4 +28,6 @@
     <color name="borde">#D9D9D9</color>
     <color name="ic_launcher_bg">@color/gold</color>
 
+    <color name="ic_launcher_background">#FFC107</color>
+
 </resources>

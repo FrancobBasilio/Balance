@@ -7,99 +7,115 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-
+    android:fitsSystemWindows="true"
     tools:context=".InicioActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-
+        <!-- Header Mejorado -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/svBienvenida"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="20dp"
+            android:elevation="6dp"
+            android:background="@drawable/gradient_header">
 
-
+            <!-- Botón Menú -->
             <ImageButton
                 android:id="@+id/btnMenu"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/ripple_circle"
                 android:contentDescription="Abrir menú"
-                android:padding="12dp"
+                android:padding="10dp"
                 android:src="@drawable/ic_menu"
                 app:tint="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-
+            <!-- Layout Central: Balance + Botón Editar -->
             <LinearLayout
                 android:id="@+id/layoutCentro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                app:layout_constraintStart_toEndOf="@id/btnMenu"
-                app:layout_constraintEnd_toStartOf="@id/btnEditBalance"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.5">
+                app:layout_constraintBottom_toBottomOf="parent">
 
+                <!-- Etiqueta BALANCE -->
                 <TextView
                     android:id="@+id/tvTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"
+                    android:text="BALANCE"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
                     android:textStyle="bold"
-                    android:gravity="center" />
+                    android:letterSpacing="0.1"
+                    android:gravity="center"
+                    android:layout_marginBottom="4dp" />
 
-                <TextView
-                    android:id="@+id/tvBalance"
+                <!-- Monto + Botón Editar -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PEN 2,200"
-                    android:textColor="@android:color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PEN 2,200"
+                        android:textColor="@color/black"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <!-- Botón Editar Balance (al lado del monto) -->
+                    <ImageButton
+                        android:id="@+id/btnEditBalance"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/ripple_circle_small"
+                        android:src="@drawable/ic_edit_balance"
+                        android:padding="6dp"
+                        android:contentDescription="Editar balance"
+                        app:tint="@color/black" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEditBalance"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/actualizar"
-                app:iconTint="@color/black"
-                app:cornerRadius="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+        <!-- Fragment Container -->
         <FrameLayout
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize" />
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
-
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/menu_header"
         app:menu="@menu/menu_nav"
         app:itemIconTint="@color/gold"

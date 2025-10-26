@@ -6,7 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.graphics.PorterDuff
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -26,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.app.balance.data.AppDatabaseHelper
 import com.app.balance.data.dao.CategoriaDAO
 import com.app.balance.model.Categoria
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -123,15 +127,20 @@ class CrearCategoriaActivity : AppCompatActivity() {
     private fun setupIconos() {
         iconosPredeterminados.forEach { iconoRes ->
             val imageView = ImageView(this).apply {
+                val sizeInDp = 70
+                val sizeInPx = (sizeInDp * resources.displayMetrics.density).toInt()
+
                 layoutParams = GridLayout.LayoutParams().apply {
-                    width = 0
-                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    width = sizeInPx
+                    height = sizeInPx
                     columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-                    setMargins(12, 12, 12, 12)
+                    setMargins(16, 16, 16, 16)
                 }
                 setImageResource(iconoRes)
-                setPadding(20, 20, 20, 20)
-                setBackgroundResource(R.drawable.circulo_icono)
+                setPadding(4, 24, 24, 24) // ✅ REDUCIR padding (era 16, ahora 12)
+                setBackgroundResource(R.drawable.fondo_circular_solido)
+                elevation = 4f
+                setColorFilter(getColor(android.R.color.black), PorterDuff.Mode.SRC_IN)
                 scaleType = ImageView.ScaleType.CENTER_INSIDE
 
                 setOnClickListener {
@@ -143,14 +152,14 @@ class CrearCategoriaActivity : AppCompatActivity() {
             gridIconos.addView(imageView)
         }
     }
-
     private fun setupColores() {
         coloresDisponibles.forEach { colorRes ->
             val colorView = View(this).apply {
                 layoutParams = LinearLayout.LayoutParams(70, 70).apply {
                     setMargins(12, 12, 12, 12)
                 }
-                setBackgroundResource(R.drawable.circulo_icono)
+                //  Usar fondo circular sólido
+                setBackgroundResource(R.drawable.fondo_circular_solido)
                 backgroundTintList = ColorStateList.valueOf(getColor(colorRes))
 
                 setOnClickListener {
@@ -234,16 +243,29 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 REQUEST_GALLERY -> {
                     data?.data?.let { uri ->
                         imagenPersonalizada = guardarImagenEnStorage(uri)
-                        ivIconoSeleccionado.setImageURI(uri)
-                        ivIconoSeleccionado.backgroundTintList = null
+
+                        //  Cargar imagen circular con Glide
+                        Glide.with(this)
+                            .load(uri)
+                            .circleCrop()
+                            .into(ivIconoSeleccionado)
+
+                        // Quitar el background circular ya que Glide hace el recorte
+                        ivIconoSeleccionado.background = null
                     }
                 }
                 REQUEST_CAMERA -> {
                     val bitmap = data?.extras?.get("data") as? Bitmap
                     bitmap?.let {
                         imagenPersonalizada = guardarBitmapEnStorage(it)
-                        ivIconoSeleccionado.setImageBitmap(it)
-                        ivIconoSeleccionado.backgroundTintList = null
+
+                        Glide.with(this)
+                            .load(it)
+                            .circleCrop()
+                            .into(ivIconoSeleccionado)
+
+                        // Quitar el background circular ya que Glide hace el recorte
+                        ivIconoSeleccionado.background = null
                     }
                 }
             }
@@ -254,9 +276,26 @@ class CrearCategoriaActivity : AppCompatActivity() {
         val fileName = "categoria_${System.currentTimeMillis()}.jpg"
         val file = File(filesDir, fileName)
 
-        contentResolver.openInputStream(uri)?.use { input ->
+        try {
+            // Decodificar y guardar con alta calidad
+            val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+            } else {
+                @Suppress("DEPRECATION")
+                MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            }
+
+            // Guardar con calidad 100 (sin compresión)
             file.outputStream().use { output ->
-                input.copyTo(output)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
+            }
+
+        } catch (e: Exception) {
+            // Fallback: copiar directamente sin recomprimir
+            contentResolver.openInputStream(uri)?.use { input ->
+                file.outputStream().use { output ->
+                    input.copyTo(output)
+                }
             }
         }
 
@@ -267,8 +306,9 @@ class CrearCategoriaActivity : AppCompatActivity() {
         val fileName = "categoria_${System.currentTimeMillis()}.jpg"
         val file = File(filesDir, fileName)
 
+        //  Guardar con calidad 100 (máxima calidad)
         file.outputStream().use { output ->
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, output)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
         }
 
         return file.absolutePath
@@ -276,11 +316,14 @@ class CrearCategoriaActivity : AppCompatActivity() {
 
     private fun actualizarIconoSeleccionado() {
         if (imagenPersonalizada == null) {
+            //  Fondo circular blanco
+            ivIconoSeleccionado.setBackgroundResource(R.drawable.fondo_circular_solido)
             ivIconoSeleccionado.setImageResource(iconoSeleccionado)
-            ivIconoSeleccionado.backgroundTintList = ColorStateList.valueOf(getColor(colorSeleccionado))
+            ivIconoSeleccionado.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            //  Pintar el icono con el color seleccionado
+            ivIconoSeleccionado.setColorFilter(getColor(colorSeleccionado), PorterDuff.Mode.SRC_IN)
         }
     }
-
     private fun setupBotonAnadir() {
         btnAnadirCategoria.setOnClickListener {
             val nombreCategoria = etNombreCategoria.text.toString().trim()
@@ -321,7 +364,8 @@ class CrearCategoriaActivity : AppCompatActivity() {
             icono = iconoNombre,
             usuarioId = usuarioId,
             tipoCategoriaId = tipoId,
-            rutaImagen = imagenPersonalizada
+            rutaImagen = imagenPersonalizada,
+            color = if (imagenPersonalizada == null) colorSeleccionado else null
         )
 
         val resultado = categoriaSistemaDAO.insertarCategoriaSistema(categoria)

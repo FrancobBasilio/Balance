@@ -4,13 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -36,8 +39,11 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var tvBalance: TextView
     private lateinit var tvTotal: TextView
-    private lateinit var btnEditBalance: MaterialButton
+    private lateinit var btnEditBalance: ImageButton
     private lateinit var btnMenu: ImageButton
+
+    // Nuevo: Referencias al layout del centro
+    private lateinit var layoutCentro: LinearLayout
 
     // Header views
     private lateinit var ivHeaderAvatar: ImageView
@@ -59,16 +65,16 @@ class InicioActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerLayout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(0, systemBars.top, 0, 0)
             insets
         }
 
         initViews()
-        initHeaderViews() // ← NUEVO
+        initHeaderViews()
         setupDrawer()
         setupNavigation()
         loadBalance()
-        loadHeaderData() // ← NUEVO
+        loadHeaderData()
         setupEditBalanceButton()
 
         if (savedInstanceState == null) {
@@ -83,6 +89,7 @@ class InicioActivity : AppCompatActivity() {
         tvTotal = findViewById(R.id.tvTotal)
         btnEditBalance = findViewById(R.id.btnEditBalance)
         btnMenu = findViewById(R.id.btnMenu)
+        layoutCentro = findViewById(R.id.layoutCentro) // Nueva referencia
     }
 
     private fun initHeaderViews() {
@@ -96,16 +103,13 @@ class InicioActivity : AppCompatActivity() {
     private fun loadHeaderData() {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-        // Cargar nombre completo
         val nombre = prefs.getString("USER_NOMBRE", "") ?: ""
         val apellido = prefs.getString("USER_APELLIDO", "") ?: ""
         tvHeaderName.text = "$nombre $apellido"
 
-        // Cargar email
         val email = prefs.getString("USER_EMAIL", "correo@ejemplo.com") ?: "correo@ejemplo.com"
         tvHeaderEmail.text = email
 
-        // Cargar bandera
         val banderaUrl = prefs.getString("DIVISA_BANDERA", "") ?: ""
         if (banderaUrl.isNotEmpty()) {
             Glide.with(this)
@@ -117,7 +121,6 @@ class InicioActivity : AppCompatActivity() {
             ivHeaderFlag.setImageResource(android.R.drawable.ic_menu_mapmode)
         }
 
-        // Cargar foto de perfil
         val fotoPerfilPath = prefs.getString("FOTO_PERFIL_PATH", null)
         if (fotoPerfilPath != null) {
             val file = File(fotoPerfilPath)
@@ -156,16 +159,19 @@ class InicioActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_inicio -> {
                     loadFragment(DashboardFragment())
+                    mostrarHeaderBalance(true) // Mostrar balance en Dashboard
                     drawerLayout.closeDrawers()
                     true
                 }
                 R.id.nav_perfil -> {
                     loadFragment(PerfilFragment())
+                    mostrarHeaderBalance(false) // Ocultar balance en Perfil
                     drawerLayout.closeDrawers()
                     true
                 }
                 R.id.nav_config -> {
                     loadFragment(ConfiguracionFragment())
+                    mostrarHeaderBalance(false) // Ocultar balance en Configuración
                     drawerLayout.closeDrawers()
                     true
                 }
@@ -175,6 +181,17 @@ class InicioActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+    }
+
+    // NUEVA FUNCIÓN: Controlar visibilidad del balance y botón de actualizar
+    private fun mostrarHeaderBalance(mostrar: Boolean) {
+        if (mostrar) {
+            layoutCentro.visibility = View.VISIBLE
+            btnEditBalance.visibility = View.VISIBLE
+        } else {
+            layoutCentro.visibility = View.GONE
+            btnEditBalance.visibility = View.GONE
         }
     }
 
@@ -199,7 +216,7 @@ class InicioActivity : AppCompatActivity() {
     }
 
     private fun actualizarVistasBalance() {
-        tvTotal.text = "Total"
+        tvTotal.text = "Ingresos"
         tvBalance.text = "$codigoDivisa ${String.format("%.2f", balanceActual)}"
     }
 
@@ -243,7 +260,6 @@ class InicioActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // CALCULAR GASTOS TOTALES
             val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
             val userId = prefs.getInt("USER_ID", 0)
 
@@ -258,7 +274,6 @@ class InicioActivity : AppCompatActivity() {
                 totalGastado += transaccion.transaccion.monto
             }
 
-            // VALIDAR: El nuevo balance debe ser mayor o igual a los gastos totales
             if (nuevoBalanceIngresado < totalGastado) {
                 Toast.makeText(
                     this,
@@ -269,10 +284,8 @@ class InicioActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // CALCULAR EL BALANCE REAL después de restar los gastos
             val balanceReal = nuevoBalanceIngresado - totalGastado
 
-            // Guardar en SharedPreferences
             prefs.edit()
                 .putString("BALANCE_MONTO", balanceReal.toString())
                 .putString("BALANCE_ORIGINAL", nuevoBalanceIngresado.toString())
@@ -281,15 +294,12 @@ class InicioActivity : AppCompatActivity() {
             balanceActual = balanceReal
             actualizarVistasBalance()
 
-            // Actualizar en la base de datos
             val usuarioDAO = UsuarioDAO(db, dbHelper)
             usuarioDAO.actualizarMontoTotal(userId, balanceReal)
             db.close()
 
-            // NOTIFICAR al fragment activo que el balance cambió
             notificarCambioBalance(balanceReal, codigoDivisa)
 
-            // Mostrar mensaje informativo
             if (totalGastado > 0) {
                 Toast.makeText(
                     this,
@@ -331,7 +341,6 @@ class InicioActivity : AppCompatActivity() {
         notificarCambioBalance(balanceActual, codigoDivisa)
     }
 
-    // NUEVA FUNCIÓN: Recargar header (llamada desde PerfilFragment cuando cambie la foto)
     fun recargarHeader() {
         loadHeaderData()
     }
@@ -340,7 +349,6 @@ class InicioActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         val codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
 
-        // Si no hay divisa en SharedPreferences, cargarla desde BD
         if (codigoDivisaActual.isNullOrEmpty() || codigoDivisaActual == "PEN") {
             val userId = prefs.getInt("USER_ID", 0)
 
@@ -356,7 +364,6 @@ class InicioActivity : AppCompatActivity() {
                     val divisa = divisaDAO.obtenerDivisaPorId(usuario.divisaId)
 
                     if (divisa != null) {
-                        // Restaurar divisa en SharedPreferences
                         prefs.edit()
                             .putInt("DIVISA_ID", divisa.id)
                             .putString("DIVISA_CODIGO", divisa.codigo)
@@ -364,7 +371,6 @@ class InicioActivity : AppCompatActivity() {
                             .putString("DIVISA_BANDERA", divisa.bandera)
                             .apply()
 
-                        // Actualizar variable local
                         codigoDivisa = divisa.codigo
 
                         Log.d("InicioActivity", "Divisa restaurada desde BD: ${divisa.codigo}")
@@ -378,10 +384,9 @@ class InicioActivity : AppCompatActivity() {
         }
     }
 
-    // MODIFICAR TU MÉTODO onResume() EXISTENTE:
     override fun onResume() {
         super.onResume()
-        verificarYCargarDivisaDesdeDB() // ← AGREGAR ESTA LÍNEA PRIMERO
+        verificarYCargarDivisaDesdeDB()
         recargarBalance()
         loadHeaderData()
     }
@@ -400,13 +405,10 @@ class InicioActivity : AppCompatActivity() {
     private fun cerrarSesion() {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
-        // IMPORTANTE: Mantener ES_PRIMERA_VEZ para no mostrar la bienvenida de nuevo
         val esPrimeraVez = prefs.getBoolean("ES_PRIMERA_VEZ", true)
 
-        // Limpiar TODAS las preferencias
         prefs.edit().clear().apply()
 
-        // Restaurar ES_PRIMERA_VEZ
         prefs.edit()
             .putBoolean("ES_PRIMERA_VEZ", esPrimeraVez)
             .putBoolean("SESION_ACTIVA", false)
@@ -414,7 +416,6 @@ class InicioActivity : AppCompatActivity() {
 
         Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show()
 
-        // Ir a LoginActivity
         val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

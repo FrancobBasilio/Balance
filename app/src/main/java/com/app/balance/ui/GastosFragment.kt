@@ -1,11 +1,13 @@
 package com.app.balance.ui
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -19,8 +21,10 @@ import com.app.balance.data.AppDatabaseHelper
 import com.app.balance.data.dao.DivisaDAO
 import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
+import com.app.balance.model.FiltroTipo
 import com.app.balance.model.TransaccionConDetalles
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
@@ -35,10 +39,15 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
     private lateinit var btnAgregarGasto: MaterialButton
     private lateinit var chipGroupFiltros: ChipGroup
 
+
     private var todasLasTransacciones = listOf<TransaccionConDetalles>()
     private var usuarioId = 0
     private var codigoDivisa = "PEN"
     private var balanceTotal = 0.0
+
+    // Variables para rango personalizado
+    private var fechaDesde: String? = null
+    private var fechaHasta: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,7 +67,7 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
     }
 
     private fun obtenerDatosUsuario() {
-        verificarYCargarDivisaDesdeDB() // ← AGREGAR ESTA LÍNEA PRIMERO
+        verificarYCargarDivisaDesdeDB()
 
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         usuarioId = prefs.getInt("USER_ID", 0)
@@ -88,18 +97,23 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
     }
 
     private fun mostrarDetallesGasto(transaccion: TransaccionConDetalles) {
-        Toast.makeText(
-            requireContext(),
-            "Gasto: ${transaccion.categoria.nombre} - ${transaccion.transaccion.comentario ?: "Sin comentario"}",
-            Toast.LENGTH_SHORT
-        ).show()
+        val fechaFormateada = formatearFechaLegible(transaccion.transaccion.fecha)
+        val mensaje = buildString {
+            append("Categoría: ${transaccion.categoria.nombre}\n")
+            append("Monto: $codigoDivisa ${String.format("%.2f", transaccion.transaccion.monto)}\n")
+            append("Fecha: $fechaFormateada")
+            if (!transaccion.transaccion.comentario.isNullOrEmpty()) {
+                append("\nComentario: ${transaccion.transaccion.comentario}")
+            }
+        }
+
+        Toast.makeText(requireContext(), mensaje, Toast.LENGTH_LONG).show()
     }
 
     private fun verificarYCargarDivisaDesdeDB() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         var codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
 
-        // Si no hay divisa en SharedPreferences, cargarla desde BD
         if (codigoDivisaActual.isNullOrEmpty() || codigoDivisaActual == "PEN") {
             val userId = prefs.getInt("USER_ID", 0)
 
@@ -115,7 +129,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
                     val divisa = divisaDAO.obtenerDivisaPorId(usuario.divisaId)
 
                     if (divisa != null) {
-                        // Restaurar divisa en SharedPreferences
                         prefs.edit()
                             .putInt("DIVISA_ID", divisa.id)
                             .putString("DIVISA_CODIGO", divisa.codigo)
@@ -123,7 +136,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
                             .putString("DIVISA_BANDERA", divisa.bandera)
                             .apply()
 
-                        // Actualizar variable local
                         codigoDivisa = divisa.codigo
                     }
                 }
@@ -146,38 +158,29 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
             .show()
     }
 
-
-
     private fun eliminarGasto(transaccion: TransaccionConDetalles) {
         val dbHelper = AppDatabaseHelper(requireContext())
         val db = dbHelper.writableDatabase
         val transaccionDAO = TransaccionDAO(db, dbHelper)
         val usuarioDAO = UsuarioDAO(db, dbHelper)
 
-        // Eliminar la transacción de la BD
         val resultado = transaccionDAO.eliminarTransaccion(transaccion.transaccion.id)
 
         if (resultado > 0) {
-            // Obtener balance actual
             val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
             val balanceActual = prefs.getString("BALANCE_MONTO", "0.00")?.toDoubleOrNull() ?: 0.0
 
-            // INCREMENTAR el balance (devolver el dinero)
             val montoDevuelto = transaccion.transaccion.monto
             val nuevoBalance = balanceActual + montoDevuelto
 
-            // Actualizar en SharedPreferences
             prefs.edit()
                 .putString("BALANCE_MONTO", nuevoBalance.toString())
                 .apply()
 
-            // Actualizar en la base de datos
             usuarioDAO.actualizarMontoTotal(usuarioId, nuevoBalance)
 
-            // Actualizar balance local
             balanceTotal = nuevoBalance
 
-            // Notificar a InicioActivity para actualizar el header
             (requireActivity() as? InicioActivity)?.recargarBalance()
 
             Toast.makeText(
@@ -186,7 +189,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
                 Toast.LENGTH_SHORT
             ).show()
 
-            // Recargar transacciones
             cargarTransacciones()
         } else {
             Toast.makeText(
@@ -205,6 +207,10 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
         val transaccionDAO = TransaccionDAO(db, dbHelper)
 
         todasLasTransacciones = transaccionDAO.obtenerTransaccionesPorUsuario(usuarioId)
+
+        // Ordenar por fecha descendente (más reciente primero)
+        todasLasTransacciones = todasLasTransacciones.sortedByDescending { it.transaccion.fecha }
+
         adapter.actualizarDatos(todasLasTransacciones)
 
         db.close()
@@ -217,36 +223,195 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
                 R.id.chipDia -> filtrarTransacciones(FiltroTipo.DIA)
                 R.id.chipSemana -> filtrarTransacciones(FiltroTipo.SEMANA)
                 R.id.chipMes -> filtrarTransacciones(FiltroTipo.MES)
+                R.id.chipPersonalizado -> mostrarDialogoRangoFechas()
+                else -> filtrarTransacciones(FiltroTipo.TODOS)
             }
+        }
+    }
+
+    private fun mostrarDialogoRangoFechas() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialogo_rango_fechas, null)
+
+        val layoutFechaDesde = dialogView.findViewById<LinearLayout>(R.id.layoutFechaDesde)
+        val tvFechaDesde = dialogView.findViewById<TextView>(R.id.tvFechaDesde)
+        val layoutFechaHasta = dialogView.findViewById<LinearLayout>(R.id.layoutFechaHasta)
+        val tvFechaHasta = dialogView.findViewById<TextView>(R.id.tvFechaHasta)
+        val btnAplicar = dialogView.findViewById<MaterialButton>(R.id.btnAplicarFiltro)
+        val btnCancelar = dialogView.findViewById<MaterialButton>(R.id.btnCancelarFiltro)
+
+        // Inicializar con fechas actuales si ya existen
+        if (fechaDesde != null && fechaHasta != null) {
+            tvFechaDesde.text = formatearFecha(fechaDesde!!)
+            tvFechaHasta.text = formatearFecha(fechaHasta!!)
+        } else {
+            // Establecer rango del mes actual por defecto
+            fechaDesde = obtenerInicioMes()
+            fechaHasta = obtenerFechaHoy()
+            tvFechaDesde.text = formatearFecha(fechaDesde!!)
+            tvFechaHasta.text = formatearFecha(fechaHasta!!)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        // Selector de fecha DESDE
+        layoutFechaDesde.setOnClickListener {
+            mostrarDatePickerParaRango(tvFechaDesde, true)
+        }
+
+        // Selector de fecha HASTA
+        layoutFechaHasta.setOnClickListener {
+            mostrarDatePickerParaRango(tvFechaHasta, false)
+        }
+
+        // Botón Aplicar
+
+        btnAplicar.setOnClickListener {
+            if (fechaDesde != null && fechaHasta != null) {
+                if (fechaDesde!! > fechaHasta!!) {
+                    Toast.makeText(
+                        requireContext(),
+                        "La fecha 'Desde' no puede ser mayor que 'Hasta'",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    filtrarPorRangoPersonalizado(fechaDesde!!, fechaHasta!!)
+                    dialog.dismiss()
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Por favor selecciona ambas fechas",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        // Botón Cancelar
+        btnCancelar.setOnClickListener {
+            // Volver al filtro "Todos"
+            chipGroupFiltros.check(R.id.chipTodos)
+            fechaDesde = null
+            fechaHasta = null
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+
+
+
+
+    private fun mostrarDatePickerParaRango(textView: TextView, esDesde: Boolean) {
+        val calendar = Calendar.getInstance()
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val fechaSeleccionada = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+
+                if (esDesde) {
+                    fechaDesde = fechaSeleccionada
+                } else {
+                    fechaHasta = fechaSeleccionada
+                }
+
+                textView.text = formatearFecha(fechaSeleccionada)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+
+        datePickerDialog.show()
+    }
+
+    private fun filtrarPorRangoPersonalizado(desde: String, hasta: String) {
+        val transaccionesFiltradas = todasLasTransacciones.filter {
+            it.transaccion.fecha >= desde && it.transaccion.fecha <= hasta
+        }
+
+        val transaccionesOrdenadas = transaccionesFiltradas.sortedByDescending { it.transaccion.fecha }
+        adapter.actualizarDatos(transaccionesOrdenadas)
+
+        if (transaccionesOrdenadas.isEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "No hay gastos en el rango seleccionado",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            val total = transaccionesOrdenadas.sumOf { it.transaccion.monto }
+            val desde = formatearFecha(fechaDesde!!)
+            val hasta = formatearFecha(fechaHasta!!)
+            Toast.makeText(
+                requireContext(),
+                "Rango: $desde - $hasta\n${transaccionesOrdenadas.size} gastos - Total: $codigoDivisa ${String.format("%.2f", total)}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
     private fun filtrarTransacciones(filtro: FiltroTipo) {
+        // Resetear fechas personalizadas si se selecciona otro filtro
+        if (filtro != FiltroTipo.TODOS) {
+            fechaDesde = null
+            fechaHasta = null
+            //  NO establecer texto, mantener solo el ícono
+        }
+
         val transaccionesFiltradas = when (filtro) {
             FiltroTipo.TODOS -> todasLasTransacciones
+
             FiltroTipo.DIA -> {
                 val hoy = obtenerFechaHoy()
-                todasLasTransacciones.filter { it.transaccion.fecha == hoy }
+                todasLasTransacciones.filter {
+                    it.transaccion.fecha == hoy
+                }
             }
+
             FiltroTipo.SEMANA -> {
                 val inicioSemana = obtenerInicioSemana()
-                todasLasTransacciones.filter { it.transaccion.fecha >= inicioSemana }
+                val finSemana = obtenerFinSemana()
+                todasLasTransacciones.filter {
+                    it.transaccion.fecha >= inicioSemana && it.transaccion.fecha <= finSemana
+                }
             }
+
             FiltroTipo.MES -> {
                 val inicioMes = obtenerInicioMes()
-                todasLasTransacciones.filter { it.transaccion.fecha >= inicioMes }
+                val finMes = obtenerFinMes()
+                todasLasTransacciones.filter {
+                    it.transaccion.fecha >= inicioMes && it.transaccion.fecha <= finMes
+                }
             }
         }
 
-        adapter.actualizarDatos(transaccionesFiltradas)
-    }
+        val transaccionesOrdenadas = transaccionesFiltradas.sortedByDescending { it.transaccion.fecha }
+        adapter.actualizarDatos(transaccionesOrdenadas)
 
+        if (transaccionesOrdenadas.isEmpty()) {
+            val mensaje = when (filtro) {
+                FiltroTipo.TODOS -> "No tienes gastos registrados"
+                FiltroTipo.DIA -> "No tienes gastos hoy"
+                FiltroTipo.SEMANA -> "No tienes gastos esta semana"
+                FiltroTipo.MES -> "No tienes gastos este mes"
+            }
+            Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
+        }
+    }
     private fun setupBotonAgregarGasto() {
         btnAgregarGasto.setOnClickListener {
             val intent = Intent(requireContext(), TransaccionGastoActivity::class.java)
             startActivity(intent)
         }
     }
+
+    // FUNCIONES DE FECHA
 
     private fun obtenerFechaHoy(): String {
         val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -257,6 +422,23 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
         val calendar = Calendar.getInstance()
         calendar.firstDayOfWeek = Calendar.MONDAY
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return formato.format(calendar.time)
+    }
+
+    private fun obtenerFinSemana(): String {
+        val calendar = Calendar.getInstance()
+        calendar.firstDayOfWeek = Calendar.MONDAY
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+
         val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return formato.format(calendar.time)
     }
@@ -264,17 +446,51 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
     private fun obtenerInicioMes(): String {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+
         val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return formato.format(calendar.time)
+    }
+
+    private fun obtenerFinMes(): String {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+
+        val formato = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return formato.format(calendar.time)
+    }
+
+    private fun formatearFecha(fecha: String): String {
+        return try {
+            val formatoEntrada = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formatoSalida = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val date = formatoEntrada.parse(fecha)
+            formatoSalida.format(date!!)
+        } catch (e: Exception) {
+            fecha
+        }
+    }
+
+    private fun formatearFechaLegible(fecha: String): String {
+        return try {
+            val formatoEntrada = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val formatoSalida = SimpleDateFormat("dd 'de' MMMM, yyyy", Locale("es", "ES"))
+            val date = formatoEntrada.parse(fecha)
+            formatoSalida.format(date!!)
+        } catch (e: Exception) {
+            fecha
+        }
     }
 
     override fun onResume() {
         super.onResume()
         obtenerDatosUsuario()
         cargarTransacciones()
-    }
-
-    enum class FiltroTipo {
-        TODOS, DIA, SEMANA, MES
     }
 }
