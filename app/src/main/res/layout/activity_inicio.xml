@@ -6,14 +6,15 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_primary"
     android:fitsSystemWindows="true"
     tools:context=".InicioActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/background_primary">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/svBienvenida"
@@ -34,10 +35,26 @@
                 android:contentDescription="Abrir menú"
                 android:padding="10dp"
                 android:src="@drawable/ic_menu"
-                app:tint="@color/black"
+                app:tint="@color/text_primary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
+
+            <!-- Logo en la cabecera (oculto por defecto). Se mostrará en Perfil/Configuración -->
+            <TextView
+                android:id="@+id/ivHeaderLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BALANCE +"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:visibility="gone"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <LinearLayout
                 android:id="@+id/layoutCentro"
@@ -55,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BALANCE"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.1"
@@ -73,7 +90,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PEN 2,200"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_primary"
                         android:textSize="32sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -87,7 +104,7 @@
                         android:src="@drawable/ic_edit_balance"
                         android:padding="6dp"
                         android:contentDescription="Editar balance"
-                        app:tint="@color/black" />
+                        app:tint="@color/text_primary" />
 
                 </LinearLayout>
 
@@ -99,7 +116,8 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@color/background_primary" />
 
     </LinearLayout>
 
@@ -109,8 +127,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="@color/drawer_background"
         app:headerLayout="@layout/menu_header"
         app:menu="@menu/menu_nav"
         app:itemIconTint="@color/gold"
-        app:itemTextColor="@color/black" />
+        app:itemTextColor="@color/nav_item_text" />
 </androidx.drawerlayout.widget.DrawerLayout>

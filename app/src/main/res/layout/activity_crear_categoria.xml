@@ -35,12 +35,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Crear Categoría"
-                android:textSize="22sp"
-                android:textStyle="bold"
                 android:textColor="@color/negro"
-                android:layout_marginStart="12dp"/>
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -68,13 +69,13 @@
                         android:id="@+id/ivIconoSeleccionado"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_comida"
-                        android:scaleType="fitCenter"
                         android:background="@drawable/fondo_circular_solido"
-                        android:padding="22dp"
                         android:clickable="true"
+                        android:elevation="6dp"
                         android:focusable="true"
-                        android:elevation="6dp"/>
+                        android:padding="22dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_comida" />
 
                 </FrameLayout>
 

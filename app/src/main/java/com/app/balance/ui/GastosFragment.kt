@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -23,8 +22,6 @@ import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
 import com.app.balance.model.FiltroTipo
 import com.app.balance.model.TransaccionConDetalles
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.text.SimpleDateFormat
@@ -36,7 +33,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
 
     private lateinit var rvGastos: RecyclerView
     private lateinit var adapter: GastosAdapter
-    private lateinit var btnAgregarGasto: MaterialButton
     private lateinit var chipGroupFiltros: ChipGroup
 
 
@@ -55,12 +51,10 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
         setupRecyclerView()
         cargarTransacciones()
         setupFiltros()
-        setupBotonAgregarGasto()
     }
 
     private fun initViews(view: View) {
         rvGastos = view.findViewById(R.id.rvGastos)
-        btnAgregarGasto = view.findViewById(R.id.btnAgregarGasto)
         chipGroupFiltros = view.findViewById(R.id.chipGroupFiltros)
     }
 
@@ -88,6 +82,13 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
             },
             onEliminarClick = { transaccion ->
                 mostrarDialogoEliminarGasto(transaccion)
+            },
+            onEditarClick = { transaccion ->
+                // Lanzar Activity de edición pasando el id de la transacción
+                val intent = Intent(requireContext(), TransaccionGastoActivity::class.java)
+                intent.putExtra("EXTRA_EDITAR", true)
+                intent.putExtra("EXTRA_TRANSACCION_ID", transaccion.transaccion.id)
+                startActivity(intent)
             }
         )
         rvGastos.layoutManager = LinearLayoutManager(requireContext())
@@ -110,7 +111,7 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
 
     private fun verificarYCargarDivisaDesdeDB() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        var codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
+        val codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
 
         if (codigoDivisaActual.isNullOrEmpty() || codigoDivisaActual == "PEN") {
             val userId = prefs.getInt("USER_ID", 0)
@@ -235,8 +236,8 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
         val tvFechaDesde = dialogView.findViewById<TextView>(R.id.tvFechaDesde)
         val layoutFechaHasta = dialogView.findViewById<LinearLayout>(R.id.layoutFechaHasta)
         val tvFechaHasta = dialogView.findViewById<TextView>(R.id.tvFechaHasta)
-        val btnAplicar = dialogView.findViewById<MaterialButton>(R.id.btnAplicarFiltro)
-        val btnCancelar = dialogView.findViewById<MaterialButton>(R.id.btnCancelarFiltro)
+        val btnAplicar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAplicarFiltro)
+        val btnCancelar = dialogView.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCancelarFiltro)
 
         // Inicializar con fechas actuales
         if (fechaDesde != null && fechaHasta != null) {
@@ -397,12 +398,6 @@ class GastosFragment : Fragment(R.layout.fragment_gastos), BalanceUpdateListener
                 FiltroTipo.MES -> "No tienes gastos este mes"
             }
             Toast.makeText(requireContext(), mensaje, Toast.LENGTH_SHORT).show()
-        }
-    }
-    private fun setupBotonAgregarGasto() {
-        btnAgregarGasto.setOnClickListener {
-            val intent = Intent(requireContext(), TransaccionGastoActivity::class.java)
-            startActivity(intent)
         }
     }
 

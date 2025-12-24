@@ -2,9 +2,7 @@ package com.app.balance.adapters
 
 import android.app.Dialog
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.PorterDuff
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +16,6 @@ import com.app.balance.model.Categoria
 import com.app.balance.model.TransaccionConDetalles
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -27,7 +24,8 @@ class GastosAdapter(
     private var transacciones: List<TransaccionConDetalles>,
     private val codigoDivisa: String,
     private val onItemClick: (TransaccionConDetalles) -> Unit,
-    private val onEliminarClick: (TransaccionConDetalles) -> Unit
+    private val onEliminarClick: (TransaccionConDetalles) -> Unit,
+    private val onEditarClick: (TransaccionConDetalles) -> Unit
 ) : RecyclerView.Adapter<GastosAdapter.GastoViewHolder>() {
 
     class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -37,6 +35,7 @@ class GastosAdapter(
         val tvComentario: TextView = view.findViewById(R.id.tvComentario)
         val tvMontoGasto: TextView = view.findViewById(R.id.tvMontoGasto)
         val tvFechaGasto: TextView = view.findViewById(R.id.tvFechaGasto)
+        // btnEditarGasto puede no existir en todas las variantes del layout, por eso lo buscamos dinámicamente
         val btnEliminarGasto: MaterialButton = view.findViewById(R.id.btnEliminarGasto)
     }
 
@@ -85,6 +84,12 @@ class GastosAdapter(
 
         holder.itemView.setOnClickListener {
             onItemClick(item)
+        }
+
+        // Botón editar (buscado dinámicamente para evitar errores si el id no existe)
+        val btnEditar = holder.itemView.findViewById<MaterialButton?>(R.id.btnEditarGasto)
+        btnEditar?.setOnClickListener {
+            onEditarClick(item)
         }
 
         // Botón eliminar

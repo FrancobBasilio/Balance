@@ -40,6 +40,22 @@
         <item name="cornerRadius">0dp</item>
         <item name="android:textAllCaps">true</item>
     </style>
+    //estilos para dialogos de confirmación de tutorial
+    <style name="TourAlertDialog.Button.Solid"
+        parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">@color/gold</item>
+        <item name="rippleColor">@color/gold_soft</item>
+    </style>
+    <style name="TourAlertDialog.Button.Solid.Positive"
+        parent="TourAlertDialog.Button.Solid">
+        <item name="android:layout_marginStart">8dp</item>
+    </style>
+    <style name="TourAlertDialog.Solid"
+        parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/TourAlertDialog.Button.Solid.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/TourAlertDialog.Button.Solid</item>
+    </style>
 
 
 </resources>

@@ -67,10 +67,17 @@ class CrearCategoriaActivity : AppCompatActivity() {
         android.R.color.holo_green_light,
         android.R.color.holo_blue_light,
         android.R.color.holo_red_light,
-        android.R.color.white,
         android.R.color.holo_orange_light,
+        android.R.color.darker_gray,
+        android.R.color.holo_blue_dark,
+        android.R.color.holo_green_dark,
+        android.R.color.holo_red_dark,
+        android.R.color.holo_orange_dark,
         android.R.color.holo_purple,
-        android.R.color.darker_gray
+        R.color.colorCyan,
+        R.color.colorPink,
+        R.color.colorLime,
+        R.color.colorTeal
     )
 
     companion object {
@@ -150,23 +157,68 @@ class CrearCategoriaActivity : AppCompatActivity() {
             gridIconos.addView(imageView)
         }
     }
+
+    //colores
+    private var colorViewSeleccionado: View? = null
+
+    private fun dpToPx(dp: Int): Int {
+        val scale = resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
+
     private fun setupColores() {
+        linearLayoutColores.removeAllViews()
+        val sizePx = dpToPx(32)   // 🔹 tamaño más pequeño
+        val marginPx = dpToPx(5)
+        val strokeNormal = dpToPx(1)
+        val strokeSeleccionado = dpToPx(2)
+
         coloresDisponibles.forEach { colorRes ->
             val colorView = View(this).apply {
-                layoutParams = LinearLayout.LayoutParams(70, 70).apply {
-                    setMargins(12, 12, 12, 12)
+                layoutParams = LinearLayout.LayoutParams(sizePx, sizePx).apply {
+                    setMargins(marginPx, marginPx, marginPx, marginPx)
                 }
-                setBackgroundResource(R.drawable.fondo_circular_solido)
-                backgroundTintList = ColorStateList.valueOf(getColor(colorRes))
-
-                setOnClickListener {
-                    colorSeleccionado = colorRes
-                    actualizarIconoSeleccionado()
-                }
+                isClickable = true
+                isFocusable = true
             }
+
+            // obtener color real del recurso
+            val colorInt = try {
+                ContextCompat.getColor(this, colorRes)
+            } catch (e: Exception) {
+                colorRes
+            }
+
+            // crear círculo con borde negro
+            val gd = android.graphics.drawable.GradientDrawable().apply {
+                shape = android.graphics.drawable.GradientDrawable.OVAL
+                setColor(colorInt)
+                setStroke(strokeNormal, android.graphics.Color.BLACK)
+            }
+
+            colorView.background = gd
+
+            // click: marcar el color seleccionado
+            colorView.setOnClickListener {
+                colorViewSeleccionado?.background?.let { prevBg ->
+                    if (prevBg is android.graphics.drawable.GradientDrawable) {
+                        prevBg.setStroke(strokeNormal, android.graphics.Color.BLACK)
+                    }
+                }
+
+                (colorView.background as? android.graphics.drawable.GradientDrawable)
+                    ?.setStroke(strokeSeleccionado, android.graphics.Color.BLACK)
+
+                colorViewSeleccionado = colorView
+                colorSeleccionado = colorRes
+                actualizarIconoSeleccionado()
+            }
+
             linearLayoutColores.addView(colorView)
         }
     }
+
+
 
     private fun setupIconoClick() {
         ivIconoSeleccionado.setOnClickListener {

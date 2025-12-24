@@ -1,7 +1,6 @@
 package com.app.balance.ui
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
@@ -9,13 +8,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.app.balance.R
-import com.app.balance.TransaccionGastoActivity
 import com.app.balance.data.AppDatabaseHelper
 import com.app.balance.data.dao.DivisaDAO
 import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
 import com.app.balance.model.TransaccionConDetalles
-import com.google.android.material.button.MaterialButton
 
 
 class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListener {
@@ -34,7 +31,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
 
     private lateinit var tvTotalGastado: TextView
     private lateinit var tvIngresosTotales: TextView
-    private lateinit var btnAgregarGasto: MaterialButton
 
     private var balanceOriginal = 0.0
     private var usuarioId = 0
@@ -46,7 +42,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
         initViews(view)
         obtenerDatosUsuario()
         cargarTransacciones()
-        setupBotonAgregarGasto()
     }
 
     private fun initViews(view: View) {
@@ -64,7 +59,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
 
         tvTotalGastado = view.findViewById(R.id.tvTotalGastado)
         tvIngresosTotales = view.findViewById(R.id.tvIngresosTotales)
-        btnAgregarGasto = view.findViewById(R.id.btnAgregarGasto)
     }
 
     private fun obtenerDatosUsuario() {
@@ -84,7 +78,7 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
     }
     private fun verificarYCargarDivisaDesdeDB() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        var codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
+        val codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
 
         // Si no hay divisa en SharedPreferences, cargarla desde BD
         if (codigoDivisaActual.isNullOrEmpty() || codigoDivisaActual == "PEN") {
@@ -216,12 +210,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
         progressBar.progressTintList = ColorStateList.valueOf(color)
     }
 
-    private fun setupBotonAgregarGasto() {
-        btnAgregarGasto.setOnClickListener {
-            val intent = Intent(requireContext(), TransaccionGastoActivity::class.java)
-            startActivity(intent)
-        }
-    }
 
     override fun onResume() {
         super.onResume()

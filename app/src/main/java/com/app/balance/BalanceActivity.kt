@@ -171,16 +171,30 @@ class BalanceActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        etMonto.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        // Cuando el usuario hace clic o el EditText gana foco, si está en "0" se limpia para poder escribir
+        etMonto.setOnClickListener {
+            if (etMonto.text.toString() == "0") {
+                etMonto.setText("")
+            }
+        }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.toString() == "0" && count > 1) {
+        etMonto.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                if (etMonto.text.toString() == "0") {
                     etMonto.setText("")
-                    etMonto.setSelection(0)
+                }
+            } else {
+                // Si pierde foco y queda vacío, restaurar el 0 por defecto
+                if (etMonto.text.toString().trim().isEmpty()) {
+                    etMonto.setText("0")
                 }
             }
+        }
 
+        // Mantener validación simple al cambiar el texto
+        etMonto.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {}
         })
 

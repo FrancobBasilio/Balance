@@ -20,6 +20,13 @@
     <color name="warning_orange">#FB8C00</color>
     <color name="error_red">#E53935</color>
 
+    <color name="colorCyan">#00BCD4</color>
+    <color name="colorPink">#E91E63</color>
+    <color name="colorLime">#CDDC39</color>
+    <color name="colorTeal">#009688</color>
+
+    <color name="gold_soft">#FFFFE29A</color>
+
     <!---  COLORES DE LA APP !-->
     <color name="negro">#0B0F12</color>
     <color name="gris">#2E2E2E</color>
@@ -27,7 +34,40 @@
     <color name="balance">#F1B90C</color>
     <color name="borde">#D9D9D9</color>
     <color name="ic_launcher_bg">@color/gold</color>
-
     <color name="ic_launcher_background">#FFC107</color>
+    
+    <!-- COLORES PARA SOPORTE DE TEMA DINÁMICO (Modo Claro) -->
+    
+    <!-- Fondos principales -->
+    <color name="background_primary">#FFFFFF</color>
+    <color name="background_secondary">#F5F5F5</color>
+    <color name="background_card">#FFFFFF</color>
+    
+    <!-- Superficies elevadas -->
+    <color name="surface_1">#FFFFFF</color>
+    <color name="surface_2">#FAFAFA</color>
+    <color name="surface_3">#F5F5F5</color>
+    
+    <!-- Textos -->
+    <color name="text_primary">#0B0F12</color>
+    <color name="text_secondary">#5F6368</color>
+    <color name="text_hint">#9E9E9E</color>
+    
+    <!-- Drawer y navegación -->
+    <color name="drawer_background">#FFFFFF</color>
+    <color name="nav_item_selected">#FFF8E1</color>
+    <color name="nav_item_text">#0B0F12</color>
+    
+    <!-- Inputs -->
+    <color name="input_background">#FFFFFF</color>
+    <color name="input_stroke">#D9D9D9</color>
+    <color name="input_stroke_focused">#FBC02D</color>
+    
+    <!-- Chips y filtros -->
+    <color name="chip_background">#F5F5F5</color>
+    <color name="chip_selected">#FFF8E1</color>
+    
+    <!-- Ripple -->
+    <color name="ripple_color">#33FBC02D</color>
 
 </resources>

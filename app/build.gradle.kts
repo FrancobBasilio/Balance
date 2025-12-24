@@ -79,4 +79,11 @@ dependencies {
     // Glide para cargar imágenes
     implementation("com.github.bumptech.glide:glide:4.15.1")
     kapt("com.github.bumptech.glide:compiler:4.15.1")
+
+    // para animaciones
+    implementation("com.airbnb.android:lottie:6.5.0")
+
+    // para el tutorial
+    implementation("com.getkeepsafe.taptargetview:taptargetview:1.13.3")
+    implementation("uk.co.samuelwall:material-tap-target-prompt:3.3.2")
 }

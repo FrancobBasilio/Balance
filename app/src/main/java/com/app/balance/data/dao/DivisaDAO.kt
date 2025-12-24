@@ -79,6 +79,4 @@ class DivisaDAO(private val db: SQLiteDatabase, private val dbHelper: AppDatabas
         }
     }
 
-
-
 }

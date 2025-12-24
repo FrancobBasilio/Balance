@@ -89,4 +89,80 @@ class TransaccionDAO(private val db: SQLiteDatabase, private val dbHelper: AppDa
             arrayOf(transaccionId.toString())
         )
     }
+
+    fun obtenerTransaccionPorId(transaccionId: Int): TransaccionConDetalles? {
+        val query = """
+        SELECT * FROM ${AppDatabaseHelper.TABLE_TRANSACCIONES}
+        WHERE ${AppDatabaseHelper.COL_TRANSACCION_ID} = ?
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(transaccionId.toString()))
+        var resultado: TransaccionConDetalles? = null
+
+        if (cursor.moveToFirst()) {
+            val transaccion = Transaccion(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_ID)),
+                categoriaId = 0,
+                monto = cursor.getDouble(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_MONTO)),
+                fecha = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_FECHA)),
+                comentario = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_COMENTARIO)),
+                usuarioId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_USUARIO_ID))
+            )
+
+            val colorIndex = cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR)
+            val color = if (cursor.isNull(colorIndex)) null else cursor.getInt(colorIndex)
+
+            val categoria = Categoria(
+                id = 0,
+                nombre = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_NOMBRE)),
+                icono = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_ICONO)),
+                usuarioId = transaccion.usuarioId,
+                tipoCategoriaId = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID)),
+                rutaImagen = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN)),
+                color = color
+            )
+
+            val tipoCategoria = TipoCategoria(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID)),
+                nombre = cursor.getString(cursor.getColumnIndexOrThrow(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_NOMBRE))
+            )
+
+            resultado = TransaccionConDetalles(transaccion, categoria, tipoCategoria)
+        }
+
+        cursor.close()
+        return resultado
+    }
+
+    fun actualizarTransaccion(
+        transaccionId: Int,
+        categoriaNombre: String,
+        categoriaIcono: String,
+        categoriaRutaImagen: String?,
+        categoriaColor: Int?,
+        tipoCategoriaId: Int,
+        tipoCategoriaNombre: String,
+        monto: Double,
+        fecha: String,
+        comentario: String?
+    ): Int {
+        val valores = ContentValues().apply {
+            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_NOMBRE, categoriaNombre)
+            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_ICONO, categoriaIcono)
+            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_RUTA_IMAGEN, categoriaRutaImagen)
+            put(AppDatabaseHelper.COL_TRANSACCION_CATEGORIA_COLOR, categoriaColor)
+            put(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_ID, tipoCategoriaId)
+            put(AppDatabaseHelper.COL_TRANSACCION_TIPO_CATEGORIA_NOMBRE, tipoCategoriaNombre)
+            put(AppDatabaseHelper.COL_TRANSACCION_MONTO, monto)
+            put(AppDatabaseHelper.COL_TRANSACCION_FECHA, fecha)
+            put(AppDatabaseHelper.COL_TRANSACCION_COMENTARIO, comentario)
+        }
+
+        return db.update(
+            AppDatabaseHelper.TABLE_TRANSACCIONES,
+            valores,
+            "${AppDatabaseHelper.COL_TRANSACCION_ID} = ?",
+            arrayOf(transaccionId.toString())
+        )
+    }
 }

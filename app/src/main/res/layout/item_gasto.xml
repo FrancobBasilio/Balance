@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/background_card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
                 android:text="Necesidades"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/tvTipoCategoria"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="PC"
                 android:textSize="14sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/text_secondary"
                 android:layout_marginTop="4dp"/>
 
             <TextView
@@ -53,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:text="mi pc no prende"
                 android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/text_hint"
                 android:layout_marginTop="2dp"
                 android:fontFamily="sans-serif-light"/>
 
@@ -73,7 +74,7 @@
                 android:text="S/. 200"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/holo_red_dark"/>
+                android:textColor="@color/error_red"/>
 
             <TextView
                 android:id="@+id/tvFechaGasto"
@@ -81,26 +82,47 @@
                 android:layout_height="wrap_content"
                 android:text="2024-01-15"
                 android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/text_secondary"
                 android:layout_marginTop="4dp"/>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEliminarGasto"
+            <!-- Botones lado a lado: editar (izquierda) y eliminar (derecha) -->
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:text="Eliminar"
-                android:textSize="11sp"
-                android:textColor="@android:color/white"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:icon="@android:drawable/ic_menu_delete"
-                app:iconSize="16dp"
-                app:iconTint="@android:color/white"
-                app:iconGravity="start"
-                app:cornerRadius="18dp"
-                app:backgroundTint="@android:color/holo_red_dark"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                style="@style/Widget.Material3.Button.TonalButton"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical|end">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEditarGasto"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:contentDescription="Editar gasto"
+                    app:icon="@drawable/ic_edit_balance"
+                    app:iconSize="20dp"
+                    app:iconTint="@color/background_primary"
+                    app:iconPadding="0dp"
+                    app:cornerRadius="18dp"
+                    app:backgroundTint="@color/balance"
+                    android:padding="7dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEliminarGasto"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="Eliminar gasto"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    app:iconSize="20dp"
+                    app:iconTint="@android:color/white"
+                    app:iconPadding="0dp"
+                    app:cornerRadius="18dp"
+                    app:backgroundTint="@color/error_red"
+                    android:padding="7dp"
+                    style="@style/Widget.MaterialComponents.Button" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

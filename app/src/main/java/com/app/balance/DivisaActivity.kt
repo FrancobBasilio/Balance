@@ -23,8 +23,7 @@ import com.app.balance.model.CountryCode
 import com.app.balance.model.Divisa
 import com.app.balance.network.apiClient.PaisesApiClientDivisa
 import com.app.balance.network.apiClient.PaisesApiClientRegistro
-import com.app.balance.respondApi.repository.DivisaRepository
-import com.app.balance.respondApi.repository.PaisRepositoryRegistro
+import com.app.balance.respondApi.DivisaRepository
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 

@@ -5,24 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.fragment.app.Fragment
 import com.app.balance.CrearCategoriaActivity
 import com.app.balance.R
 import com.app.balance.TransaccionGastoActivity
 import com.app.balance.data.AppDatabaseHelper
 import com.app.balance.data.dao.DivisaDAO
-import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.button.MaterialButton
 
 class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateListener {
 
     private lateinit var progressCircular: ProgressCircular
-    private lateinit var btnAgregarGasto: MaterialButton
     private lateinit var fabCrearCategoria: FloatingActionButton
 
     private var balanceOriginal = 0.0
@@ -34,21 +30,37 @@ class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateList
         super.onViewCreated(view, savedInstanceState)
 
         progressCircular = view.findViewById(R.id.progressCircular)
-        btnAgregarGasto = view.findViewById(R.id.btnAgregarGasto)
         fabCrearCategoria = view.findViewById(R.id.fabCrearCategoria)
 
         obtenerDatos()
         actualizarGrafico()
 
+        fabCrearCategoria.setOnClickListener {
+            mostrarMenuBottom()
+        }
+    }
+
+    private fun mostrarMenuBottom() {
+        val dialog = BottomSheetDialog(requireContext())
+        val sheetView = LayoutInflater.from(requireContext()).inflate(R.layout.bottom_sheet_menu_ingresos, null)
+
+        val btnAgregarGasto = sheetView.findViewById<MaterialButton>(R.id.btnAgregarGastoBottom)
+        val btnAgregarCategoria = sheetView.findViewById<MaterialButton>(R.id.btnAgregarCategoriaBottom)
+
         btnAgregarGasto.setOnClickListener {
             val intent = Intent(requireContext(), TransaccionGastoActivity::class.java)
             startActivity(intent)
+            dialog.dismiss()
         }
 
-        fabCrearCategoria.setOnClickListener {
+        btnAgregarCategoria.setOnClickListener {
             val intent = Intent(requireContext(), CrearCategoriaActivity::class.java)
             startActivity(intent)
+            dialog.dismiss()
         }
+
+        dialog.setContentView(sheetView)
+        dialog.show()
     }
 
     override fun onBalanceUpdated(nuevoBalance: Double, codigoDivisa: String) {
@@ -59,7 +71,7 @@ class IngresosFragment : Fragment(R.layout.fragment_ingresos), BalanceUpdateList
 
     private fun verificarYCargarDivisaDesdeDB() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        var codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
+        val codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
 
         // Si no hay divisa en SharedPreferences, cargarla desde BD
         if (codigoDivisaActual.isNullOrEmpty() || codigoDivisaActual == "PEN") {

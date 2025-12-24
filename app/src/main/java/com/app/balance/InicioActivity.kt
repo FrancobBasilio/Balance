@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.viewpager2.widget.ViewPager2
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,6 +23,7 @@ import com.app.balance.data.AppDatabaseHelper
 import com.app.balance.data.dao.DivisaDAO
 import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
+import com.app.balance.ui.AcercaFragment
 import com.app.balance.ui.BalanceUpdateListener
 import com.app.balance.ui.ConfiguracionFragment
 import com.app.balance.ui.DashboardFragment
@@ -31,6 +33,10 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.tabs.TabLayout
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
+
 import java.io.File
 
 class InicioActivity : AppCompatActivity() {
@@ -47,6 +53,7 @@ class InicioActivity : AppCompatActivity() {
     private lateinit var tvHeaderName: TextView
     private lateinit var ivHeaderFlag: ImageView
     private lateinit var tvHeaderEmail: TextView
+    private lateinit var ivHeaderLogo: TextView
 
     private var codigoDivisa = ""
     private var balanceActual = 0.0
@@ -87,6 +94,7 @@ class InicioActivity : AppCompatActivity() {
         btnEditBalance = findViewById(R.id.btnEditBalance)
         btnMenu = findViewById(R.id.btnMenu)
         layoutCentro = findViewById(R.id.layoutCentro)
+        ivHeaderLogo = findViewById(R.id.ivHeaderLogo)
     }
 
     private fun initHeaderViews() {
@@ -172,6 +180,12 @@ class InicioActivity : AppCompatActivity() {
                     drawerLayout.closeDrawers()
                     true
                 }
+                R.id.nav_about -> {
+                    loadFragment(AcercaFragment())
+                    mostrarHeaderBalance(false)
+                    drawerLayout.closeDrawers()
+                    true
+                }
                 R.id.nav_log_out -> {
                     mostrarDialogoCerrarSesion()
                     true
@@ -185,9 +199,11 @@ class InicioActivity : AppCompatActivity() {
         if (mostrar) {
             layoutCentro.visibility = View.VISIBLE
             btnEditBalance.visibility = View.VISIBLE
+            ivHeaderLogo.visibility = View.GONE
         } else {
             layoutCentro.visibility = View.GONE
             btnEditBalance.visibility = View.GONE
+            ivHeaderLogo.visibility = View.VISIBLE
         }
     }
 
@@ -392,21 +408,29 @@ class InicioActivity : AppCompatActivity() {
             .setTitle("Cerrar sesión")
             .setMessage("¿Estás seguro de que deseas cerrar sesión?")
             .setPositiveButton("Cerrar sesión") { _, _ ->
-                cerrarSesion()
+                cerrarSesion() // <-- Llama a la función de abajo
             }
             .setNegativeButton("Cancelar", null)
             .show()
     }
 
+
+    // --- LÓGICA para CIERRE DE SESIÓN y NO BORRA el historial del tour.
+
     private fun cerrarSesion() {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
 
+        // 1. Antes de borrar, se leen los flags que se quieren mantener
         val esPrimeraVez = prefs.getBoolean("ES_PRIMERA_VEZ", true)
+        val tourHecho = prefs.getBoolean("TUTORIAL_DASHBOARD_DONE", false)
 
+        // 2. Se limipan los datos (ID de usuario, email, etc.)
         prefs.edit().clear().apply()
 
+        // 3. Se guadan flags importantes
         prefs.edit()
             .putBoolean("ES_PRIMERA_VEZ", esPrimeraVez)
+            .putBoolean("TUTORIAL_DASHBOARD_DONE", tourHecho) // VALIDACIÓN
             .putBoolean("SESION_ACTIVA", false)
             .apply()
 
@@ -417,4 +441,347 @@ class InicioActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+    //  TOUR INTERACTIVO (usando 'TabLayout' y 'ViewPager2')
+    // =====================================================
+
+    // Variable para no mostrar el diálogo de tour más de una vez por sesión
+    private var pregunteEstaVez = false
+
+    // --- Definimos colores ---
+    private val GOLD = 0xFFF1B623.toInt()
+    private val GOLD_SOFT = 0xFFFFE29A.toInt()
+    private val TEXT = 0xFF202124.toInt()
+
+    // Estilos a los círculos del tour.
+
+    private fun TapTarget.estilo(): TapTarget = this
+        .outerCircleColorInt(GOLD)
+        .targetCircleColorInt(GOLD_SOFT)
+        .titleTextColorInt(TEXT)
+        .descriptionTextColorInt(TEXT)
+        .transparentTarget(true)
+        .drawShadow(true)
+        .cancelable(false) // El usuario DEBE tocar el círculo
+
+   // Busca un ID DENTRO del DashboardFragment (Fragment Padre)
+    //Este ID ayuda a encontrar el TabLayout y el ViewPager.
+
+    private fun vistaEnDashboardPadre(id: Int): View? {
+        val frag =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? com.app.balance.ui.DashboardFragment
+        if (frag?.view == null) {
+            Log.e("Tour", "DashboardFragment (Padre) no encontrado o su vista es nula.")
+            return null
+        }
+        return frag.view?.findViewById(id)
+    }
+
+    // Busca un ID DENTRO del FRAGMENTO HIJO que está actualmente visible en el ViewPager.
+    // Se usa encontrar "fabCrearCategoria"
+    private fun vistaEnHijoDelViewPager(id: Int): View? {
+        val dashFrag =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? com.app.balance.ui.DashboardFragment
+        if (dashFrag?.view == null) {
+            Log.e("Tour", "vistaEnHijo: DashboardFragment (Padre) no encontrado.")
+            return null
+        }
+
+        // Usamos el ID de  DashboardFragment
+        val viewPager = dashFrag.view?.findViewById<ViewPager2>(R.id.viewPager)
+        if (viewPager == null) {
+            Log.e("Tour", "vistaEnHijo: ViewPager2 (R.id.viewPager) no encontrado.")
+            return null
+        }
+
+        // El ViewPager2 crea fragments con un etiqueta "f" + la posición
+        val currentFrag =
+            dashFrag.childFragmentManager.findFragmentByTag("f${viewPager.currentItem}")
+        if (currentFrag?.view == null) {
+            Log.e(
+                "Tour",
+                "vistaEnHijo: Fragmento hijo no encontrado (Tag: f${viewPager.currentItem})."
+            )
+            return null
+        }
+
+        return currentFrag.view?.findViewById(id)
+    }
+
+
+    // ¡CONDICIÓN CLAVE!
+     // Aquí se decide si mostramos el tour. Solo lo hace si 'TUTORIAL_DASHBOARD_DONE' es 'false'.
+
+    private fun esUsuarioNuevo(prefs: android.content.SharedPreferences): Boolean {
+        val tourHecho = prefs.getBoolean("TUTORIAL_DASHBOARD_DONE", false)
+        return !tourHecho
+    }
+
+     // Revisa si estamos en la pantalla de Dashboard.
+     private fun estamosEnDashboard(): Boolean {
+        val frag = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        return (frag is com.app.balance.ui.DashboardFragment)
+    }
+
+    // Revisa todas las condiciones antes de mostrar el diálogo.
+    private fun mostrarTourSiUsuarioNuevo() {
+        if (pregunteEstaVez) return
+        if (!estamosEnDashboard()) return
+
+        val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+        if (!esUsuarioNuevo(prefs)) {
+            Log.d("Tour", "El usuario ya vio el tour.")
+            return
+        }
+
+        pregunteEstaVez = true
+        Log.d("Tour", "Es usuario nuevo. Mostrando diálogo de tour.")
+
+        // ¡¡CAMBIO AQUÍ!! Usamos el nuevo estilo ".Solid"
+        MaterialAlertDialogBuilder(this, R.style.TourAlertDialog_Solid)
+            .setTitle("¿Quieres iniciar el tour?")
+            .setMessage("¡Te mostramos lo esencial de Balance+!")
+            .setPositiveButton("Iniciar") { _, _ ->
+                Log.d("Tour", "Usuario aceptó el tour.")
+                prefs.edit().putBoolean("ES_PRIMERA_VEZ", false).apply()
+
+                // Esperamos un poco para que el DashboardFragment y sus hijos carguen
+                drawerLayout.postDelayed({
+                    iniciarTourPaso1_Balance()
+                }, 700) // Un poco más de tiempo por si acaso
+            }
+            .setNegativeButton("No, gracias") { _, _ ->
+                Log.d("Tour", "Usuario rechazó el tour. Marcando como 'hecho'.")
+                prefs.edit()
+                    .putBoolean("ES_PRIMERA_VEZ", false)
+                    .putBoolean("TUTORIAL_DASHBOARD_DONE", true)
+                    .apply()
+            }
+            .show()
+    }
+
+    // ---------- EL FLUJO DEL TOUR  ----------
+    //PASO 1: Mostrar el botón de Editar Balance (Header)
+
+    private fun iniciarTourPaso1_Balance() {
+        val vBalance = findViewById<View>(R.id.btnEditBalance)
+        if (vBalance == null) {
+            Log.e("Tour", "Paso 1: ¡ERROR! No se encontró 'R.id.btnEditBalance'.")
+            finalizarTour(marcarComoHecho = false)
+            return
+        }
+
+        TapTargetView.showFor(this,
+            TapTarget.forView(
+                vBalance,
+                "1. Tu Balance",
+                "Toca aquí para actualizar el monto total de tu balance" ).estilo(),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    mostrarTourPaso2_TabGastos() // Siguiente paso
+                }
+
+                override fun onTargetLongClick(view: TapTargetView) {
+                    onTargetClick(view)
+                }
+
+                override fun onTargetCancel(view: TapTargetView) {
+                    finalizarTour(marcarComoHecho = false)
+                }
+            }
+        )
+    }
+    //PASO 2: Mostrar la Pestaña "Gastos"
+    private fun mostrarTourPaso2_TabGastos() {
+        val tabLayout = vistaEnDashboardPadre(R.id.tabLayout) as? TabLayout
+        if (tabLayout == null) {
+            Log.e("Tour", "Paso 2: ¡ERROR! No se encontró el TabLayout (R.id.tabLayout).")
+            finalizarTour(marcarComoHecho = true) // Vio el paso 1, así que marcamos
+            return
+        }
+
+        // "Gastos" es la primera pestaña (índice 0)
+        val vTabGastos = tabLayout.getTabAt(0)?.view
+        if (vTabGastos == null) {
+            Log.e("Tour", "Paso 2: ¡ERROR! No se encontró la pestaña en el índice 0.")
+            finalizarTour(marcarComoHecho = true)
+            return
+        }
+
+        TapTargetView.showFor(this,
+            TapTarget.forView(
+                vTabGastos,
+                "2. Tus gastos ",
+                "Aquí verás el historial de tus gastos/transacciones."
+            ).estilo(),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    // Navegamos a esa pestaña
+                    tabLayout.getTabAt(0)?.select()
+                    // Esperamos que el ViewPager cambie de fragment
+                    drawerLayout.postDelayed({
+                        mostrarTourPaso3_TabDashboard()
+                    }, 400)
+                }
+
+                override fun onTargetLongClick(view: TapTargetView) {
+                    onTargetClick(view)
+                }
+
+                override fun onTargetCancel(view: TapTargetView) {
+                    finalizarTour(marcarComoHecho = true)
+                }
+            }
+        )
+    }
+
+   //PASO 3: Mostrar la Pestaña "Dashboard"
+    private fun mostrarTourPaso3_TabDashboard() {
+        val tabLayout = vistaEnDashboardPadre(R.id.tabLayout) as? TabLayout
+        if (tabLayout == null) {
+            Log.e("Tour", "Paso 3: ¡ERROR! No se encontró el TabLayout.")
+            finalizarTour(marcarComoHecho = true)
+            return
+        }
+
+        // "Dashboard" es la segunda pestaña (índice 1)
+        val vTabDashboard = tabLayout.getTabAt(1)?.view
+        if (vTabDashboard == null) {
+            Log.e("Tour", "Paso 3: ¡ERROR! No se encontró la pestaña en el índice 1.")
+            finalizarTour(marcarComoHecho = true)
+            return
+        }
+
+        TapTargetView.showFor(this,
+            TapTarget.forView(
+                vTabDashboard,
+                "3. Tu Dashboard",
+                "Toca aquí para tu resumen financero."
+            ).estilo(),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    // ¡Navegamos!
+                    tabLayout.getTabAt(1)?.select()
+                    drawerLayout.postDelayed({
+                        mostrarTourPaso4_BotonCategoria()
+                    }, 400)
+                }
+
+                override fun onTargetLongClick(view: TapTargetView) {
+                    onTargetClick(view)
+                }
+
+                override fun onTargetCancel(view: TapTargetView) {
+                    finalizarTour(marcarComoHecho = true)
+                }
+            }
+        )
+    }
+
+    //PASO 4: Mostrar el Botón de "Crear Categoría" (FAB)
+
+    private fun mostrarTourPaso4_BotonCategoria() {
+        val vBotonCategoria = vistaEnHijoDelViewPager(R.id.fabCrearCategoria)
+
+        if (vBotonCategoria == null) {
+            Log.e(
+                "Tour",
+                "Paso 4: ¡AVISO! No se encontró 'R.id.ID_DE_TU_BOTON_CATEGORIA_FAB'. Saltando al paso 5."
+            )
+            mostrarTourPaso5_TabBalance() // Si no lo encuentra, salta al último paso
+            return
+        }
+
+        TapTargetView.showFor(this,
+            TapTarget.forView(
+                vBotonCategoria,
+                "4. Agregar categorías / transacciones",
+                "Toca aquí para añadir categorías y transacciones."
+            ).estilo(),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    mostrarTourPaso5_TabBalance() // Siguiente paso
+                }
+
+                override fun onTargetLongClick(view: TapTargetView) {
+                    onTargetClick(view)
+                }
+
+                override fun onTargetCancel(view: TapTargetView) {
+                    finalizarTour(marcarComoHecho = true)
+                }
+            }
+        )
+    }
+
+    //PASO 5: Mostrar la Pestaña "Balance" (ahorro)
+    private fun mostrarTourPaso5_TabBalance() {
+        val tabLayout = vistaEnDashboardPadre(R.id.tabLayout) as? TabLayout
+        if (tabLayout == null) {
+            Log.e("Tour", "Paso 5: ¡ERROR! No se encontró el TabLayout.")
+            finalizarTour(marcarComoHecho = true)
+            return
+        }
+
+        // "Balance" (Ahorro) es la tercera pestaña (índice 2)
+        val vTabBalance = tabLayout.getTabAt(2)?.view
+        if (vTabBalance == null) {
+            Log.e("Tour", "Paso 5: ¡ERROR! No se encontró la pestaña en el índice 2.")
+            finalizarTour(marcarComoHecho = true)
+            return
+        }
+
+        TapTargetView.showFor(this,
+            TapTarget.forView(vTabBalance, "5. Tu Balance", "Toca aquí para ver tu control financiero.")
+                .estilo(),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView) {
+                    super.onTargetClick(view)
+                    // ¡Navegamos!
+                    tabLayout.getTabAt(2)?.select()
+                    drawerLayout.postDelayed({
+                        finalizarTour(marcarComoHecho = true)
+                    }, 400)
+                }
+
+                override fun onTargetLongClick(view: TapTargetView) {
+                    onTargetClick(view)
+                }
+
+                override fun onTargetCancel(view: TapTargetView) {
+                    finalizarTour(marcarComoHecho = true)
+                }
+            }
+        )
+    }
+
+    //FINAL: Marca el tour como completado y muestra el mensaje final.
+    private fun finalizarTour(marcarComoHecho: Boolean) {
+        if (marcarComoHecho) {
+            Log.d("Tour", "Tour finalizado y guardado.")
+            val prefs = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+            prefs.edit().putBoolean("TUTORIAL_DASHBOARD_DONE", true).apply()
+
+            // se agrega un estilo
+            MaterialAlertDialogBuilder(this@InicioActivity, R.style.TourAlertDialog_Solid)
+                .setTitle("¡Listo!")
+                .setMessage("Ya conoces lo esencial de BALANCE+   Disfruta la app.")
+                .setPositiveButton("Aceptar", null)
+                .show()
+        } else {
+            Log.e("Tour", "Tour finalizado por un error, no se marcará como 'hecho'.")
+        }
+    }
+
+    //Se llama cuando la Activity es visible.
+
+    override fun onPostResume() {
+        super.onPostResume()
+        mostrarTourSiUsuarioNuevo()
+    }
+
 }

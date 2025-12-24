@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- COLORES MODO OSCURO -->
+    
+    <!-- Fondos principales -->
+    <color name="background_primary">#121212</color>
+    <color name="background_secondary">#1E1E1E</color>
+    <color name="background_card">#2D2D2D</color>
+    
+    <!-- Superficies elevadas -->
+    <color name="surface_1">#1E1E1E</color>
+    <color name="surface_2">#232323</color>
+    <color name="surface_3">#252525</color>
+    
+    <!-- Textos -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B3B3B3</color>
+    <color name="text_hint">#808080</color>
+    
+    <!-- Colores de la app adaptados -->
+    <color name="negro">#FFFFFF</color>
+    <color name="gris">#B3B3B3</color>
+    <color name="blanco">#121212</color>
+    <color name="balance">#F1B90C</color>
+    <color name="borde">#3D3D3D</color>
+    
+    <!-- Colores del sistema -->
+    <color name="black">#FFFFFF</color>
+    <color name="white">#121212</color>
+    
+    <!-- Mantener colores de acento -->
+    <color name="gold">#FBC02D</color>
+    <color name="gold_soft">#3D3A00</color>
+    
+    <!-- Estados -->
+    <color name="green">#4CAF50</color>
+    <color name="red">#EF5350</color>
+    <color name="blue">#42A5F5</color>
+    <color name="gray">#9E9E9E</color>
+    
+    <color name="light_green">#81C784</color>
+    <color name="light_blue">#64B5F6</color>
+    <color name="light_gray">#616161</color>
+    
+    <color name="success_green">#66BB6A</color>
+    <color name="warning_orange">#FFA726</color>
+    <color name="error_red">#EF5350</color>
+    
+    <!-- Drawer y navegación -->
+    <color name="drawer_background">#1E1E1E</color>
+    <color name="nav_item_selected">#3D3A00</color>
+    <color name="nav_item_text">#E0E0E0</color>
+    
+    <!-- Inputs -->
+    <color name="input_background">#2D2D2D</color>
+    <color name="input_stroke">#4D4D4D</color>
+    <color name="input_stroke_focused">#FBC02D</color>
+    
+    <!-- Chips y filtros -->
+    <color name="chip_background">#2D2D2D</color>
+    <color name="chip_selected">#3D3A00</color>
+    
+    <!-- Ripple -->
+    <color name="ripple_color">#33FBC02D</color>
+</resources>

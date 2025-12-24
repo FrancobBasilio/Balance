@@ -29,12 +29,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Añadir transacciones"
-                android:textSize="24sp"
-                android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_marginStart="8dp"/>
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

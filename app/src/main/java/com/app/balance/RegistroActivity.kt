@@ -19,7 +19,7 @@ import com.app.balance.data.dao.UsuarioDAO
 import com.app.balance.model.CountryCode
 import com.app.balance.model.Usuario
 import com.app.balance.network.apiClient.PaisesApiClientRegistro
-import com.app.balance.respondApi.repository.PaisRepositoryRegistro
+import com.app.balance.respondApi.PaisRepositoryRegistro
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText

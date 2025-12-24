@@ -45,6 +45,11 @@ class TransaccionGastoActivity : AppCompatActivity() {
     private var usuarioId: Int = 0
     private var codigoDivisa: String = "PEN"
 
+    // Edit mode
+    private var esModoEditar: Boolean = false
+    private var editarTransaccionId: Int = -1
+    private var transaccionOriginal: com.app.balance.model.TransaccionConDetalles? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -60,11 +65,21 @@ class TransaccionGastoActivity : AppCompatActivity() {
         initViews()
         setupRecyclerView()
         cargarCategoriasSistema()
+        // Leer extras para modo edición
+        esModoEditar = intent.getBooleanExtra("EXTRA_EDITAR", false)
+        if (esModoEditar) {
+            editarTransaccionId = intent.getIntExtra("EXTRA_TRANSACCION_ID", -1)
+        }
         setupFechaPicker()
         setupBotonAnadir()
         setupBotonRegresar()
 
         establecerFechaActual()
+
+        // Si venimos en modo edición, cargar la transacción y precargar campos
+        if (esModoEditar && editarTransaccionId != -1) {
+            precargarTransaccionParaEdicion(editarTransaccionId)
+        }
     }
 
     private fun obtenerDatosUsuario() {
@@ -225,7 +240,11 @@ class TransaccionGastoActivity : AppCompatActivity() {
             return
         }
 
-        guardarTransaccion(monto, categoriaSeleccionada, comentario)
+        if (esModoEditar && transaccionOriginal != null) {
+            actualizarTransaccion(transaccionOriginal!!, monto, categoriaSeleccionada, comentario)
+        } else {
+            guardarTransaccion(monto, categoriaSeleccionada, comentario)
+        }
     }
 
     private fun guardarTransaccion(monto: Double, categoria: Categoria, comentario: String) {
@@ -278,6 +297,53 @@ class TransaccionGastoActivity : AppCompatActivity() {
         db.close()
     }
 
+    private fun actualizarTransaccion(original: com.app.balance.model.TransaccionConDetalles, monto: Double, categoria: Categoria, comentario: String) {
+        val dbHelper = AppDatabaseHelper(this)
+        val db = dbHelper.writableDatabase
+        val transaccionDAO = com.app.balance.data.dao.TransaccionDAO(db, dbHelper)
+        val usuarioDAO = UsuarioDAO(db, dbHelper)
+
+        val resultado = transaccionDAO.actualizarTransaccion(
+            transaccionId = original.transaccion.id,
+            categoriaNombre = categoria.nombre,
+            categoriaIcono = categoria.icono,
+            categoriaRutaImagen = categoria.rutaImagen,
+            categoriaColor = categoria.color,
+            tipoCategoriaId = categoria.tipoCategoriaId,
+            tipoCategoriaNombre = categoria.tipoCategoriaId.let { id ->
+                // obtener nombre tipo desde la categoria que usamos en UI
+                val tipoDAO = TipoCategoriaDAO(db, dbHelper)
+                tipoDAO.obtenerTipoPorId(categoria.tipoCategoriaId)?.nombre ?: ""
+            },
+            monto = monto,
+            fecha = fechaSeleccionada,
+            comentario = comentario.ifEmpty { null }
+        )
+
+        if (resultado > 0) {
+            // Ajustar balance según diferencia
+            val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+            val balanceActual = prefs.getString("BALANCE_MONTO", "0.00")?.toDoubleOrNull() ?: 0.0
+            val montoOriginal = original.transaccion.monto
+            val delta = monto - montoOriginal // si positivo, restar más; si negativo, devolver
+            val nuevoBalance = balanceActual - delta
+
+            prefs.edit()
+                .putString("BALANCE_MONTO", nuevoBalance.toString())
+                .apply()
+
+            usuarioDAO.actualizarMontoTotal(usuarioId, nuevoBalance)
+
+            Toast.makeText(this, "Gasto actualizado", Toast.LENGTH_SHORT).show()
+            setResult(RESULT_OK)
+            finish()
+        } else {
+            Toast.makeText(this, "Error al actualizar el gasto", Toast.LENGTH_SHORT).show()
+        }
+
+        db.close()
+    }
+
     private fun actualizarBalanceDespuesDeGasto(montoGasto: Double, usuarioDAO: UsuarioDAO) {
         val prefs = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         val balanceActual = prefs.getString("BALANCE_MONTO", "0.00")?.toDoubleOrNull() ?: 0.0
@@ -288,5 +354,37 @@ class TransaccionGastoActivity : AppCompatActivity() {
             .apply()
 
         usuarioDAO.actualizarMontoTotal(usuarioId, nuevoBalance)
+    }
+
+    private fun precargarTransaccionParaEdicion(transaccionId: Int) {
+        val dbHelper = AppDatabaseHelper(this)
+        val db = dbHelper.readableDatabase
+        val transaccionDAO = TransaccionDAO(db, dbHelper)
+        val categoriaDAO = CategoriaDAO(db, dbHelper)
+
+        val tx = transaccionDAO.obtenerTransaccionPorId(transaccionId)
+        if (tx != null) {
+            transaccionOriginal = tx
+
+            // Precargar campos
+            etMontoGasto.setText(tx.transaccion.monto.toString())
+            fechaSeleccionada = tx.transaccion.fecha
+            tvFechaSeleccionada.text = formatearFecha(fechaSeleccionada)
+            etComentario.setText(tx.transaccion.comentario ?: "")
+
+            // Cargar categorías y seleccionar la que coincida por nombre
+            val categorias = categoriaDAO.obtenerCategoriasSistemaPorUsuario(usuarioId)
+            adapter.actualizarCategorias(categorias)
+
+            val match = categorias.find { it.nombre == tx.categoria.nombre }
+            if (match != null) {
+                adapter.setSelectedById(match.id)
+            }
+
+            // Cambiar texto del botón
+            btnAnadirGasto.text = "Actualizar gasto"
+        }
+
+        db.close()
     }
 }

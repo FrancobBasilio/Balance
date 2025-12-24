@@ -58,10 +58,10 @@ class ProgressCircular @JvmOverloads constructor(
         paintText.typeface = android.graphics.Typeface.DEFAULT_BOLD
 
         paintText.color = 0xFF000000.toInt()
-        paintText.textSize = 110f
+        paintText.textSize = 128f
         canvas.drawText("${porcentajeAhorroDisponible.toInt()}%", centerX, centerY + 35f, paintText)
 
-        paintText.textSize = 28f
+        paintText.textSize = 40f
         paintText.color = 0xFF666666.toInt()
         paintText.typeface = android.graphics.Typeface.DEFAULT
         canvas.drawText("ahorro disponible", centerX, centerY + 75f, paintText)

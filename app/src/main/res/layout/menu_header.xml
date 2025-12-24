@@ -14,15 +14,15 @@
         app:cardCornerRadius="50dp"
         app:cardElevation="8dp"
         app:strokeWidth="3dp"
-        app:strokeColor="@android:color/white">
+        app:strokeColor="@color/gold">
 
         <ImageView
             android:id="@+id/ivHeaderAvatar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="105dp"
+            android:contentDescription="Avatar del usuario"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_persona"
-            android:contentDescription="Avatar del usuario" />
+            android:src="@drawable/ic_persona" />
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -38,13 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Usuario"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:shadowColor="#000000"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="4" />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivHeaderFlag"
@@ -60,14 +56,10 @@
         android:id="@+id/tvHeaderEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="correo@ejemplo.com"
-        android:textSize="14sp"
-        android:textColor="@android:color/white"
-        android:alpha="0.8"
         android:layout_marginTop="4dp"
-        android:shadowColor="#000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2" />
+        android:alpha="0.8"
+        android:text="correo@ejemplo.com"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp" />
 
 </LinearLayout>

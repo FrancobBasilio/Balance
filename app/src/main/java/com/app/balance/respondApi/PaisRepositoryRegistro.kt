@@ -1,4 +1,4 @@
-package com.app.balance.respondApi.repository
+package com.app.balance.respondApi
 
 import com.app.balance.model.CountryCode
 import com.app.balance.network.PaisesApiServiceRegistro

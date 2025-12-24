@@ -93,7 +93,18 @@ class CategoriaSeleccionAdapter(
         return categorias.find { it.id == categoriaSeleccionadaId }
     }
 
-    //  Cargar icono predeterminado con background circular
+    fun setSelectedById(categoriaId: Int) {
+        categoriaSeleccionadaId = categoriaId
+        notifyDataSetChanged()
+    }
+
+    fun setCategoriasAndSelected(nuevasCategorias: List<Categoria>, selectedId: Int?) {
+        categorias = nuevasCategorias
+        categoriaSeleccionadaId = selectedId ?: -1
+        notifyDataSetChanged()
+    }
+
+    //  Cargar icono predeterminado with circular background
     private fun cargarIconoPredeterminado(holder: CategoriaViewHolder, categoria: Categoria) {
         val context = holder.itemView.context
         val iconoRes = obtenerRecursoIcono(categoria.icono)

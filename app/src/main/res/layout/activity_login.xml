@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_primary"
     tools:context=".LoginActivity">
 
     <ScrollView
@@ -50,6 +50,7 @@
                 android:text="Inicia sesión para continuar"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
+                android:textColor="@color/text_secondary"
                 style="@style/textBalance"/>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -59,6 +60,10 @@
                 android:hint="Correo electronico"
                 android:layout_marginTop="16dp"
                 app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="@color/input_background"
+                app:boxStrokeColor="@color/gold"
+                app:hintTextColor="@color/text_hint"
+                android:textColorHint="@color/text_hint"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -69,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
+                    android:textColor="@color/text_primary"
                     android:inputType="textEmailAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -80,17 +86,23 @@
                 android:hint="Contraseña"
                 android:layout_marginTop="16dp"
                 app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="@color/input_background"
+                app:boxStrokeColor="@color/gold"
+                app:hintTextColor="@color/text_hint"
+                android:textColorHint="@color/text_hint"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopStart="8dp"
-                app:passwordToggleEnabled="true">
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/text_secondary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietClave"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
+                    android:textColor="@color/text_primary"
                     android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -110,6 +122,7 @@
                 android:text="¿Olvidaste tu contraseña?"
                 android:layout_marginTop="29dp"
                 android:textStyle="bold"
+                android:textColor="@color/text_secondary"
                 style="@style/textBalance"
                 android:clickable="true"
                 android:focusable="true"/>
@@ -125,6 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="¿Eres nuevo en la aplicación? "
+                    android:textColor="@color/text_secondary"
                     style="@style/textBalance"/>
 
                 <TextView
@@ -133,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:text="Regístrate aquí"
                     android:textStyle="bold"
-                    style="Registrate aqui"
+                    android:textColor="@color/gold"
                     android:clickable="true"
                     android:focusable="true"/>
             </LinearLayout>

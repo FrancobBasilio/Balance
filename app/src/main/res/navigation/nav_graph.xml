@@ -17,4 +17,11 @@
         android:id="@+id/configuracionFragment"
         android:name="com.app.balance.ui.ConfiguracionFragment"
         android:label="ConfiguracionFragment" />
+    <fragment
+        android:id="@+id/acercaFragment"
+        android:name="com.app.balance.ui.AcercaFragment"
+        android:label="AcercaFragment">
+    </fragment>
+
 </navigation>
+
