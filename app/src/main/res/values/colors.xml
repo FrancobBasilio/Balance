@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ========================================== -->
+    <!-- MODO CLARO - BALANCE+ BRAND COLORS         -->
+    <!-- ========================================== -->
 
-    <!---  COLORES DEL SISTEMA NO ELIMINAR !-->
+    <!-- Colores del sistema -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#2E7D32</color>
     <color name="red">#D32F2F</color>
     <color name="blue">#1565C0</color>
     <color name="gray">#424242</color>
-
+<color name="switch_tint">#424242</color>
     <color name="light_green">#66BB6A</color>
     <color name="light_blue">#42A5F5</color>
     <color name="light_gray">#BDBDBD</color>
 
     <color name="gold">#FBC02D</color>
+    <color name="gold_soft">#FFF8E1</color>
+    <color name="gold_dark">#C49000</color>
     <color name="teal">#009688</color>
 
     <color name="success_green">#4CAF50</color>
@@ -25,25 +30,21 @@
     <color name="colorLime">#CDDC39</color>
     <color name="colorTeal">#009688</color>
 
-    <color name="gold_soft">#FFFFE29A</color>
-
-    <!---  COLORES DE LA APP !-->
+    <!-- COLORES DE LA APP -->
     <color name="negro">#0B0F12</color>
-    <color name="gris">#2E2E2E</color>
-    <color name="blanco">#ffffff</color>
+    <color name="gris">#5F6368</color>
+    <color name="blanco">#FFFFFF</color>
     <color name="balance">#F1B90C</color>
-    <color name="borde">#D9D9D9</color>
+    <color name="borde">#E0E0E0</color>
     <color name="ic_launcher_bg">@color/gold</color>
     <color name="ic_launcher_background">#FFC107</color>
     
-    <!-- COLORES PARA SOPORTE DE TEMA DINÁMICO (Modo Claro) -->
-    
     <!-- Fondos principales -->
     <color name="background_primary">#FFFFFF</color>
-    <color name="background_secondary">#F5F5F5</color>
+    <color name="background_secondary">#FAFAFA</color>
     <color name="background_card">#FFFFFF</color>
     
-    <!-- Superficies elevadas -->
+    <!-- Superficies -->
     <color name="surface_1">#FFFFFF</color>
     <color name="surface_2">#FAFAFA</color>
     <color name="surface_3">#F5F5F5</color>
@@ -60,14 +61,28 @@
     
     <!-- Inputs -->
     <color name="input_background">#FFFFFF</color>
-    <color name="input_stroke">#D9D9D9</color>
+    <color name="input_stroke">#E0E0E0</color>
     <color name="input_stroke_focused">#FBC02D</color>
+    <color name="input_text">#0B0F12</color>
     
-    <!-- Chips y filtros -->
+    <!-- Chips -->
     <color name="chip_background">#F5F5F5</color>
     <color name="chip_selected">#FFF8E1</color>
+    <color name="chip_text">#0B0F12</color>
+    
+    <!-- Botones -->
+    <color name="button_primary">#F1B90C</color>
+    <color name="button_text">#0B0F12</color>
+    
+    <!-- Cards -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="card_stroke">#E0E0E0</color>
     
     <!-- Ripple -->
     <color name="ripple_color">#33FBC02D</color>
+    
+    <!-- Iconos -->
+    <color name="icon_primary">#FBC02D</color>
+    <color name="icon_secondary">#5F6368</color>
 
 </resources>

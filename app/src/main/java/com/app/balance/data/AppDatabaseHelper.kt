@@ -3,12 +3,14 @@ package com.app.balance.data
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 
 class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
+        private const val TAG = "AppDatabaseHelper"
         private const val DATABASE_NAME = "balance_db"
-        private const val DATABASE_VERSION = 7
+        private const val DATABASE_VERSION = 7 // Mantener versión original
 
         // Tablas
         const val TABLE_USUARIOS = "usuarios"
@@ -29,7 +31,6 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         const val COL_USUARIO_CONTRASENA = "contrasena"
         const val COL_USUARIO_DIVISA_ID = "divisa_id"
         const val COL_USUARIO_MONTO_TOTAL = "monto_total"
-
         const val COL_USUARIO_FOTO_PERFIL = "foto_perfil"
 
         // Columnas Categoría Sistema
@@ -39,7 +40,6 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         const val COL_CAT_SISTEMA_USUARIO_ID = "usuario_id"
         const val COL_CAT_SISTEMA_TIPO_ID = "tipo_categoria_id"
         const val COL_CAT_SISTEMA_RUTA_IMAGEN = "ruta_imagen"
-
         const val COL_CAT_SISTEMA_COLOR = "color"
 
         // Columnas Transacción
@@ -58,7 +58,6 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         // Columnas Tipo Categoría
         const val COL_TIPO_ID = "id"
         const val COL_TIPO_NOMBRE = "nombre"
-
 
         // Columnas Country Code
         const val COL_COUNTRY_ID = "id"
@@ -163,6 +162,51 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
             )
         """.trimIndent()
         db.execSQL(createTransaccionTable)
+        
+        // Crear índices para optimización (sin cambiar versión)
+        crearIndicesSiNoExisten(db)
+    }
+    
+    /**
+     * Crea índices solo si no existen (seguro para llamar múltiples veces)
+     */
+    private fun crearIndicesSiNoExisten(db: SQLiteDatabase) {
+        try {
+            // Índice para búsqueda de transacciones por usuario
+            db.execSQL("""
+                CREATE INDEX IF NOT EXISTS idx_transacciones_usuario 
+                ON $TABLE_TRANSACCIONES ($COL_TRANSACCION_USUARIO_ID)
+            """)
+            
+            // Índice para ordenamiento por fecha
+            db.execSQL("""
+                CREATE INDEX IF NOT EXISTS idx_transacciones_fecha 
+                ON $TABLE_TRANSACCIONES ($COL_TRANSACCION_FECHA DESC)
+            """)
+            
+            // Índice compuesto para consultas filtradas por usuario y fecha
+            db.execSQL("""
+                CREATE INDEX IF NOT EXISTS idx_transacciones_usuario_fecha 
+                ON $TABLE_TRANSACCIONES ($COL_TRANSACCION_USUARIO_ID, $COL_TRANSACCION_FECHA DESC)
+            """)
+            
+            // Índice para categorías por usuario
+            db.execSQL("""
+                CREATE INDEX IF NOT EXISTS idx_categorias_usuario 
+                ON $TABLE_CATEGORIAS_SISTEMA ($COL_CAT_SISTEMA_USUARIO_ID)
+            """)
+            
+            // Índice para login por email
+            db.execSQL("""
+                CREATE INDEX IF NOT EXISTS idx_usuarios_email 
+                ON $TABLE_USUARIOS ($COL_USUARIO_EMAIL)
+            """)
+            
+            Log.d(TAG, "Índices verificados/creados correctamente")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error al crear índices: ${e.message}")
+            // No hacer nada - los índices son opcionales para el funcionamiento
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -174,5 +218,17 @@ class AppDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TIPOS_CATEGORIA")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_COUNTRY_CODES")
         onCreate(db)
+    }
+    
+    /**
+     * Optimizaciones al abrir la base de datos
+     */
+    override fun onOpen(db: SQLiteDatabase) {
+        super.onOpen(db)
+        
+        // Crear índices si no existen (para bases de datos existentes)
+        if (!db.isReadOnly) {
+            crearIndicesSiNoExisten(db)
+        }
     }
 }

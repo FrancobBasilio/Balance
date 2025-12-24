@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blanco">
-
+    android:background="@color/background_primary">
 
     <com.app.balance.ui.ProgressCircular
         android:id="@+id/progressCircular"
@@ -37,7 +36,7 @@
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="#33000000"
-        app:tint="@color/black" />
+        app:rippleColor="@color/ripple_color"
+        app:tint="@color/button_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

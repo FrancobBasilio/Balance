@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background_primary"
     tools:context=".RegistroActivity">
 
     <ScrollView
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Crea tu cuenta"
-                android:textColor="@color/black"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -67,10 +67,14 @@
                     android:layout_weight="1"
                     android:layout_marginEnd="10dp"
                     android:hint="Nombre"
-                    app:boxCornerRadiusBottomEnd="0dp"
-                    app:boxCornerRadiusTopEnd="0dp"
-                    app:boxCornerRadiusBottomStart="0dp"
-                    app:boxCornerRadiusTopStart="0dp">
+                    app:boxBackgroundColor="@color/input_background"
+                    app:boxStrokeColor="@color/gold"
+                    app:hintTextColor="@color/text_hint"
+                    android:textColorHint="@color/text_hint"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopStart="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tietNombre"
@@ -78,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:inputType="text"
-                        style="@style/textBalance"/>
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -87,10 +91,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Apellido"
-                    app:boxCornerRadiusBottomEnd="0dp"
-                    app:boxCornerRadiusTopEnd="0dp"
-                    app:boxCornerRadiusBottomStart="0dp"
-                    app:boxCornerRadiusTopStart="0dp">
+                    app:boxBackgroundColor="@color/input_background"
+                    app:boxStrokeColor="@color/gold"
+                    app:hintTextColor="@color/text_hint"
+                    android:textColorHint="@color/text_hint"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopStart="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tietApellido"
@@ -98,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:singleLine="true"
                         android:inputType="text"
-                        style="@style/textBalance"/>
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -107,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:text="Fecha de nacimiento"
                 android:textStyle="bold"
-                style="@style/textBalance"
+                android:textColor="@color/text_primary"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"/>
 
@@ -123,10 +131,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Dia"
-                    app:boxCornerRadiusBottomEnd="0dp"
-                    app:boxCornerRadiusTopEnd="0dp"
-                    app:boxCornerRadiusBottomStart="0dp"
-                    app:boxCornerRadiusTopStart="0dp"
+                    app:boxBackgroundColor="@color/input_background"
+                    app:boxStrokeColor="@color/gold"
+                    app:hintTextColor="@color/text_hint"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
                     android:layout_marginEnd="8dp">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -136,7 +147,7 @@
                         android:singleLine="true"
                         android:inputType="number"
                         android:maxLength="2"
-                        style="@style/textBalance"/>
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -145,10 +156,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Mes"
-                    app:boxCornerRadiusBottomEnd="0dp"
-                    app:boxCornerRadiusTopEnd="0dp"
-                    app:boxCornerRadiusBottomStart="0dp"
-                    app:boxCornerRadiusTopStart="0dp"
+                    app:boxBackgroundColor="@color/input_background"
+                    app:boxStrokeColor="@color/gold"
+                    app:hintTextColor="@color/text_hint"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="8dp">
 
@@ -159,7 +173,7 @@
                         android:singleLine="true"
                         android:inputType="number"
                         android:maxLength="2"
-                        style="@style/textBalance"/>
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -168,10 +182,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Año"
-                    app:boxCornerRadiusBottomEnd="0dp"
-                    app:boxCornerRadiusTopEnd="0dp"
-                    app:boxCornerRadiusBottomStart="0dp"
-                    app:boxCornerRadiusTopStart="0dp">
+                    app:boxBackgroundColor="@color/input_background"
+                    app:boxStrokeColor="@color/gold"
+                    app:hintTextColor="@color/text_hint"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusTopStart="8dp"
+                    android:layout_marginStart="4dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/tietAnio"
@@ -180,7 +198,7 @@
                         android:singleLine="true"
                         android:inputType="number"
                         android:maxLength="4"
-                        style="@style/textBalance"/>
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -189,8 +207,7 @@
                 android:layout_height="wrap_content"
                 android:text="Género"
                 android:textStyle="bold"
-                style="@style/textBalance"
-                android:layout_marginTop="24dp"
+                android:textColor="@color/text_primary"
                 android:layout_marginBottom="8dp"/>
 
             <LinearLayout
@@ -209,16 +226,17 @@
                     <CheckBox
                         android:id="@+id/chkHombre"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/gold" />
 
                     <TextView
                         android:id="@+id/tvHombre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hombre"
-                        android:textSize="13sp"
-                        android:layout_marginStart="6dp"
-                        style="@style/textBalance" />
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="6dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -231,16 +249,17 @@
                     <CheckBox
                         android:id="@+id/chkMujer"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/gold" />
 
                     <TextView
                         android:id="@+id/tvMujer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mujer"
-                        android:textSize="13sp"
-                        android:layout_marginStart="6dp"
-                        style="@style/textBalance" />
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="6dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -252,16 +271,17 @@
                     <CheckBox
                         android:id="@+id/chkOtro"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/gold" />
 
                     <TextView
                         android:id="@+id/tvOtro"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Prefiero no decirlo"
-                        android:textSize="13sp"
-                        android:layout_marginStart="6dp"
-                        style="@style/textBalance" />
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="6dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -270,7 +290,7 @@
                 android:layout_height="wrap_content"
                 android:text="Selecciona tu país"
                 android:textStyle="bold"
-                style="@style/textBalance"
+                android:textColor="@color/text_primary"
                 android:layout_marginBottom="8dp"/>
 
             <Spinner
@@ -278,6 +298,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="48dp"
+                android:background="@color/input_background"
                 android:layout_marginBottom="8dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -287,18 +308,22 @@
                 android:hint="Celular"
                 android:layout_marginTop="16dp"
                 app:prefixText="+51"
-                app:boxCornerRadiusBottomEnd="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusTopStart="0dp"
-                style="@style/textBalance">
+                app:prefixTextColor="@color/text_secondary"
+                app:boxBackgroundColor="@color/input_background"
+                app:boxStrokeColor="@color/gold"
+                app:hintTextColor="@color/text_hint"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopStart="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietCelular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:inputType="phone" />
+                    android:inputType="phone"
+                    android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -307,10 +332,13 @@
                 android:layout_height="wrap_content"
                 android:hint="Correo"
                 android:layout_marginTop="16dp"
-                app:boxCornerRadiusBottomEnd="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusTopStart="0dp">
+                app:boxBackgroundColor="@color/input_background"
+                app:boxStrokeColor="@color/gold"
+                app:hintTextColor="@color/text_hint"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopStart="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietCorreo"
@@ -318,7 +346,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:inputType="textEmailAddress"
-                    style="@style/textBalance"/>
+                    android:textColor="@color/text_primary"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -327,11 +355,15 @@
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
                 android:layout_marginTop="16dp"
-                app:boxCornerRadiusBottomEnd="0dp"
-                app:boxCornerRadiusTopEnd="0dp"
-                app:boxCornerRadiusBottomStart="0dp"
-                app:boxCornerRadiusTopStart="0dp"
-                app:endIconMode="password_toggle">
+                app:boxBackgroundColor="@color/input_background"
+                app:boxStrokeColor="@color/gold"
+                app:hintTextColor="@color/text_hint"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/text_secondary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietClave"
@@ -339,7 +371,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:inputType="textPassword"
-                    style="@style/textBalance"/>
+                    android:textColor="@color/text_primary"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -347,11 +379,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Acepto los Términos y la Política de Privacidad de Balance+."
-                android:textColor="@color/black"
+                android:textColor="@color/text_primary"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 app:useMaterialThemeColors="false"
-                app:thumbTint="@color/gold"/>
+                app:thumbTint="@color/gold"
+                app:trackTint="@color/borde"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegister"
@@ -360,9 +393,9 @@
                 android:text="CREAR CUENTA"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:textStyle="normal"
+                android:textStyle="bold"
                 android:textSize="17sp"
-                android:textColor="@color/black"
+                android:textColor="@color/button_text"
                 app:backgroundTint="@color/balance"/>
         </LinearLayout>
     </ScrollView>

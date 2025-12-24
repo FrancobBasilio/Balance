@@ -4,50 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/card_background">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Editar nombre"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="20dp"/>
+        android:textColor="@color/text_primary"
+        android:layout_marginBottom="16dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre"
+        app:boxBackgroundColor="@color/input_background"
         app:boxStrokeColor="@color/gold"
-        app:hintTextColor="@color/gold"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        app:hintTextColor="@color/text_hint"
+        android:layout_marginBottom="12dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tietNombre"
+            android:id="@+id/etNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:maxLength="50"/>
+            android:inputType="textPersonName"
+            android:textColor="@color/text_primary"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilApellido"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Apellido"
+        app:boxBackgroundColor="@color/input_background"
         app:boxStrokeColor="@color/gold"
-        app:hintTextColor="@color/gold"
-        android:layout_marginBottom="24dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        app:hintTextColor="@color/text_hint">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tietApellido"
+            android:id="@+id/etApellido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapWords"
-            android:maxLength="50"/>
+            android:inputType="textPersonName"
+            android:textColor="@color/text_primary"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,28 +57,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end">
+        android:gravity="end"
+        android:layout_marginTop="24dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancelar"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancelar"
-            android:textColor="@color/gold"
-            android:backgroundTint="@android:color/transparent"
-            app:strokeColor="@color/gold"
-            app:strokeWidth="1dp"
-            android:layout_marginEnd="12dp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            android:textColor="@color/text_secondary"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Guardar"
-            android:backgroundTint="@color/gold"
-            android:textColor="@android:color/white"
-            style="@style/Widget.MaterialComponents.Button"/>
+            android:textColor="@color/button_text"
+            app:backgroundTint="@color/gold"
+            android:layout_marginStart="8dp"/>
 
     </LinearLayout>
 

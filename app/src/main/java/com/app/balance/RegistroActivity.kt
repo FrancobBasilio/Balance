@@ -28,7 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.security.MessageDigest
+import com.app.balance.security.PasswordManager
 import java.util.Calendar
 
 class RegistroActivity : AppCompatActivity() {
@@ -516,11 +516,11 @@ class RegistroActivity : AppCompatActivity() {
         finish()
     }
     /**
-     * Hashea una contraseña usando SHA-256
+     * Hashea una contraseña usando PBKDF2 (más seguro)
      */
     private fun hashearContrasena(contrasena: String): String {
-        val bytes = MessageDigest.getInstance("SHA-256").digest(contrasena.toByteArray())
-        return bytes.joinToString("") { "%02x".format(it) }
+        return PasswordManager.hashPassword(contrasena)
+        // Usando PBKDF2
     }
 
     override fun onDestroy() {

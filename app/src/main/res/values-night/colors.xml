@@ -1,65 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- COLORES MODO OSCURO -->
+    <!-- ========================================== -->
+    <!-- MODO OSCURO - BALANCE+ BRAND COLORS        -->
+    <!-- Mantiene la identidad dorada de la marca   -->
+    <!-- ========================================== -->
     
-    <!-- Fondos principales -->
-    <color name="background_primary">#121212</color>
-    <color name="background_secondary">#1E1E1E</color>
-    <color name="background_card">#2D2D2D</color>
+    <!-- Fondos principales - Tonos oscuros con tinte dorado -->
+    <color name="background_primary">#1A1814</color>
+    <color name="background_secondary">#242019</color>
+    <color name="background_card">#2D2820</color>
     
     <!-- Superficies elevadas -->
-    <color name="surface_1">#1E1E1E</color>
-    <color name="surface_2">#232323</color>
-    <color name="surface_3">#252525</color>
+    <color name="surface_1">#242019</color>
+    <color name="surface_2">#2D2820</color>
+    <color name="surface_3">#363025</color>
     
-    <!-- Textos -->
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#B3B3B3</color>
-    <color name="text_hint">#808080</color>
+    <!-- Textos - Alta legibilidad -->
+    <color name="text_primary">#FFFDF5</color>
+    <color name="text_secondary">#D4C9B0</color>
+    <color name="text_hint">#9A8F7A</color>
     
-    <!-- Colores de la app adaptados -->
-    <color name="negro">#FFFFFF</color>
-    <color name="gris">#B3B3B3</color>
-    <color name="blanco">#121212</color>
+    <!-- COLORES DE LA APP - Adaptados para modo oscuro -->
+    <color name="negro">#FFFDF5</color>
+    <color name="gris">#D4C9B0</color>
+    <color name="blanco">#1A1814</color>
     <color name="balance">#F1B90C</color>
-    <color name="borde">#3D3D3D</color>
+    <color name="borde">#4A4235</color>
     
-    <!-- Colores del sistema -->
-    <color name="black">#FFFFFF</color>
-    <color name="white">#121212</color>
+    <!-- Colores del sistema - Invertidos para modo oscuro -->
+    <color name="black">#FFFDF5</color>
+    <color name="white">#1A1814</color>
     
-    <!-- Mantener colores de acento -->
+    <!-- Colores de marca - Se mantienen -->
     <color name="gold">#FBC02D</color>
-    <color name="gold_soft">#3D3A00</color>
+    <color name="gold_soft">#3D3520</color>
+    <color name="gold_dark">#C4960A</color>
     
-    <!-- Estados -->
-    <color name="green">#4CAF50</color>
+    <!-- Estados y alertas -->
+    <color name="green">#66BB6A</color>
     <color name="red">#EF5350</color>
     <color name="blue">#42A5F5</color>
     <color name="gray">#9E9E9E</color>
     
     <color name="light_green">#81C784</color>
     <color name="light_blue">#64B5F6</color>
-    <color name="light_gray">#616161</color>
+    <color name="light_gray">#757575</color>
     
     <color name="success_green">#66BB6A</color>
     <color name="warning_orange">#FFA726</color>
     <color name="error_red">#EF5350</color>
     
-    <!-- Drawer y navegación -->
-    <color name="drawer_background">#1E1E1E</color>
-    <color name="nav_item_selected">#3D3A00</color>
-    <color name="nav_item_text">#E0E0E0</color>
+    <color name="teal">#26A69A</color>
+    <color name="colorCyan">#4DD0E1</color>
+    <color name="colorPink">#F48FB1</color>
+    <color name="colorLime">#DCE775</color>
+    <color name="colorTeal">#4DB6AC</color>
     
-    <!-- Inputs -->
-    <color name="input_background">#2D2D2D</color>
-    <color name="input_stroke">#4D4D4D</color>
+    <!-- Drawer y navegación -->
+    <color name="drawer_background">#1A1814</color>
+    <color name="nav_item_selected">#3D3520</color>
+    <color name="nav_item_text">#FFFDF5</color>
+    
+    <!-- Inputs - Mejor contraste -->
+    <color name="input_background">#2D2820</color>
+    <color name="input_stroke">#4A4235</color>
     <color name="input_stroke_focused">#FBC02D</color>
+    <color name="input_text">#FFFDF5</color>
     
     <!-- Chips y filtros -->
-    <color name="chip_background">#2D2D2D</color>
-    <color name="chip_selected">#3D3A00</color>
+    <color name="chip_background">#2D2820</color>
+    <color name="chip_selected">#3D3520</color>
+    <color name="chip_text">#FFFDF5</color>
+    
+    <!-- Botones -->
+    <color name="button_primary">#F1B90C</color>
+    <color name="button_text">#1A1814</color>
+    
+    <!-- Cards -->
+    <color name="card_background">#2D2820</color>
+    <color name="card_stroke">#4A4235</color>
     
     <!-- Ripple -->
-    <color name="ripple_color">#33FBC02D</color>
+    <color name="ripple_color">#40FBC02D</color>
+    
+    <!-- Iconos -->
+    <color name="icon_primary">#FBC02D</color>
+    <color name="icon_secondary">#D4C9B0</color>
+    
+    <!-- Launcher -->
+    <color name="ic_launcher_background">#FFC107</color>
+    <color name="ic_launcher_bg">@color/gold</color>
 </resources>

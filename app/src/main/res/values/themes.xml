@@ -1,61 +1,84 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Tema base -->
     <style name="Base.Theme.Balance" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/gold</item>
+        <item name="colorSecondary">@color/gold</item>
+        <item name="colorOnPrimary">@color/button_text</item>
+        <item name="android:colorBackground">@color/background_primary</item>
+        <item name="colorSurface">@color/surface_1</item>
+        <item name="colorOnSurface">@color/text_primary</item>
     </style>
+    
+    <!-- Tema principal para modo claro -->
     <style name="Theme.Balance" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/gold</item>
         <item name="colorSecondary">@color/gold</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/button_text</item>
+        <item name="android:colorBackground">@color/background_primary</item>
+        <item name="colorSurface">@color/surface_1</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:windowBackground">@color/background_primary</item>
+        <item name="android:statusBarColor">@color/gold</item>
+        <item name="android:navigationBarColor">@color/background_primary</item>
     </style>
 
-
-
+    <!-- Estilos de texto -->
     <style name="textBalance">
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">@color/gris</item>
+        <item name="android:textColor">@color/text_secondary</item>
         <item name="android:textSize">15sp</item>
     </style>
 
     <style name="subTitulo">
         <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textColor">@color/negro</item>
+        <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">18sp</item>
     </style>
-
 
     <style name="input">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/negro</item>
-        <item name="strokeColor">@color/borde</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="strokeColor">@color/input_stroke</item>
+        <item name="boxBackgroundColor">@color/input_background</item>
+        <item name="hintTextColor">@color/text_hint</item>
     </style>
 
     <style name="boton">
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@android:color/transparent</item>
         <item name="backgroundTint">@color/balance</item>
-        <item name="android:textColor">@color/negro</item>
+        <item name="android:textColor">@color/button_text</item>
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:textSize">16sp</item>
         <item name="cornerRadius">0dp</item>
         <item name="android:textAllCaps">true</item>
     </style>
-    //estilos para dialogos de confirmación de tutorial
-    <style name="TourAlertDialog.Button.Solid"
-        parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">@color/black</item>
+
+    <!-- Estilos para diálogos del tutorial -->
+    <style name="TourAlertDialog.Button.Solid" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/button_text</item>
         <item name="backgroundTint">@color/gold</item>
-        <item name="rippleColor">@color/gold_soft</item>
+        <item name="rippleColor">@color/ripple_color</item>
     </style>
-    <style name="TourAlertDialog.Button.Solid.Positive"
-        parent="TourAlertDialog.Button.Solid">
+    
+    <style name="TourAlertDialog.Button.Solid.Positive" parent="TourAlertDialog.Button.Solid">
         <item name="android:layout_marginStart">8dp</item>
     </style>
-    <style name="TourAlertDialog.Solid"
-        parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    
+    <style name="TourAlertDialog.Solid" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="buttonBarPositiveButtonStyle">@style/TourAlertDialog.Button.Solid.Positive</item>
         <item name="buttonBarNegativeButtonStyle">@style/TourAlertDialog.Button.Solid</item>
+        <item name="android:background">@color/card_background</item>
     </style>
-
+    
+    <!-- Estilo para AlertDialog con tema oscuro -->
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="android:background">@color/card_background</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+    </style>
 
 </resources>

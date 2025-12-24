@@ -86,4 +86,10 @@ dependencies {
     // para el tutorial
     implementation("com.getkeepsafe.taptargetview:taptargetview:1.13.3")
     implementation("uk.co.samuelwall:material-tap-target-prompt:3.3.2")
+
+    // Biometría
+    implementation("androidx.biometric:biometric:1.1.0")
+
+    // Seguridad - EncryptedSharedPreferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 }
