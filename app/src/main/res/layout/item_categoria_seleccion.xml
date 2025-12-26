@@ -5,48 +5,50 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="8dp">
+    android:padding="6dp">
 
     <FrameLayout
-        android:layout_width="64dp"
-        android:layout_height="64dp">
+        android:layout_width="56dp"
+        android:layout_height="56dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardCategoria"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="@android:color/transparent"
-            app:cardBackgroundColor="@color/card_background">
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/gold_soft">
 
-            <ImageView
-                android:id="@+id/ivIconoCategoria"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivIconoCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"/>
+
+            </FrameLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Check de selección -->
         <ImageView
             android:id="@+id/ivCheckMarca"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="bottom|end"
             android:src="@drawable/ic_check_circle"
             app:tint="@color/gold"
-            android:visibility="gone"
-            android:background="@color/background_primary"
-            android:padding="2dp"/>
+            android:visibility="gone"/>
 
     </FrameLayout>
 
     <TextView
         android:id="@+id/tvNombreCategoria"
-        android:layout_width="wrap_content"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Categoría"

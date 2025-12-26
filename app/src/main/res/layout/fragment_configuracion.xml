@@ -3,281 +3,184 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_primary"
-    android:padding="24dp">
+    android:background="@color/background_primary">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <TextView
-            android:id="@+id/tvTituloConf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Configuración"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textSize="24sp"
             android:textColor="@color/text_primary"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="32dp"/>
 
-        <!-- Sección de Seguridad -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Seguridad"
-            android:textSize="14sp"
-            android:textColor="@color/gold"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
-
-        <com.google.android.material.card.MaterialCardView
+        <!-- Biometría -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/card_background"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_fingerprint"
-                    app:tint="@color/gold"
-                    android:layout_marginEnd="12dp"
-                    android:contentDescription="Biometría"/>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Acceso biométrico"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/tvBiometriaDesc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Usa tu huella o rostro para iniciar sesión"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp" />
-
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/swBiometria"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    app:thumbTint="@color/switch_tint"
-                    app:trackTint="@color/borde" />
+                    android:text="Acceso biométrico"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"/>
 
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Sección de Notificaciones -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notificaciones"
-            android:textSize="14sp"
-            android:textColor="@color/gold"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="8dp" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/card_background"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginEnd="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Alertas de ahorro"
-                            android:textColor="@color/text_primary"
-                            android:textSize="16sp" />
-
-                        <TextView
-                            android:id="@+id/tvNotificacionDesc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Activa para recibir alertas de tu ahorro"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp"
-                            android:layout_marginTop="2dp" />
-
-                    </LinearLayout>
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/swNotificaciones"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        app:thumbTint="@color/switch_tint"
-                        app:trackTint="@color/borde" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/borde"
-                    android:layout_marginVertical="12dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginEnd="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Notificación fija"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Mantener visible en la barra de notificaciones"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:layout_marginTop="2dp" />
-
-                    </LinearLayout>
-
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/swNotificacionFija"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minWidth="0dp"
-                        android:minHeight="0dp"
-                        android:enabled="false"
-                        app:thumbTint="@color/switch_tint"
-                        app:trackTint="@color/borde" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Sección de Apariencia -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Apariencia"
-            android:textSize="14sp"
-            android:textColor="@color/gold"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="16dp" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/card_background"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Modo oscuro"
-                        android:textColor="@color/text_primary"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Reduce el brillo de la pantalla"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp" />
-
-                </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/swTemaOscuro"
+                <TextView
+                    android:id="@+id/tvBiometriaDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    app:thumbTint="@color/switch_tint"
-                    app:trackTint="@color/borde" />
+                    android:text="Huella o rostro para iniciar sesión"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="2dp"/>
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swBiometria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_tint"
+                app:trackTint="@color/borde"/>
 
-        <!-- Versión de la app -->
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"
+            android:layout_marginVertical="16dp"/>
+
+        <!-- Notificaciones -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alertas de ahorro"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"/>
+
+                <TextView
+                    android:id="@+id/tvNotificacionDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recibe alertas de tu porcentaje"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swNotificaciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_tint"
+                app:trackTint="@color/borde"/>
+
+        </LinearLayout>
+
+        <!-- Notificación fija -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Mantener notificación fija"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"/>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swNotificacionFija"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                app:thumbTint="@color/switch_tint"
+                app:trackTint="@color/borde"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"
+            android:layout_marginVertical="16dp"/>
+
+        <!-- Tema oscuro -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modo oscuro"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reduce el brillo de la pantalla"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/swTemaOscuro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:thumbTint="@color/switch_tint"
+                app:trackTint="@color/borde"/>
+
+        </LinearLayout>
+
+        <!-- Versión -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -285,7 +188,7 @@
             android:textColor="@color/text_hint"
             android:textSize="12sp"
             android:gravity="center"
-            android:layout_marginTop="32dp" />
+            android:layout_marginTop="48dp"/>
 
     </LinearLayout>
 </ScrollView>

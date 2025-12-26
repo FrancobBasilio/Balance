@@ -13,7 +13,7 @@ import com.app.balance.data.dao.DivisaDAO
 import com.app.balance.data.dao.TransaccionDAO
 import com.app.balance.data.dao.UsuarioDAO
 import com.app.balance.model.TransaccionConDetalles
-
+import com.app.balance.notifications.NotificationHelper
 
 class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListener {
 
@@ -71,16 +71,15 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
     }
 
     override fun onBalanceUpdated(nuevoBalance: Double, codigoDivisa: String) {
-        // Recargar datos desde SharedPreferences
         obtenerDatosUsuario()
         this.codigoDivisa = codigoDivisa
         cargarTransacciones()
     }
+
     private fun verificarYCargarDivisaDesdeDB() {
         val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         val codigoDivisaActual = prefs.getString("DIVISA_CODIGO", "")
 
-        // Si no hay divisa en SharedPreferences, cargarla desde BD
         if (codigoDivisaActual.isNullOrEmpty() || codigoDivisaActual == "PEN") {
             val userId = prefs.getInt("USER_ID", 0)
 
@@ -96,7 +95,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
                     val divisa = divisaDAO.obtenerDivisaPorId(usuario.divisaId)
 
                     if (divisa != null) {
-                        // Restaurar divisa en SharedPreferences
                         prefs.edit()
                             .putInt("DIVISA_ID", divisa.id)
                             .putString("DIVISA_CODIGO", divisa.codigo)
@@ -104,7 +102,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
                             .putString("DIVISA_BANDERA", divisa.bandera)
                             .apply()
 
-                        // Actualizar variable local
                         codigoDivisa = divisa.codigo
                     }
                 }
@@ -128,7 +125,6 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
     }
 
     private fun calcularYActualizarVista(transacciones: List<TransaccionConDetalles>) {
-        // Calcular gastos SOLO de Necesidad y Deseo
         var gastoNecesidad = 0.0
         var gastoDeseo = 0.0
 
@@ -139,29 +135,21 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
             }
         }
 
-        // Total gastado (SOLO Necesidad + Deseo)
         val totalGastado = gastoNecesidad + gastoDeseo
-
-        // AHORRO = Balance ORIGINAL - Total Gastado
         val ahorroDisponible = balanceOriginal - totalGastado
 
-        // Calcular porcentaje de ahorro respecto al balance ORIGINAL
         val porcentajeAhorro = if (balanceOriginal > 0) {
             ((ahorroDisponible / balanceOriginal) * 100.0).toFloat()
         } else {
             0f
         }
 
-        // Calcular los montos ideales según patrón 50/30/20 del BALANCE ORIGINAL
         val montoIdealNecesidad = balanceOriginal * 0.50
         val montoIdealDeseo = balanceOriginal * 0.30
-        val montoIdealAhorro = balanceOriginal * 0.20
 
-        // Calcular lo que queda disponible para gastar
         val disponibleNecesidad = (montoIdealNecesidad - gastoNecesidad).coerceAtLeast(0.0)
         val disponibleDeseo = (montoIdealDeseo - gastoDeseo).coerceAtLeast(0.0)
 
-        // Calcular porcentajes gastados respecto al ideal
         val porcentajeGastadoNecesidad = if (montoIdealNecesidad > 0) {
             ((gastoNecesidad / montoIdealNecesidad) * 100).toInt().coerceIn(0, 100)
         } else 0
@@ -170,46 +158,56 @@ class AhorrosFragment : Fragment(R.layout.fragment_ahorro), BalanceUpdateListene
             ((gastoDeseo / montoIdealDeseo) * 100).toInt().coerceIn(0, 100)
         } else 0
 
-        // Porcentaje de cuanto del ahorro ideal se ha consumido
-        val porcentajeAhorroConsumido = if (montoIdealAhorro > 0) {
-            val deficitAhorro = (montoIdealAhorro - ahorroDisponible).coerceAtLeast(0.0)
-            ((deficitAhorro / montoIdealAhorro) * 100).toInt().coerceIn(0, 100)
-        } else 0
+        val porcentajeAhorroProgreso = porcentajeAhorro.toInt().coerceIn(0, 100)
 
-        // Actualizar UI - Montos disponibles
-        tvMontoNecesidad.text = "$codigoDivisa ${String.format("%.2f", disponibleNecesidad)}"
-        tvMontoDeseo.text = "$codigoDivisa ${String.format("%.2f", disponibleDeseo)}"
+        // Actualizar UI
+        tvMontoNecesidad.text = "Disponible: $codigoDivisa ${String.format("%.2f", disponibleNecesidad)}"
+        tvMontoDeseo.text = "Disponible: $codigoDivisa ${String.format("%.2f", disponibleDeseo)}"
         tvMontoAhorro.text = "$codigoDivisa ${String.format("%.2f", ahorroDisponible)}"
 
-        // Actualizar barras de progreso
         progressNecesidad.progress = porcentajeGastadoNecesidad
         progressDeseo.progress = porcentajeGastadoDeseo
-        progressAhorro.progress = porcentajeAhorroConsumido
+        progressAhorro.progress = porcentajeAhorroProgreso
 
-        // Actualizar textos
         tvPorcentajeNecesidad.text = "Gastado: $codigoDivisa ${String.format("%.2f", gastoNecesidad)} ($porcentajeGastadoNecesidad%)"
         tvPorcentajeDeseo.text = "Gastado: $codigoDivisa ${String.format("%.2f", gastoDeseo)} ($porcentajeGastadoDeseo%)"
         tvPorcentajeAhorro.text = "${String.format("%.1f", porcentajeAhorro)}% del monto total"
 
-        // Total gastado e Ingresos
         tvTotalGastado.text = "$codigoDivisa ${String.format("%.2f", totalGastado)}"
         tvIngresosTotales.text = "$codigoDivisa ${String.format("%.2f", ahorroDisponible)}"
 
-        // Cambiar color de las barras
-        actualizarColoresProgreso(progressNecesidad, porcentajeGastadoNecesidad)
-        actualizarColoresProgreso(progressDeseo, porcentajeGastadoDeseo)
-        actualizarColoresProgreso(progressAhorro, porcentajeAhorroConsumido)
+        // Actualizar colores de barras de progreso
+        actualizarColorProgreso(progressNecesidad, porcentajeGastadoNecesidad)
+        actualizarColorProgreso(progressDeseo, porcentajeGastadoDeseo)
+        
+        // Actualizar notificación si está activa
+        actualizarNotificacionSiActiva(porcentajeAhorro, ahorroDisponible)
     }
 
-    private fun actualizarColoresProgreso(progressBar: ProgressBar, porcentaje: Int) {
+    private fun actualizarColorProgreso(progressBar: ProgressBar, porcentaje: Int) {
         val color = when {
-            porcentaje < 50 -> requireContext().getColor(android.R.color.holo_green_light)
-            porcentaje < 75 -> requireContext().getColor(android.R.color.holo_orange_light)
-            else -> requireContext().getColor(android.R.color.holo_red_light)
+            porcentaje < 50 -> requireContext().getColor(R.color.success_green)
+            porcentaje < 75 -> requireContext().getColor(R.color.warning_orange)
+            else -> requireContext().getColor(R.color.error_red)
         }
         progressBar.progressTintList = ColorStateList.valueOf(color)
     }
-
+    
+    private fun actualizarNotificacionSiActiva(porcentajeAhorro: Float, montoAhorro: Double) {
+        val prefs = requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+        val notificacionesActivas = prefs.getBoolean("NOTIFICACIONES_ACTIVAS", false)
+        
+        if (notificacionesActivas) {
+            val esFija = prefs.getBoolean("NOTIFICACION_FIJA", false)
+            val notificationHelper = NotificationHelper(requireContext())
+            notificationHelper.mostrarNotificacionAhorro(
+                porcentajeAhorro = porcentajeAhorro,
+                montoAhorro = montoAhorro,
+                codigoDivisa = codigoDivisa,
+                esPersistente = esFija
+            )
+        }
+    }
 
     override fun onResume() {
         super.onResume()

@@ -1,17 +1,16 @@
 package com.app.balance.adapters
 
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.app.balance.R
 import com.app.balance.model.Categoria
 import com.bumptech.glide.Glide
+import com.google.android.material.card.MaterialCardView
 import java.io.File
 
 class CategoriaSeleccionAdapter(
@@ -23,6 +22,7 @@ class CategoriaSeleccionAdapter(
     private var categoriaSeleccionadaId: Int = -1
 
     class CategoriaViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val cardCategoria: MaterialCardView = view.findViewById(R.id.cardCategoria)
         val ivIconoCategoria: ImageView = view.findViewById(R.id.ivIconoCategoria)
         val ivCheckMarca: ImageView = view.findViewById(R.id.ivCheckMarca)
         val tvNombreCategoria: TextView = view.findViewById(R.id.tvNombreCategoria)
@@ -40,42 +40,40 @@ class CategoriaSeleccionAdapter(
 
         holder.tvNombreCategoria.text = categoria.nombre
 
-        //  Cargar icono con Glide
+        // Limpiar estado anterior
+        holder.ivIconoCategoria.clearColorFilter()
+        holder.cardCategoria.strokeWidth = 0
+        holder.ivIconoCategoria.setPadding(0, 0, 0, 0)
+        
         if (!categoria.rutaImagen.isNullOrEmpty()) {
-            // Cargar imagen personalizada circular
             val file = File(categoria.rutaImagen)
             if (file.exists()) {
+                // Imagen personalizada - llenar todo el círculo
+                holder.ivIconoCategoria.scaleType = ImageView.ScaleType.CENTER_CROP
+                holder.cardCategoria.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                
                 Glide.with(context)
                     .load(file)
-                    .circleCrop()
+                    .centerCrop()
                     .into(holder.ivIconoCategoria)
-
-                // Quitar el background para evitar el borde
-                holder.ivIconoCategoria.background = null
             } else {
-                // Si el archivo no existe, cargar icono por defecto
                 cargarIconoPredeterminado(holder, categoria)
             }
         } else {
-            // Cargar icono predeterminado
             cargarIconoPredeterminado(holder, categoria)
         }
 
-        // Mostrar check si está seleccionada
-        if (categoria.id == categoriaSeleccionadaId) {
-            holder.ivCheckMarca.visibility = View.VISIBLE
-        } else {
-            holder.ivCheckMarca.visibility = View.GONE
-        }
+        // Check de selección
+        holder.ivCheckMarca.visibility = if (categoria.id == categoriaSeleccionadaId) View.VISIBLE else View.GONE
 
-        // Click normal - seleccionar
+        // Click
         holder.itemView.setOnClickListener {
             categoriaSeleccionadaId = categoria.id
             notifyDataSetChanged()
             onCategoriaClick(categoria)
         }
 
-        // Long click - eliminar
+        // Long click
         holder.itemView.setOnLongClickListener {
             onCategoriaLongClick(categoria)
             true
@@ -104,21 +102,31 @@ class CategoriaSeleccionAdapter(
         notifyDataSetChanged()
     }
 
-    //  Cargar icono predeterminado with circular background
     private fun cargarIconoPredeterminado(holder: CategoriaViewHolder, categoria: Categoria) {
         val context = holder.itemView.context
         val iconoRes = obtenerRecursoIcono(categoria.icono)
 
+        // Icono predeterminado centrado con padding
+        holder.ivIconoCategoria.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        val paddingPx = (14 * context.resources.displayMetrics.density).toInt()
+        holder.ivIconoCategoria.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+        
+        // Usar color guardado o gold por defecto
+        val colorInt = try {
+            if (categoria.color != null) {
+                ContextCompat.getColor(context, categoria.color)
+            } else {
+                ContextCompat.getColor(context, R.color.gold)
+            }
+        } catch (e: Exception) {
+            ContextCompat.getColor(context, R.color.gold)
+        }
+        
+        // Fondo más claro basado en el color
+        holder.cardCategoria.setCardBackgroundColor(ContextCompat.getColor(context, R.color.gold_soft))
+        
         holder.ivIconoCategoria.setImageResource(iconoRes)
-        // Fondo circular blanco
-        holder.ivIconoCategoria.setBackgroundResource(R.drawable.fondo_circular_solido)
-
-        // Usar el color guardado o negro por defecto
-        val colorIcono = categoria.color ?: android.R.color.black
-        holder.ivIconoCategoria.setColorFilter(
-            context.getColor(colorIcono),
-            PorterDuff.Mode.SRC_IN
-        )
+        holder.ivIconoCategoria.setColorFilter(colorInt)
     }
 
     private fun obtenerRecursoIcono(nombreIcono: String): Int {

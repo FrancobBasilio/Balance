@@ -6,93 +6,100 @@
     android:orientation="vertical"
     android:background="@color/background_primary">
 
+    <!-- Filtros -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
-        android:fillViewport="true"
-        android:paddingVertical="8dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupFiltros"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:chipSpacingHorizontal="8dp">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroupFiltros"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipTodos"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:gravity="center"
-                app:singleSelection="true"
-                app:selectionRequired="true">
+                android:layout_height="36dp"
+                android:text="Todos"
+                android:checked="true"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                app:chipBackgroundColor="@color/chip_bg_selector"
+                app:chipCornerRadius="18dp"
+                app:chipStrokeWidth="0dp"
+                app:checkedIconVisible="false"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipTodos"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Todos"
-                    android:checked="true"
-                    android:textColor="@color/text_primary"
-                    app:chipBackgroundColor="@color/chip_background" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDia"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Hoy"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                app:chipBackgroundColor="@color/chip_bg_selector"
+                app:chipCornerRadius="18dp"
+                app:chipStrokeWidth="0dp"
+                app:checkedIconVisible="false"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipDia"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hoy"
-                    android:textColor="@color/text_primary"
-                    app:chipBackgroundColor="@color/chip_background" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipSemana"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Semana"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                app:chipBackgroundColor="@color/chip_bg_selector"
+                app:chipCornerRadius="18dp"
+                app:chipStrokeWidth="0dp"
+                app:checkedIconVisible="false"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipSemana"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Semana"
-                    android:textColor="@color/text_primary"
-                    app:chipBackgroundColor="@color/chip_background" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMes"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Mes"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                app:chipBackgroundColor="@color/chip_bg_selector"
+                app:chipCornerRadius="18dp"
+                app:chipStrokeWidth="0dp"
+                app:checkedIconVisible="false"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipMes"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mes"
-                    android:textColor="@color/text_primary"
-                    app:chipBackgroundColor="@color/chip_background" />
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPersonalizado"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Rango"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                app:chipBackgroundColor="@color/chip_bg_selector"
+                app:chipCornerRadius="18dp"
+                app:chipStrokeWidth="0dp"
+                app:checkedIconVisible="false"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipPersonalizado"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:checkable="true"
-                    app:chipIcon="@drawable/ic_calendario"
-                    app:chipIconVisible="true"
-                    app:chipIconSize="24dp"
-                    app:chipIconTint="@color/chip_icon_color"
-                    app:chipStrokeWidth="1dp"
-                    app:chipStrokeColor="@color/gold"
-                    app:chipBackgroundColor="@color/chip_background"
-                    android:contentDescription="Filtro personalizado" />
-
-            </com.google.android.material.chip.ChipGroup>
-
-        </LinearLayout>
+        </com.google.android.material.chip.ChipGroup>
 
     </HorizontalScrollView>
 
+    <!-- Lista -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGastos"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8dp"
         android:clipToPadding="false"
-        android:paddingBottom="80dp"
-        android:background="@color/background_primary" />
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="100dp"/>
 
 </LinearLayout>

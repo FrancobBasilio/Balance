@@ -11,27 +11,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Editar nombre"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="24dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilNombre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre"
-        app:boxBackgroundColor="@color/input_background"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:boxStrokeColor="@color/gold"
-        app:hintTextColor="@color/text_hint"
-        android:layout_marginBottom="12dp">
+        app:hintTextColor="@color/gold"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        android:layout_marginBottom="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etNombre"
+            android:id="@+id/tietNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:textColor="@color/text_primary"/>
+            android:inputType="textPersonName|textCapWords"
+            android:textColor="@color/text_primary"
+            android:maxLines="1"
+            android:imeOptions="actionNext"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -40,16 +46,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Apellido"
-        app:boxBackgroundColor="@color/input_background"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:boxStrokeColor="@color/gold"
-        app:hintTextColor="@color/text_hint">
+        app:hintTextColor="@color/gold"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        android:layout_marginBottom="24dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etApellido"
+            android:id="@+id/tietApellido"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:textColor="@color/text_primary"/>
+            android:inputType="textPersonName|textCapWords"
+            android:textColor="@color/text_primary"
+            android:maxLines="1"
+            android:imeOptions="actionDone"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,24 +70,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end"
-        android:layout_marginTop="24dp">
+        android:gravity="end">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancelar"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="Cancelar"
             android:textColor="@color/text_secondary"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGuardar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="Guardar"
-            android:textColor="@color/button_text"
+            android:textColor="@color/white"
             app:backgroundTint="@color/gold"
+            app:cornerRadius="8dp"
             android:layout_marginStart="8dp"/>
 
     </LinearLayout>

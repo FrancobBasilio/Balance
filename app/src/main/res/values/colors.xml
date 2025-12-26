@@ -16,6 +16,7 @@
     <color name="light_blue">#42A5F5</color>
     <color name="light_gray">#BDBDBD</color>
 
+    <color name="chip_bg_selector">#FBC02D</color>
     <color name="gold">#FBC02D</color>
     <color name="gold_soft">#FFF8E1</color>
     <color name="gold_dark">#C49000</color>

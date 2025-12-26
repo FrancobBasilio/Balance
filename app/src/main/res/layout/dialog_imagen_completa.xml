@@ -3,15 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="@android:color/black"
+    android:clickable="true"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/ivImagenCompleta"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:layout_gravity="center"
-        android:contentDescription="Imagen completa de la categoría"/>
+        android:adjustViewBounds="true"
+        android:contentDescription="Imagen completa"/>
 
     <ImageButton
         android:id="@+id/btnCerrarImagen"
@@ -20,8 +23,10 @@
         android:layout_gravity="top|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:background="@color/balance"
+        android:background="@drawable/bg_circle"
+        android:backgroundTint="@color/gold"
+        android:padding="12dp"
         android:contentDescription="Cerrar"
-        app:tint="@android:color/black"/>
+        app:tint="@android:color/white"/>
 
 </FrameLayout>

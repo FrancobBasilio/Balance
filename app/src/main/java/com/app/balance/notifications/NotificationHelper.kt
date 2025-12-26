@@ -14,38 +14,28 @@ import androidx.core.content.ContextCompat
 import com.app.balance.InicioActivity
 import com.app.balance.R
 
-/**
- * Helper para manejar notificaciones de Balance+
- * Incluye alertas basadas en porcentaje de ahorro
- */
 class NotificationHelper(private val context: Context) {
     
     companion object {
         const val CHANNEL_ID_SAVINGS = "balance_savings_channel"
-        const val CHANNEL_ID_REMINDERS = "balance_reminders_channel"
-        
+        const val CHANNEL_ID_PERSISTENT = "balance_persistent_channel"
         const val NOTIFICATION_ID_SAVINGS = 1001
-        const val NOTIFICATION_ID_REMINDER = 1002
         
-        // Umbrales de alerta
-        const val THRESHOLD_EXCELLENT = 80  // > 80% ahorro
-        const val THRESHOLD_GOOD = 50       // 50-80% ahorro
-        const val THRESHOLD_WARNING = 30    // 30-50% ahorro
-        const val THRESHOLD_DANGER = 20     // < 20% ahorro
+        const val THRESHOLD_EXCELLENT = 80
+        const val THRESHOLD_GOOD = 50
+        const val THRESHOLD_WARNING = 30
+        const val THRESHOLD_DANGER = 20
     }
+    
+    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     
     init {
         createNotificationChannels()
     }
     
-    /**
-     * Crea los canales de notificación (requerido para Android 8+)
-     */
     private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            
-            // Canal para alertas de ahorro
+            // Canal para alertas normales
             val savingsChannel = NotificationChannel(
                 CHANNEL_ID_SAVINGS,
                 "Alertas de Ahorro",
@@ -56,191 +46,127 @@ class NotificationHelper(private val context: Context) {
                 setShowBadge(true)
             }
             
-            // Canal para recordatorios
-            val remindersChannel = NotificationChannel(
-                CHANNEL_ID_REMINDERS,
-                "Recordatorios",
+            // Canal para notificaciones persistentes (importancia baja para no molestar)
+            val persistentChannel = NotificationChannel(
+                CHANNEL_ID_PERSISTENT,
+                "Estado de Ahorro (Fijo)",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Recordatorios para registrar tus gastos"
+                description = "Notificación fija con el estado de tu ahorro"
                 enableVibration(false)
+                setShowBadge(false)
             }
             
             notificationManager.createNotificationChannel(savingsChannel)
-            notificationManager.createNotificationChannel(remindersChannel)
+            notificationManager.createNotificationChannel(persistentChannel)
         }
     }
     
-    /**
-     * Muestra notificación basada en el porcentaje de ahorro
-     * @param porcentajeAhorro Porcentaje actual de ahorro (0-100)
-     * @param montoAhorro Monto actual de ahorro
-     * @param codigoDivisa Código de la divisa (PEN, USD, etc.)
-     * @param esPersistente Si la notificación debe ser fija en la barra
-     */
     fun mostrarNotificacionAhorro(
         porcentajeAhorro: Float,
         montoAhorro: Double,
         codigoDivisa: String,
         esPersistente: Boolean = false
     ) {
-        // Verificar permisos en Android 13+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-        }
+        if (!tienePermisoNotificaciones()) return
         
-        val (titulo, mensaje, icono) = obtenerContenidoNotificacion(
-            porcentajeAhorro, 
-            montoAhorro, 
-            codigoDivisa
-        )
+        val (titulo, mensaje) = obtenerContenidoNotificacion(porcentajeAhorro, montoAhorro, codigoDivisa)
         
-        // Intent para abrir la app al tocar la notificación
         val intent = Intent(context, InicioActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         
         val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
+            context, 0, intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID_SAVINGS)
+        // Usar canal diferente según si es persistente o no
+        val channelId = if (esPersistente) CHANNEL_ID_PERSISTENT else CHANNEL_ID_SAVINGS
+        
+        val builder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_billetera)
             .setContentTitle(titulo)
             .setContentText(mensaje)
             .setStyle(NotificationCompat.BigTextStyle().bigText(mensaje))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
-            .setAutoCancel(!esPersistente)
-            .setOngoing(esPersistente)
-            .setColor(ContextCompat.getColor(context, R.color.gold))
+            .setColor(obtenerColorNotificacion(porcentajeAhorro))
+            .setOnlyAlertOnce(true) // No repetir sonido si se actualiza
         
-        // Color según el estado
-        when {
-            porcentajeAhorro >= THRESHOLD_EXCELLENT -> {
-                builder.setColor(ContextCompat.getColor(context, R.color.success_green))
-            }
-            porcentajeAhorro >= THRESHOLD_GOOD -> {
-                builder.setColor(ContextCompat.getColor(context, R.color.gold))
-            }
-            porcentajeAhorro >= THRESHOLD_WARNING -> {
-                builder.setColor(ContextCompat.getColor(context, R.color.warning_orange))
-            }
-            else -> {
-                builder.setColor(ContextCompat.getColor(context, R.color.error_red))
-            }
+        if (esPersistente) {
+            builder.setOngoing(true)  // No se puede deslizar para eliminar
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setAutoCancel(false)
+        } else {
+            builder.setOngoing(false)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
         }
         
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID_SAVINGS, builder.build())
+        try {
+            NotificationManagerCompat.from(context).notify(NOTIFICATION_ID_SAVINGS, builder.build())
+        } catch (e: SecurityException) {
+            e.printStackTrace()
         }
     }
     
-    /**
-     * Obtiene el contenido de la notificación según el porcentaje de ahorro
-     */
+    private fun tienePermisoNotificaciones(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+    }
+    
     private fun obtenerContenidoNotificacion(
         porcentajeAhorro: Float,
         montoAhorro: Double,
         codigoDivisa: String
-    ): Triple<String, String, Int> {
+    ): Pair<String, String> {
         val montoFormateado = "$codigoDivisa ${String.format("%.2f", montoAhorro)}"
+        val porcentajeFormateado = String.format("%.1f", porcentajeAhorro)
         
         return when {
-            porcentajeAhorro >= THRESHOLD_EXCELLENT -> Triple(
+            porcentajeAhorro >= THRESHOLD_EXCELLENT -> Pair(
                 "¡Excelente ahorro! 🎉",
-                "Has ahorrado el ${String.format("%.1f", porcentajeAhorro)}% de tu balance ($montoFormateado). ¡Sigue así!",
-                R.drawable.ic_check_circle
+                "Tienes $porcentajeFormateado% ahorrado ($montoFormateado). ¡Sigue así!"
             )
-            porcentajeAhorro >= THRESHOLD_GOOD -> Triple(
+            porcentajeAhorro >= THRESHOLD_GOOD -> Pair(
                 "Buen progreso 👍",
-                "Tu ahorro es del ${String.format("%.1f", porcentajeAhorro)}% ($montoFormateado). Vas por buen camino.",
-                R.drawable.ic_billetera
+                "Ahorro: $porcentajeFormateado% ($montoFormateado). Vas bien."
             )
-            porcentajeAhorro >= THRESHOLD_WARNING -> Triple(
-                "Atención con tus gastos ⚠️",
-                "Tu ahorro ha bajado al ${String.format("%.1f", porcentajeAhorro)}% ($montoFormateado). Considera reducir gastos.",
-                R.drawable.ic_billetera
+            porcentajeAhorro >= THRESHOLD_WARNING -> Pair(
+                "Atención ⚠️",
+                "Ahorro: $porcentajeFormateado% ($montoFormateado). Considera reducir gastos."
             )
-            porcentajeAhorro >= THRESHOLD_DANGER -> Triple(
-                "¡Alerta de ahorro! 🔴",
-                "Solo tienes ${String.format("%.1f", porcentajeAhorro)}% de ahorro ($montoFormateado). Revisa tus gastos.",
-                R.drawable.ic_billetera
+            porcentajeAhorro > 0 -> Pair(
+                "¡Alerta! 🔴",
+                "Solo $porcentajeFormateado% de ahorro ($montoFormateado). Revisa tus gastos."
             )
-            else -> Triple(
-                "⚠️ Sin ahorro disponible",
-                "Tu ahorro está en $montoFormateado. Es momento de ajustar tu presupuesto.",
-                R.drawable.ic_billetera
+            else -> Pair(
+                "Sin ahorro ⚠️",
+                "Tu ahorro está en $montoFormateado. Ajusta tu presupuesto."
             )
         }
     }
     
-    /**
-     * Muestra recordatorio para registrar gastos
-     */
-    fun mostrarRecordatorioGastos() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-        }
-        
-        val intent = Intent(context, InicioActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            0,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID_REMINDERS)
-            .setSmallIcon(R.drawable.ic_billetera)
-            .setContentTitle("📝 Registra tus gastos")
-            .setContentText("No olvides registrar los gastos del día para mantener tu balance actualizado.")
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .setColor(ContextCompat.getColor(context, R.color.gold))
-        
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID_REMINDER, builder.build())
+    private fun obtenerColorNotificacion(porcentajeAhorro: Float): Int {
+        return when {
+            porcentajeAhorro >= THRESHOLD_EXCELLENT -> ContextCompat.getColor(context, R.color.success_green)
+            porcentajeAhorro >= THRESHOLD_GOOD -> ContextCompat.getColor(context, R.color.gold)
+            porcentajeAhorro >= THRESHOLD_WARNING -> ContextCompat.getColor(context, R.color.warning_orange)
+            else -> ContextCompat.getColor(context, R.color.error_red)
         }
     }
     
-    /**
-     * Cancela la notificación de ahorro
-     */
     fun cancelarNotificacionAhorro() {
         NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID_SAVINGS)
     }
     
-    /**
-     * Cancela todas las notificaciones
-     */
     fun cancelarTodasNotificaciones() {
         NotificationManagerCompat.from(context).cancelAll()
-    }
-    
-    /**
-     * Verifica si las notificaciones están habilitadas
-     */
-    fun notificacionesHabilitadas(): Boolean {
-        return NotificationManagerCompat.from(context).areNotificationsEnabled()
     }
 }

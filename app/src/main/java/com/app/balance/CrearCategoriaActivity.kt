@@ -4,13 +4,15 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.Matrix
 import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
 import android.widget.GridLayout
@@ -24,8 +26,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.exifinterface.media.ExifInterface
 import com.app.balance.data.AppDatabaseHelper
 import com.app.balance.data.dao.CategoriaDAO
 import com.app.balance.model.Categoria
@@ -34,6 +38,10 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import java.io.File
+import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CrearCategoriaActivity : AppCompatActivity() {
 
@@ -51,6 +59,10 @@ class CrearCategoriaActivity : AppCompatActivity() {
     private var colorSeleccionado: Int = android.R.color.holo_green_light
     private var imagenPersonalizada: String? = null
     private var usuarioId: Int = 0
+    
+    // Para captura de cámara con alta calidad
+    private var fotoUri: Uri? = null
+    private var fotoPath: String? = null
 
     private val iconosPredeterminados = listOf(
         R.drawable.ic_comida,
@@ -84,6 +96,7 @@ class CrearCategoriaActivity : AppCompatActivity() {
         private const val REQUEST_GALLERY = 100
         private const val REQUEST_CAMERA = 101
         private const val REQUEST_PERMISSIONS = 102
+        private const val MAX_IMAGE_SIZE = 1024
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -158,7 +171,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
         }
     }
 
-    //colores
     private var colorViewSeleccionado: View? = null
 
     private fun dpToPx(dp: Int): Int {
@@ -168,7 +180,7 @@ class CrearCategoriaActivity : AppCompatActivity() {
 
     private fun setupColores() {
         linearLayoutColores.removeAllViews()
-        val sizePx = dpToPx(32)   // 🔹 tamaño más pequeño
+        val sizePx = dpToPx(32)
         val marginPx = dpToPx(5)
         val strokeNormal = dpToPx(1)
         val strokeSeleccionado = dpToPx(2)
@@ -182,14 +194,12 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 isFocusable = true
             }
 
-            // obtener color real del recurso
             val colorInt = try {
                 ContextCompat.getColor(this, colorRes)
             } catch (e: Exception) {
                 colorRes
             }
 
-            // crear círculo con borde negro
             val gd = android.graphics.drawable.GradientDrawable().apply {
                 shape = android.graphics.drawable.GradientDrawable.OVAL
                 setColor(colorInt)
@@ -198,7 +208,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
 
             colorView.background = gd
 
-            // click: marcar el color seleccionado
             colorView.setOnClickListener {
                 colorViewSeleccionado?.background?.let { prevBg ->
                     if (prevBg is android.graphics.drawable.GradientDrawable) {
@@ -218,8 +227,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun setupIconoClick() {
         ivIconoSeleccionado.setOnClickListener {
             mostrarOpcionesImagen()
@@ -227,7 +234,7 @@ class CrearCategoriaActivity : AppCompatActivity() {
     }
 
     private fun mostrarOpcionesImagen() {
-        val opciones = arrayOf("Tomar foto", "Seleccionar de galería", "Cancelar")
+        val opciones = arrayOf("Tomar foto", "Elegir de galería", "Cancelar")
 
         MaterialAlertDialogBuilder(this)
             .setTitle("Seleccionar imagen")
@@ -262,9 +269,31 @@ class CrearCategoriaActivity : AppCompatActivity() {
     private fun abrirCamara() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(intent, REQUEST_CAMERA)
+            val archivoFoto = crearArchivoImagen()
+            archivoFoto?.let {
+                fotoPath = it.absolutePath
+                fotoUri = FileProvider.getUriForFile(
+                    this,
+                    "${packageName}.fileprovider",
+                    it
+                )
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fotoUri)
+                startActivityForResult(intent, REQUEST_CAMERA)
+            }
         } else {
             Toast.makeText(this, "No se encontró una aplicación de cámara", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun crearArchivoImagen(): File? {
+        return try {
+            val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val nombreArchivo = "IMG_${timeStamp}"
+            val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            File.createTempFile(nombreArchivo, ".jpg", storageDir)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
@@ -292,48 +321,159 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 REQUEST_GALLERY -> {
                     data?.data?.let { uri ->
                         imagenPersonalizada = guardarImagenEnStorage(uri)
-
-                        ivIconoSeleccionado.background = null
-                        ivIconoSeleccionado.clearColorFilter()
-
-                        Glide.with(this)
-                            .load(uri)
-                            .circleCrop()
-                            .into(ivIconoSeleccionado)
+                        mostrarImagenSeleccionada()
                     }
                 }
                 REQUEST_CAMERA -> {
-                    val bitmap = data?.extras?.get("data") as? Bitmap
-                    bitmap?.let {
-                        imagenPersonalizada = guardarBitmapEnStorage(it)
-
-                        ivIconoSeleccionado.background = null
-                        ivIconoSeleccionado.clearColorFilter()
-
-                        Glide.with(this)
-                            .load(it)
-                            .circleCrop()
-                            .into(ivIconoSeleccionado)
+                    fotoPath?.let { path ->
+                        val file = File(path)
+                        if (file.exists()) {
+                            imagenPersonalizada = optimizarYGuardarImagen(file)
+                            mostrarImagenSeleccionada()
+                        }
                     }
                 }
             }
         }
     }
+    
+    private fun mostrarImagenSeleccionada() {
+        imagenPersonalizada?.let { path ->
+            ivIconoSeleccionado.background = null
+            ivIconoSeleccionado.clearColorFilter()
+            
+            Glide.with(this)
+                .load(File(path))
+                .circleCrop()
+                .into(ivIconoSeleccionado)
+        }
+    }
+    
+    /**
+     * Obtiene la rotación necesaria basada en EXIF
+     */
+    private fun obtenerRotacionExif(path: String): Int {
+        return try {
+            val exif = ExifInterface(path)
+            when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> 90
+                ExifInterface.ORIENTATION_ROTATE_180 -> 180
+                ExifInterface.ORIENTATION_ROTATE_270 -> 270
+                else -> 0
+            }
+        } catch (e: Exception) {
+            0
+        }
+    }
+    
+    /**
+     * Rota un bitmap según el ángulo dado
+     */
+    private fun rotarBitmap(bitmap: Bitmap, grados: Int): Bitmap {
+        if (grados == 0) return bitmap
+        
+        val matrix = Matrix()
+        matrix.postRotate(grados.toFloat())
+        
+        val rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        
+        if (rotated != bitmap) {
+            bitmap.recycle()
+        }
+        
+        return rotated
+    }
+    
+    private fun optimizarYGuardarImagen(archivoOriginal: File): String {
+        val fileName = "categoria_${System.currentTimeMillis()}.jpg"
+        val archivoFinal = File(filesDir, fileName)
+        
+        try {
+            // Obtener rotación EXIF antes de procesar
+            val rotacion = obtenerRotacionExif(archivoOriginal.absolutePath)
+            
+            // Decodificar con opciones para obtener dimensiones
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            BitmapFactory.decodeFile(archivoOriginal.absolutePath, options)
+            
+            // Calcular factor de escala
+            val scaleFactor = calculateInSampleSize(options, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE)
+            
+            // Decodificar con el factor de escala
+            options.apply {
+                inJustDecodeBounds = false
+                inSampleSize = scaleFactor
+            }
+            
+            var bitmap = BitmapFactory.decodeFile(archivoOriginal.absolutePath, options)
+            
+            // Rotar si es necesario
+            bitmap = rotarBitmap(bitmap, rotacion)
+            
+            // Guardar con alta calidad (95%)
+            FileOutputStream(archivoFinal).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+            }
+            
+            bitmap.recycle()
+            
+            // Eliminar archivo temporal
+            archivoOriginal.delete()
+            
+        } catch (e: Exception) {
+            e.printStackTrace()
+            archivoOriginal.copyTo(archivoFinal, overwrite = true)
+            archivoOriginal.delete()
+        }
+        
+        return archivoFinal.absolutePath
+    }
+    
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val height = options.outHeight
+        val width = options.outWidth
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight = height / 2
+            val halfWidth = width / 2
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+        return inSampleSize
+    }
+
     private fun guardarImagenEnStorage(uri: Uri): String {
         val fileName = "categoria_${System.currentTimeMillis()}.jpg"
         val file = File(filesDir, fileName)
 
         try {
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, uri))
+                val source = ImageDecoder.createSource(contentResolver, uri)
+                ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                    decoder.isMutableRequired = true
+                }
             } else {
                 @Suppress("DEPRECATION")
                 MediaStore.Images.Media.getBitmap(contentResolver, uri)
             }
+            
+            // Escalar si es necesario
+            val scaledBitmap = escalarBitmapSiNecesario(bitmap)
 
             file.outputStream().use { output ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 95, output)
             }
+            
+            if (scaledBitmap != bitmap) {
+                scaledBitmap.recycle()
+            }
+            bitmap.recycle()
 
         } catch (e: Exception) {
             contentResolver.openInputStream(uri)?.use { input ->
@@ -345,16 +485,23 @@ class CrearCategoriaActivity : AppCompatActivity() {
 
         return file.absolutePath
     }
-
-    private fun guardarBitmapEnStorage(bitmap: Bitmap): String {
-        val fileName = "categoria_${System.currentTimeMillis()}.jpg"
-        val file = File(filesDir, fileName)
-
-        file.outputStream().use { output ->
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output)
+    
+    private fun escalarBitmapSiNecesario(bitmap: Bitmap): Bitmap {
+        val maxDimension = MAX_IMAGE_SIZE
+        
+        if (bitmap.width <= maxDimension && bitmap.height <= maxDimension) {
+            return bitmap
         }
-
-        return file.absolutePath
+        
+        val ratio = minOf(
+            maxDimension.toFloat() / bitmap.width,
+            maxDimension.toFloat() / bitmap.height
+        )
+        
+        val newWidth = (bitmap.width * ratio).toInt()
+        val newHeight = (bitmap.height * ratio).toInt()
+        
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
     }
 
     private fun actualizarIconoSeleccionado() {
@@ -364,7 +511,6 @@ class CrearCategoriaActivity : AppCompatActivity() {
             ivIconoSeleccionado.scaleType = ImageView.ScaleType.CENTER_INSIDE
             ivIconoSeleccionado.setColorFilter(getColor(colorSeleccionado), PorterDuff.Mode.SRC_IN)
         } else {
-
             ivIconoSeleccionado.background = null
             ivIconoSeleccionado.clearColorFilter()
 
@@ -374,6 +520,7 @@ class CrearCategoriaActivity : AppCompatActivity() {
                 .into(ivIconoSeleccionado)
         }
     }
+
     private fun setupBotonAnadir() {
         btnAnadirCategoria.setOnClickListener {
             val nombreCategoria = etNombreCategoria.text.toString().trim()

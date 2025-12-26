@@ -1,20 +1,20 @@
-package com.app.balance.ui // Asegúrate que el package sea el correcto
+package com.app.balance.ui
 
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.app.balance.R
-import com.google.android.material.card.MaterialCardView
 
 class AcercaFragment : Fragment(R.layout.fragment_acerca) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //  Buenas Prácticas
+        // Buenas Prácticas
         setupExpandable(
             view.findViewById(R.id.mcv_practicas),
             view.findViewById(R.id.tv_practicas),
@@ -41,21 +41,14 @@ class AcercaFragment : Fragment(R.layout.fragment_acerca) {
         )
     }
 
-    // para despegable:
-    // @param card La cabecera (tarjeta) que recibe el clic.
-    // @param content El texto (TextView) que se mostrará u ocultará.
-    //@param arrow La flecha (ImageView) que rotará.
-
-    private fun setupExpandable(card: MaterialCardView, content: TextView, arrow: ImageView) {
-        card.setOnClickListener {
+    private fun setupExpandable(header: LinearLayout, content: TextView, arrow: ImageView) {
+        header.setOnClickListener {
             if (content.isVisible) {
-                // Ocultar
                 content.visibility = View.GONE
-                arrow.animate().rotation(0f).setDuration(300).start()
+                arrow.animate().rotation(0f).setDuration(200).start()
             } else {
-                // Mostrar
                 content.visibility = View.VISIBLE
-                arrow.animate().rotation(180f).setDuration(300).start()
+                arrow.animate().rotation(180f).setDuration(200).start()
             }
         }
     }

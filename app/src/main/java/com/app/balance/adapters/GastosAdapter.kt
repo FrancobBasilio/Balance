@@ -2,7 +2,6 @@ package com.app.balance.adapters
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,13 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.app.balance.R
 import com.app.balance.model.Categoria
 import com.app.balance.model.TransaccionConDetalles
 import com.bumptech.glide.Glide
-import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -29,14 +29,15 @@ class GastosAdapter(
 ) : RecyclerView.Adapter<GastosAdapter.GastoViewHolder>() {
 
     class GastoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val cardIcono: MaterialCardView = view.findViewById(R.id.cardIcono)
         val ivIconoCategoria: ImageView = view.findViewById(R.id.ivIconoCategoria)
         val tvNombreCategoria: TextView = view.findViewById(R.id.tvNombreCategoria)
         val tvTipoCategoria: TextView = view.findViewById(R.id.tvTipoCategoria)
         val tvComentario: TextView = view.findViewById(R.id.tvComentario)
         val tvMontoGasto: TextView = view.findViewById(R.id.tvMontoGasto)
         val tvFechaGasto: TextView = view.findViewById(R.id.tvFechaGasto)
-        // btnEditarGasto puede no existir en todas las variantes del layout, por eso lo buscamos dinámicamente
-        val btnEliminarGasto: MaterialButton = view.findViewById(R.id.btnEliminarGasto)
+        val btnEditarGasto: ImageButton = view.findViewById(R.id.btnEditarGasto)
+        val btnEliminarGasto: ImageButton = view.findViewById(R.id.btnEliminarGasto)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GastoViewHolder {
@@ -51,12 +52,10 @@ class GastosAdapter(
 
         holder.tvNombreCategoria.text = item.categoria.nombre
         holder.tvTipoCategoria.text = item.tipoCategoria.nombre
-        holder.tvMontoGasto.text = "$codigoDivisa ${String.format("%.2f", item.transaccion.monto)}"
+        holder.tvMontoGasto.text = "-$codigoDivisa ${String.format("%.2f", item.transaccion.monto)}"
+        holder.tvFechaGasto.text = formatearFechaCorta(item.transaccion.fecha)
 
-        // Formatear fecha
-        holder.tvFechaGasto.text = formatearFecha(item.transaccion.fecha)
-
-        // Mostrar comentario si existe
+        // Comentario
         if (!item.transaccion.comentario.isNullOrEmpty()) {
             holder.tvComentario.visibility = View.VISIBLE
             holder.tvComentario.text = item.transaccion.comentario
@@ -64,37 +63,31 @@ class GastosAdapter(
             holder.tvComentario.visibility = View.GONE
         }
 
-        // Cambiar color del monto según el tipo de categoría
+        // Color del monto
         val colorMonto = when (item.tipoCategoria.nombre) {
-            "Necesidad" -> context.getColor(android.R.color.holo_red_dark)
-            "Deseo" -> context.getColor(android.R.color.holo_orange_dark)
-            "Ahorro" -> context.getColor(android.R.color.holo_green_dark)
-            else -> context.getColor(android.R.color.black)
+            "Necesidad" -> ContextCompat.getColor(context, R.color.error_red)
+            "Deseo" -> ContextCompat.getColor(context, R.color.warning_orange)
+            "Ahorro" -> ContextCompat.getColor(context, R.color.success_green)
+            else -> ContextCompat.getColor(context, R.color.text_primary)
         }
         holder.tvMontoGasto.setTextColor(colorMonto)
 
+        // Cargar icono
         cargarIconoCategoria(holder, item.categoria, context)
 
-        // Click en la imagen para ver en tamaño completo
-        holder.ivIconoCategoria.setOnClickListener {
-            if (!item.categoria.rutaImagen.isNullOrEmpty()) {
-                mostrarImagenCompleta(context, item.categoria.rutaImagen)
+        // Listeners
+        holder.itemView.setOnClickListener { onItemClick(item) }
+        holder.btnEditarGasto.setOnClickListener { onEditarClick(item) }
+        holder.btnEliminarGasto.setOnClickListener { onEliminarClick(item) }
+        
+        // Click en imagen para ver completa
+        if (!item.categoria.rutaImagen.isNullOrEmpty()) {
+            holder.ivIconoCategoria.setOnClickListener {
+                mostrarImagenCompleta(context, item.categoria.rutaImagen!!)
             }
-        }
-
-        holder.itemView.setOnClickListener {
-            onItemClick(item)
-        }
-
-        // Botón editar (buscado dinámicamente para evitar errores si el id no existe)
-        val btnEditar = holder.itemView.findViewById<MaterialButton?>(R.id.btnEditarGasto)
-        btnEditar?.setOnClickListener {
-            onEditarClick(item)
-        }
-
-        // Botón eliminar
-        holder.btnEliminarGasto.setOnClickListener {
-            onEliminarClick(item)
+        } else {
+            holder.ivIconoCategoria.setOnClickListener(null)
+            holder.ivIconoCategoria.isClickable = false
         }
     }
 
@@ -105,10 +98,10 @@ class GastosAdapter(
         notifyDataSetChanged()
     }
 
-    private fun formatearFecha(fecha: String): String {
+    private fun formatearFechaCorta(fecha: String): String {
         return try {
             val formatoEntrada = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val formatoSalida = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val formatoSalida = SimpleDateFormat("dd MMM", Locale("es", "ES"))
             val date = formatoEntrada.parse(fecha)
             formatoSalida.format(date!!)
         } catch (e: Exception) {
@@ -116,51 +109,52 @@ class GastosAdapter(
         }
     }
 
-    // Cargar icono circular con Glide
     private fun cargarIconoCategoria(holder: GastoViewHolder, categoria: Categoria, context: Context) {
+        // Limpiar estado anterior
+        holder.ivIconoCategoria.clearColorFilter()
+        holder.ivIconoCategoria.setPadding(0, 0, 0, 0)
+        holder.cardIcono.strokeWidth = 0
+        
         if (!categoria.rutaImagen.isNullOrEmpty()) {
             val file = File(categoria.rutaImagen)
             if (file.exists()) {
-                holder.ivIconoCategoria.background = null
-                holder.ivIconoCategoria.clearColorFilter()
-
+                // Imagen de galería/cámara - llenar todo el círculo
+                holder.ivIconoCategoria.scaleType = ImageView.ScaleType.CENTER_CROP
+                holder.cardIcono.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+                
                 Glide.with(context)
                     .load(file)
-                    .circleCrop()
-                    .error(R.drawable.ic_default)
+                    .centerCrop()
                     .into(holder.ivIconoCategoria)
-
+                    
                 holder.ivIconoCategoria.isClickable = true
-                holder.ivIconoCategoria.isFocusable = true
-            } else {
-                cargarIconoPredeterminado(holder, categoria)
+                return
             }
-        } else {
-            cargarIconoPredeterminado(holder, categoria)
         }
-    }
-
-    //  Cargar icono predeterminado
-    private fun cargarIconoPredeterminado(holder: GastoViewHolder, categoria: Categoria) {
-        val context = holder.itemView.context
+        
+        // Icono predeterminado - con fondo y padding
+        holder.ivIconoCategoria.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        holder.cardIcono.setCardBackgroundColor(ContextCompat.getColor(context, R.color.gold_soft))
+        val paddingPx = (12 * context.resources.displayMetrics.density).toInt()
+        holder.ivIconoCategoria.setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
+        
         val iconoRes = obtenerRecursoIcono(categoria.icono)
-
         holder.ivIconoCategoria.setImageResource(iconoRes)
-
-        holder.ivIconoCategoria.setBackgroundResource(R.drawable.fondo_circular_solido)
-
-
-        val colorIcono = categoria.color ?: android.R.color.black
-        holder.ivIconoCategoria.setColorFilter(
-            context.getColor(colorIcono),
-            PorterDuff.Mode.SRC_IN
-        )
+        
+        // Usar color guardado o gold por defecto
+        val colorInt = try {
+            if (categoria.color != null) {
+                ContextCompat.getColor(context, categoria.color)
+            } else {
+                ContextCompat.getColor(context, R.color.gold)
+            }
+        } catch (e: Exception) {
+            ContextCompat.getColor(context, R.color.gold)
+        }
+        holder.ivIconoCategoria.setColorFilter(colorInt)
         holder.ivIconoCategoria.isClickable = false
-        holder.ivIconoCategoria.isFocusable = false
     }
 
-
-    //  Mostrar imagen en tamaño completo
     private fun mostrarImagenCompleta(context: Context, rutaImagen: String) {
         val file = File(rutaImagen)
         if (!file.exists()) {
@@ -174,14 +168,14 @@ class GastosAdapter(
         val ivImagenCompleta = dialog.findViewById<ImageView>(R.id.ivImagenCompleta)
         val btnCerrar = dialog.findViewById<ImageButton>(R.id.btnCerrarImagen)
 
+        // Cargar imagen a tamaño completo
         Glide.with(context)
             .load(file)
-            .centerInside()
+            .fitCenter()
             .into(ivImagenCompleta)
 
         ivImagenCompleta.setOnClickListener { dialog.dismiss() }
         btnCerrar.setOnClickListener { dialog.dismiss() }
-
         dialog.show()
     }
 

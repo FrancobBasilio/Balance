@@ -10,336 +10,233 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:padding="24dp">
 
+        <!-- Foto de perfil centrada -->
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="16dp"
-            android:layout_gravity="center">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAvatar"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                app:cardCornerRadius="70dp"
-                app:cardElevation="8dp"
-                app:strokeWidth="4dp"
-                app:strokeColor="@color/gold">
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
 
-                <ImageView
-                    android:id="@+id/ivFotoPerfil"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_persona"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="Foto de perfil" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/gold">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <ImageView
+                        android:id="@+id/ivFotoPerfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_persona"
+                        android:scaleType="centerCrop"
+                        android:background="@color/surface_2"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="-6dp"
-                android:layout_marginBottom="-6dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="6dp"
-                app:cardBackgroundColor="@color/card_background">
+                </com.google.android.material.card.MaterialCardView>
 
                 <ImageButton
                     android:id="@+id/btnCambiarFoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@drawable/bg_circle"
+                    android:backgroundTint="@color/gold"
                     android:src="@drawable/ic_camera"
-                    android:scaleType="centerInside"
-                    android:padding="8dp"
+                    android:padding="7dp"
                     android:contentDescription="Cambiar foto"
-                    app:tint="@color/gold" />
+                    app:tint="@color/white"/>
 
-            </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
 
         </FrameLayout>
 
+        <!-- Nombre -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="4dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"/>
+
+                <TextView
+                    android:id="@+id/tvNombreCompleto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Usuario"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"
+                    android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnEditarNombre"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_edit_balance"
+                android:padding="8dp"
+                android:contentDescription="Editar"
+                app:tint="@color/gold"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"/>
+
+        <!-- País y Ahorro -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="País"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="4dp">
+
+                    <ImageView
+                        android:id="@+id/ivBanderaPais"
+                        android:layout_width="24dp"
+                        android:layout_height="16dp"
+                        android:scaleType="fitCenter"
+                        android:layout_marginEnd="8dp"/>
+
+                    <TextView
+                        android:id="@+id/tvNombrePais"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Perú"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="end">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ahorro disponible"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"/>
+
+                <TextView
+                    android:id="@+id/tvAhorroDisponible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PEN 0.00"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/gold"
+                    android:layout_marginTop="4dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"/>
+
+        <!-- Email -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="20dp">
 
-            <!-- Card Nombre -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="3dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/card_background"
-                app:strokeColor="@color/borde"
-                app:strokeWidth="1dp">
+                android:text="Email"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="20dp"
-                    android:gravity="center_vertical">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="NOMBRE COMPLETO"
-                            android:textSize="11sp"
-                            android:textColor="@color/text_hint"
-                            android:letterSpacing="0.1"
-                            android:layout_marginBottom="4dp"/>
-
-                        <TextView
-                            android:id="@+id/tvNombreCompleto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Juan Pérez García"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_primary"/>
-
-                    </LinearLayout>
-
-                    <ImageButton
-                        android:id="@+id/btnEditarNombre"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/ripple_circle_small"
-                        android:src="@drawable/ic_edit_balance"
-                        android:padding="8dp"
-                        android:contentDescription="Editar nombre"
-                        app:tint="@color/gold"/>
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Cards País y Ahorro -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
+                android:text="correo@ejemplo.com"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="4dp"/>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="3dp"
-                    app:cardBackgroundColor="@color/card_background"
-                    app:strokeColor="@color/borde"
-                    app:strokeWidth="1dp">
+        </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+        <!-- Teléfono -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PAÍS"
-                            android:textSize="11sp"
-                            android:textColor="@color/text_hint"
-                            android:letterSpacing="0.1"
-                            android:layout_marginBottom="8dp"/>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <ImageView
-                                android:id="@+id/ivBanderaPais"
-                                android:layout_width="32dp"
-                                android:layout_height="24dp"
-                                android:scaleType="fitCenter"
-                                android:layout_marginEnd="8dp"/>
-
-                            <TextView
-                                android:id="@+id/tvNombrePais"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Perú"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_primary"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="3dp"
-                    app:cardBackgroundColor="@color/card_background"
-                    app:strokeColor="@color/borde"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="AHORRO"
-                            android:textSize="11sp"
-                            android:textColor="@color/text_hint"
-                            android:letterSpacing="0.1"
-                            android:layout_marginBottom="8dp"/>
-
-                        <TextView
-                            android:id="@+id/tvAhorroDisponible"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PEN 0.00"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/gold"/>
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-            <!-- Card Contacto -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="3dp"
-                app:cardBackgroundColor="@color/card_background"
-                app:strokeColor="@color/borde"
-                app:strokeWidth="1dp">
+                android:text="Teléfono"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="INFORMACIÓN DE CONTACTO"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_hint"
-                        android:letterSpacing="0.1"
-                        android:layout_marginBottom="16dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="16dp">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/ic_dialog_email"
-                            app:tint="@color/gold"
-                            android:layout_marginEnd="12dp"/>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Email"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_hint"/>
-
-                            <TextView
-                                android:id="@+id/tvEmail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="correo@ejemplo.com"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/borde"
-                        android:layout_marginBottom="16dp"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/stat_sys_phone_call"
-                            app:tint="@color/gold"
-                            android:layout_marginEnd="12dp"/>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Teléfono"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_hint"/>
-
-                            <TextView
-                                android:id="@+id/tvCelular"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="+51 987654321"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary"/>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvCelular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+51 987654321"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="4dp"/>
 
         </LinearLayout>
 

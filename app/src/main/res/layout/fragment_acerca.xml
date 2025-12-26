@@ -12,297 +12,230 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
+        <!-- Logo y nombre -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:gravity="center"
-            android:padding="16dp">
-            <TextView
-                android:id="@+id/tvTitulo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="Acerca de: "
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:textSize="22sp" />
-            <ImageView
-                android:id="@+id/ivLogoInicio"
-                android:layout_width="160dp"
-                android:layout_height="120dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_logo"
-                android:scaleType="centerInside"
-                android:contentDescription="Logo de Balance+" />
-        </LinearLayout>
+            android:layout_marginBottom="24dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_logo"
+                android:scaleType="centerInside"/>
+
             <TextView
                 android:id="@+id/tv_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Versión 1.0"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/text_hint"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            <TextView
-                android:id="@+id/tv_fecha_actualizada"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Actualizado: 30/10/2025"
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Balance+ te ayuda a registrar ingresos y gastos, ver tu balance disponible y organizar categorías."
-            android:textColor="@color/text_primary"
-            android:textSize="14sp" />
+            android:text="Balance+ te ayuda a registrar ingresos y gastos, ver tu balance disponible y organizar tus finanzas personales."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginBottom="32dp"/>
 
-        <com.google.android.material.divider.MaterialDivider
+        <!-- Buenas Prácticas -->
+        <LinearLayout
+            android:id="@+id/mcv_practicas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Buenas prácticas"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <ImageView
+                android:id="@+id/iv_practicas"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="@color/text_hint"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_practicas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:text="• Registra los movimientos el mismo día\n• Usa comentarios para identificar gastos\n• Revisa el Dashboard semanalmente"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:lineSpacingExtra="6dp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
-            app:dividerColor="@color/gold" />
+            android:background="@color/borde"/>
 
+        <!-- Pregunta 1 -->
         <LinearLayout
+            android:id="@+id/mcv_pf_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_practicas"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/gold"
-                app:cardBackgroundColor="@color/card_background">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_today"
-                        app:tint="@color/gold"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="Buenas Prácticas"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
-                    <ImageView
-                        android:id="@+id/iv_practicas"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/arrow_down_float"
-                        app:tint="@color/text_secondary"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
 
             <TextView
-                android:id="@+id/tv_practicas"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@color/surface_2"
-                android:text="• Registra los movimientos el mismo día para evitar olvidos.\n\n• Usa comentarios estándar ('almuerzo', 'transporte') para mejorar el análisis.\n\n• Revisa el Dashboard semanalmente para ajustar hábitos y detectar excesos."
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:lineSpacingExtra="4dp"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                android:layout_weight="1"
+                android:text="¿Puedo editar o eliminar un gasto?"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <ImageView
+                android:id="@+id/iv_pf_1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="@color/text_hint"/>
+
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Preguntas Frecuentes"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"/>
-
-        <LinearLayout
+            android:id="@+id/tv_pf_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="8dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:text="Sí. En la sección Gastos, usa los botones de editar o eliminar en cada registro."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_pf_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/borde"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/card_background">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="¿Puedo editar o eliminar un movimiento?"
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                    <ImageView
-                        android:id="@+id/iv_pf_1"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/arrow_down_float"
-                        app:tint="@color/text_secondary"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"/>
 
-            <TextView
-                android:id="@+id/tv_pf_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@color/surface_2"
-                android:text="Sí. En la sección 'Gastos', toca el registro que deseas modificar y usa los iconos de 'Editar' o 'Eliminar'."
-                android:textColor="@color/text_primary"
-                android:lineSpacingExtra="4dp"
-                android:visibility="gone"
-                tools:visibility="visible"/>
-        </LinearLayout>
-
+        <!-- Pregunta 2 -->
         <LinearLayout
+            android:id="@+id/mcv_pf_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="8dp">
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_pf_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/borde"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/card_background">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="El gráfico no cambió tras registrar un gasto."
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                    <ImageView
-                        android:id="@+id/iv_pf_2"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/arrow_down_float"
-                        app:tint="@color/text_secondary"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
 
             <TextView
-                android:id="@+id/tv_pf_2"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@color/surface_2"
-                android:text="Refresca la vista volviendo al Dashboard o espera unos segundos tras 'Guardar'."
-                android:textColor="@color/text_primary"
-                android:lineSpacingExtra="4dp"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                android:layout_weight="1"
+                android:text="El gráfico no se actualiza"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <ImageView
+                android:id="@+id/iv_pf_2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="@color/text_hint"/>
+
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_pf_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="8dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:text="Vuelve al Dashboard o espera unos segundos después de guardar."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_pf_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/borde"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardBackgroundColor="@color/card_background">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="No puedo iniciar sesión o un monto no se guarda."
-                        android:textColor="@color/text_primary"
-                        android:textSize="14sp" />
-                    <ImageView
-                        android:id="@+id/iv_pf_3"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/arrow_down_float"
-                        app:tint="@color/text_secondary"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"/>
+
+        <!-- Pregunta 3 -->
+        <LinearLayout
+            android:id="@+id/mcv_pf_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingVertical="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
 
             <TextView
-                android:id="@+id/tv_pf_3"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@color/surface_2"
-                android:text="• Login: Revisa tu correo/contraseña y la conexión a internet (si aplica).\n\n• Monto: Verifica que sea un número válido y mayor a cero."
-                android:textColor="@color/text_primary"
-                android:lineSpacingExtra="4dp"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                android:layout_weight="1"
+                android:text="Problemas al iniciar sesión"
+                android:textSize="15sp"
+                android:textColor="@color/text_primary"/>
+
+            <ImageView
+                android:id="@+id/iv_pf_3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/arrow_down_float"
+                app:tint="@color/text_hint"/>
+
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_pf_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:text="Revisa tu correo y contraseña. Verifica tu conexión a internet."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp"
+            android:visibility="gone"/>
+
+        <!-- Fecha actualización -->
+        <TextView
+            android:id="@+id/tv_fecha_actualizada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Última actualización: Diciembre 2025"
+            android:textColor="@color/text_hint"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginTop="32dp"/>
 
     </LinearLayout>
 </ScrollView>

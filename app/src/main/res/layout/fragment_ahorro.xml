@@ -1,209 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/background_primary">
+    android:background="@color/background_primary"
+    android:fillViewport="true">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="@color/card_background"
-        app:strokeColor="@color/borde"
-        app:strokeWidth="1dp">
+        android:orientation="vertical"
+        android:padding="20dp">
 
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Control de Finanzas"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Patrón 50/30/20"
+            android:textSize="13sp"
+            android:textColor="@color/text_hint"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Necesidades -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginBottom="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Control de Finanzas"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Patrón ideal: 50% Necesidades, 30% Deseos, 20% Ahorro"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="4dp"/>
-
-            <!-- Necesidades -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Necesidades (50%)"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"/>
-
-                    <TextView
-                        android:id="@+id/tvMontoNecesidad"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 0.00"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/success_green"/>
-
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressNecesidad"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_marginTop="4dp"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressTint="@color/error_red"/>
-
-                <TextView
-                    android:id="@+id/tvPorcentajeNecesidad"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gastado: S/. 0.00 (0%)"
-                    android:textSize="12sp"
-                    android:textColor="@color/error_red"
-                    android:layout_marginTop="2dp"/>
-
-            </LinearLayout>
-
-            <!-- Deseos -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Deseos (30%)"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"/>
-
-                    <TextView
-                        android:id="@+id/tvMontoDeseo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 0.00"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/success_green"/>
-
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressDeseo"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_marginTop="4dp"
-                    android:max="100"
-                    android:progress="0"
-                    android:progressTint="@color/warning_orange"/>
-
-                <TextView
-                    android:id="@+id/tvPorcentajeDeseo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Gastado: S/. 0.00 (0%)"
-                    android:textSize="12sp"
-                    android:textColor="@color/warning_orange"
-                    android:layout_marginTop="2dp"/>
-
-            </LinearLayout>
-
-            <!-- Ahorro -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Ahorro disponible"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary"/>
-
-                    <TextView
-                        android:id="@+id/tvMontoAhorro"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="S/. 0.00"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/success_green"/>
-
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressAhorro"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    android:layout_marginTop="4dp"
-                    android:max="100"
-                    android:progress="100"
-                    android:progressTint="@color/success_green"/>
-
-                <TextView
-                    android:id="@+id/tvPorcentajeAhorro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0.0% del monto total"
-                    android:textSize="12sp"
-                    android:textColor="@color/success_green"
-                    android:layout_marginTop="2dp"/>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="16dp"
-                android:background="@color/borde"/>
-
-            <!-- Total Gastado -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,54 +46,211 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Total gastado:"
+                    android:text="Necesidades (50%)"
                     android:textSize="14sp"
-                    android:textColor="@color/error_red"/>
+                    android:textColor="@color/text_primary"/>
+
+                <TextView
+                    android:id="@+id/tvMontoNecesidad"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 0.00"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressNecesidad"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_bar_blue"/>
+
+            <TextView
+                android:id="@+id/tvPorcentajeNecesidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gastado: 0%"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+
+        <!-- Deseos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Deseos (30%)"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"/>
+
+                <TextView
+                    android:id="@+id/tvMontoDeseo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 0.00"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressDeseo"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/progress_bar_orange"/>
+
+            <TextView
+                android:id="@+id/tvPorcentajeDeseo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gastado: 0%"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+
+        <!-- Ahorro -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="28dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ahorro (20%)"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_primary"/>
+
+                <TextView
+                    android:id="@+id/tvMontoAhorro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/. 0.00"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/success_green"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progressAhorro"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="100"
+                android:progressDrawable="@drawable/progress_bar_green"/>
+
+            <TextView
+                android:id="@+id/tvPorcentajeAhorro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0% del total"
+                android:textSize="12sp"
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="4dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/borde"/>
+
+        <!-- Resumen -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total gastado"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"/>
 
                 <TextView
                     android:id="@+id/tvTotalGastado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="S/. 0.00"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/error_red"/>
+                    android:textColor="@color/error_red"
+                    android:layout_marginTop="4dp"/>
 
             </LinearLayout>
 
-            <!-- Ingresos Totales -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="end">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Ingresos totales (ahorro):"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary"/>
+                    android:text="Balance disponible"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"/>
 
                 <TextView
                     android:id="@+id/tvIngresosTotales"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="S/. 0.00"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/success_green"/>
+                    android:textColor="@color/success_green"
+                    android:layout_marginTop="4dp"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-</LinearLayout>
+</ScrollView>

@@ -92,4 +92,7 @@ dependencies {
 
     // Seguridad - EncryptedSharedPreferences
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    
+    // ExifInterface para rotación de imágenes
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
 }
